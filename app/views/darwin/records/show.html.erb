@@ -1,0 +1,67 @@
+<h1><%= @model.name %> Record</h1>
+
+<%# Attributes %>
+<% @model.runtime_constant.columns.each do |column| %>
+  <%# Skip foreign keys, as they are handled by the association block below %>
+  <% next if @model.runtime_constant.reflect_on_all_associations(:belongs_to).map(&:foreign_key).include?(column.name) %>
+  <p>
+    <strong><%= column.name.humanize %>:</strong>
+    <%= @record.send(column.name) %>
+  </p>
+<% end %>
+
+<%# Belongs to associations %>
+<% @model.runtime_constant.reflect_on_all_associations(:belongs_to).each do |association| %>
+  <p>
+    <strong><%= association.name.to_s.humanize %>:</strong>
+    <% associated_record = @record.send(association.name) %>
+    <% if associated_record %>
+      <%
+        # Find the Darwin::Model for the associated record
+        associated_model = Darwin::Model.find_by(name: association.klass.name)
+        if associated_model
+          # Construct the correct path
+          link_path = darwin.record_path(associated_model.name.pluralize.underscore, associated_record)
+          %>
+          <%= link_to associated_record.to_s, link_path %>
+        <% else %>
+          <%= associated_record.to_s %>
+        <% end %>
+    <% else %>
+      None
+    <% end %>
+  </p>
+<% end %>
+
+<%# Has many / Has one associations %>
+<% (@model.runtime_constant.reflect_on_all_associations(:has_many) + @model.runtime_constant.reflect_on_all_associations(:has_one)).each do |association| %>
+  <div>
+    <strong><%= association.name.to_s.humanize %>:</strong>
+    <ul>
+      <% associated_records = Array.wrap(@record.send(association.name)) %>
+      <% if associated_records.any? %>
+        <% associated_records.each do |associated_record| %>
+          <li>
+            <%
+              # Find the Darwin::Model for the associated record
+              associated_model = Darwin::Model.find_by(name: association.klass.name)
+              if associated_model
+                # Construct the correct path
+                link_path = darwin.record_path(associated_model.name.pluralize.underscore, associated_record)
+                %>
+                <%= link_to associated_record.to_s, link_path %>
+              <% else %>
+                <%= associated_record.to_s %>
+              <% end %>
+          </li>
+        <% end %>
+      <% else %>
+        <li>None</li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+
+<%= link_to 'Edit', darwin.edit_record_path(@model.name.pluralize.underscore, @record) %> |
+<%= link_to 'Back', darwin.records_path(@model.name.pluralize.underscore) %>

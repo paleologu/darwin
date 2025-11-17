@@ -1,0 +1,9 @@
+<%= turbo_frame_tag "new_block_form" do %>
+  <%= form_with(model: [block.darwin_model, block], scope: :darwin_block) do |form| %>
+    <%= render partial: "darwin/models/block_forms/#{block.block_type}", locals: { f: form } %>
+    <div class="actions">
+      <%= form.submit "Save" %>
+      <%= link_to "Cancel", darwin.edit_model_path(block.darwin_model) %>
+    </div>
+  <% end %>
+<% end %>

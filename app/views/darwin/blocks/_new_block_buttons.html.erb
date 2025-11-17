@@ -1,0 +1,8 @@
+<div class="mt-8">
+  <h3 class="font-bold text-lg">New Block</h3>
+  <div class="mt-4 flex space-x-2">
+    <% available_block_types(model).each do |block_type| %>
+      <%= link_to "Add #{block_type.humanize}", darwin.new_model_block(@model, block_type: block_type), class: "btn-secondary" %>
+    <% end %>
+  </div>
+</div>

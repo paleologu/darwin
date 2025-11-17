@@ -1,0 +1,7 @@
+rules:
+  - name: Runtime Integrity
+    description: "All dynamic class definitions must survive multiple reloads without duplication."
+  - name: Interpreter Guard
+    description: "Any macro-defining operation must skip redefinition if the macro already exists."
+  - name: Declarative Model Principle
+    description: "Prefer storing logic as data in Darwin::Block instead of hardcoding macros in Ruby."

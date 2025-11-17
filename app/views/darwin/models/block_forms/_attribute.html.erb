@@ -1,0 +1,45 @@
+<%= f.hidden_field :block_type, value: f.object.block_type %>
+<div class="field">
+  <%= f.label :args_name, "Attribute Name" %>
+  <%= f.text_field :args_name, value: f.object.args_name %>
+  <% if f.object.errors[:args_name].any? %>
+    <p style="color: red;"><%= f.object.errors.full_messages_for(:args_name).join(", ") %></p>
+  <% end %>
+</div>
+<div class="field">
+  <%= f.label :args_type, "Type" %>
+  <%= f.select :args_type, %w[string integer boolean text datetime date float decimal], { selected: f.object.args_type }, { data: { block_form_target: "attributeType", action: "change->block-form#toggleAttributeFields" } } %>
+  <% if f.object.errors[:args_type].any? %>
+    <p style="color: red;"><%= f.object.errors.full_messages_for(:args_type).join(", ") %></p>
+  <% end %>
+</div>
+<div class="field" data-attribute-type="all">
+  <%= f.label :options_default, "Default" %>
+  <%= f.fields_for :options do |options_form| %>
+    <%= options_form.text_field :default, value: f.object.options ? f.object.options['default'] : '' %>
+  <% end %>
+</div>
+<div class="field" data-attribute-type="all">
+  <%= f.label :options_null, "Null" %>
+  <%= f.fields_for :options do |options_form| %>
+    <%= options_form.check_box :null, checked: f.object.options ? f.object.options['null'] : false %>
+  <% end %>
+</div>
+<div class="field" data-attribute-type="string text integer binary">
+  <%= f.label :options_limit, "Limit" %>
+  <%= f.fields_for :options do |options_form| %>
+    <%= options_form.number_field :limit, value: f.object.options ? f.object.options['limit'] : '' %>
+  <% end %>
+</div>
+<div class="field" data-attribute-type="decimal">
+  <%= f.label :options_precision, "Precision" %>
+  <%= f.fields_for :options do |options_form| %>
+    <%= options_form.number_field :precision, value: f.object.options ? f.object.options['precision'] : '' %>
+  <% end %>
+</div>
+<div class="field" data-attribute-type="decimal">
+  <%= f.label :options_scale, "Scale" %>
+  <%= f.fields_for :options do |options_form| %>
+    <%= options_form.number_field :scale, value: f.object.options ? f.object.options['scale'] : '' %>
+  <% end %>
+</div>

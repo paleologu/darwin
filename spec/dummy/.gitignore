@@ -1,0 +1,38 @@
+# macOS
+.DS_Store
+
+# Ruby / Bundler
+/.bundle/
+/vendor/bundle/
+/*.gem
+!/vendor/assets/
+
+# Logs and temp files
+/log/*
+!/log/.keep
+/tmp
+*.log
+
+# Rails
+/config/master.key
+/config/credentials.yml.enc
+/storage/*
+!/storage/.keep
+
+# Byebug / Pry / etc.
+/.byebug_history
+
+# Node / JS tools (dummy app)
+node_modules/
+/app/javascript/packs/*.js.map
+
+# Test coverage
+/coverage/
+
+# Sensitive
+/spec/dummy/log/*
+!/spec/dummy/log/.keep
+/spec/dummy/tmp
+/spec/dummy/storage/*
+!/spec/dummy/storage/.keep
+/console_test.log

@@ -1,0 +1,5 @@
+<%= f.hidden_field :block_type, value: f.object.block_type %>
+<div class="field">
+  <%= f.label :args_name, "Association" %>
+  <%= f.select :args_name, f.object.darwin_model.runtime_constant.reflect_on_all_associations.map(&:name) %>
+</div>

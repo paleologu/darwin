@@ -1,0 +1,31 @@
+<h1><%= @model.name.pluralize %></h1>
+
+<p>
+  <%= link_to "Edit Schema", darwin.edit_model_path(@model) %>
+</p>
+
+<%= link_to "New #{@model.name}", darwin.new_record_path(@model.name.pluralize.underscore) %>
+
+<table>
+  <thead>
+    <tr>
+      <% @model.runtime_constant.attribute_names.each do |attr_name| %>
+        <th><%= attr_name.humanize %></th>
+      <% end %>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @records.each do |record| %>
+      <tr>
+        <% @model.runtime_constant.attribute_names.each do |attr_name| %>
+          <td><%= record.send(attr_name) %></td>
+        <% end %>
+        <td><%= link_to 'Show', darwin.record_path(@model.name.pluralize.underscore, record) %></td>
+        <td><%= link_to 'Edit', darwin.edit_record_path(@model.name.pluralize.underscore, record) %></td>
+        <td><%= link_to 'Destroy', darwin.record_path(@model.name.pluralize.underscore, record), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

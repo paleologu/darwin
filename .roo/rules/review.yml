@@ -1,0 +1,8 @@
+rules:
+  - name: "Final Review Checklist"
+    description: |
+      Before completing a project or a major set of tasks, follow this review process:
+      1. **Format Code:** Run `rubocop -A` to auto-correct style issues.
+      2. **Run Full Test Suite:** Execute `bundle exec rspec` to ensure all tests pass.
+      3. **Fix Failures and Warnings:** Address any failing tests and resolve all code warnings.
+      4. **Review Changes:** Run `git diff --name-only main` to get a list of changed files and review each one for correctness and adherence to project standards.

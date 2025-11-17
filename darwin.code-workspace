@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../darwin_host"
+		}
+	],
+	"settings": {}
+}

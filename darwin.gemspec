@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+require_relative 'lib/darwin/version'
+
+Gem::Specification.new do |spec|
+  spec.name          = 'darwin'
+  spec.version       = Darwin::VERSION
+  spec.authors       = ['Mihail Paleologu']
+  spec.email         = ['mihail@botlegion.io']
+
+  spec.summary       = 'Dynamic ActiveRecord'
+  spec.description   = 'Create user-defined resource types with dynamic fields, validations, and relationships.'
+  spec.homepage      = 'https://github.com/paleologu/resource'
+  spec.license       = 'MIT'
+  spec.required_ruby_version = '>= 3.0'
+
+  spec.metadata['homepage_uri'] = spec.homepage
+  spec.metadata['source_code_uri'] = spec.homepage
+  spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
+  spec.metadata['rubygems_mfa_required'] = 'true'
+
+  spec.files         = Dir['{app,db,lib}/**/*', 'MIT-LICENSE', 'README.md']
+  spec.require_paths = ['lib']
+
+  spec.add_dependency 'activerecord'
+  spec.add_dependency 'pg'
+  spec.add_dependency 'rails', '>= 7.0', '< 9.0'
+  spec.add_dependency 'turbo-rails'
+  spec.add_dependency 'importmap-rails'
+
+  spec.add_development_dependency 'database_cleaner-active_record'
+  spec.add_development_dependency 'rspec-rails'
+  spec.add_development_dependency 'shoulda-matchers'
+end

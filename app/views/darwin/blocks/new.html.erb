@@ -1,0 +1,12 @@
+<%= turbo_frame_tag "new_block" do %>
+  <% if @block.block_type.present? %>
+    <%= form_with(model: @block, scope: :darwin_block, url: darwin.model_blocks_path(@model)) do |form| %>
+      <%= render partial: "darwin/models/block_forms/#{@block.block_type}", locals: { f: form } %>
+      <div class="actions">
+        <%= form.submit "Save" %>
+      </div>
+    <% end %>
+  <% else %>
+    <%= render partial: "darwin/blocks/new_block_buttons", locals: { model: @model } %>
+  <% end %>
+<% end %>

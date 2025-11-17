@@ -1,0 +1,6 @@
+<h1>Editing <%= @model.name %> Record</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Show', darwin.record_path(@model.name.pluralize.underscore, @record) %> |
+<%= link_to 'Back', darwin.records_path(@model.name.pluralize.underscore) %>

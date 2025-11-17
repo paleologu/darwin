@@ -1,0 +1,13 @@
+<%= turbo_frame_tag dom_id(block) do %>
+  <div class="flex items-center justify-between p-4 border rounded-lg">
+    <div>
+      <span class="font-bold"><%= block.block_type %></span>
+      <span class="ml-2 text-gray-500"><%= Array(block.args).join(", ") %></span>
+    </div>
+    <div>
+      <%= form_with(url: darwin.model_block_path(@model, block), method: :delete) do |form| %>
+        <%= form.submit "Delete", class: "btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

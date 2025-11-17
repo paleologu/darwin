@@ -1,0 +1,75 @@
+<%= f.hidden_field :block_type, value: f.object.block_type %>
+
+<div data-controller="block-form" data-block-form-model-name-value="<%= f.object.darwin_model.name %>">
+  <div class="field">
+    <%= f.label :args_name, "Attribute" %>
+    <%= f.select :args_name,
+                 f.object.darwin_model.runtime_constant.attribute_names,
+                 { selected: f.object.args_name },
+                 { data: { action: "change->block-form#populateValidationTypes",
+                           block_form_target: "attributeSelect" } } %>
+  </div>
+
+  <div class="field" data-block-form-target="validationTypeContainer" style="display: none;">
+    <%= f.label :validation_type, "Validation Type" %>
+    <%= f.select :validation_type, [], {}, { data: { action: "change->block-form#toggleValidationFields" } } %>
+  </div>
+
+  <%# Presence Validation %>
+  <div class="field" data-block-form-target="validationField" data-validation-type="presence" style="display: none;">
+    <%= f.fields_for :options do |options_form| %>
+      <%= options_form.check_box :presence, checked: f.object.options['presence'] %>
+    <% end %>
+  </div>
+
+  <%# Numericality Validation %>
+  <div class="field" data-block-form-target="validationField" data-validation-type="numericality" style="display: none;">
+    <%= f.fields_for :options do |options_form| %>
+      <%= options_form.check_box :numericality, checked: f.object.options['numericality'] %>
+    <% end %>
+  </div>
+
+  <%# Uniqueness Validation %>
+  <div class="field" data-block-form-target="validationField" data-validation-type="uniqueness" style="display: none;">
+    <%= f.fields_for :options do |options_form| %>
+      <%= options_form.check_box :uniqueness, checked: f.object.options['uniqueness'] %>
+    <% end %>
+  </div>
+
+  <%# Length Validation %>
+  <div class="field" data-block-form-target="validationField" data-validation-type="length" style="display: none;">
+    <%= f.fields_for :options do |options_form| %>
+      <%= options_form.fields_for :length, (f.object.options['length'] || {}) do |length_form| %>
+        <%= length_form.number_field :minimum, placeholder: "Minimum" %>
+        <%= length_form.number_field :maximum, placeholder: "Maximum" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Format Validation %>
+  <div class="field" data-block-form-target="validationField" data-validation-type="format" style="display: none;">
+    <%= f.fields_for :options do |options_form| %>
+      <%= options_form.fields_for :format, (f.object.options['format'] || {}) do |format_form| %>
+        <%= format_form.text_field :with, placeholder: "Regex" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Inclusion Validation %>
+  <div class="field" data-block-form-target="validationField" data-validation-type="inclusion" style="display: none;">
+    <%= f.fields_for :options do |options_form| %>
+      <%= options_form.fields_for :inclusion, (f.object.options['inclusion'] || {}) do |inclusion_form| %>
+        <%= inclusion_form.text_field :in, value: inclusion_form.object.try(:[], 'in')&.join(', '), placeholder: "Comma-separated values" %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Exclusion Validation %>
+  <div class="field" data-block-form-target="validationField" data-validation-type="exclusion" style="display: none;">
+    <%= f.fields_for :options do |options_form| %>
+      <%= options_form.fields_for :exclusion, (f.object.options['exclusion'] || {}) do |exclusion_form| %>
+        <%= exclusion_form.text_field :in, value: exclusion_form.object.try(:[], 'in')&.join(', '), placeholder: "Comma-separated values" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

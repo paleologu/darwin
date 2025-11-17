@@ -1,0 +1,41 @@
+<h1>New Darwin Model</h1>
+
+<%= form_with(model: @model, scope: :darwin_model, url: darwin.models_path) do |form| %>
+  <% if @model.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@model.errors.count, "error") %> prohibited this model from being saved:</h2>
+
+      <ul>
+        <% @model.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <h2>Blocks</h2>
+
+  <div id="blocks">
+    <%= form.fields_for :blocks, @blocks do |block_form| %>
+      <%= render 'block_fields', f: block_form %>
+    <% end %>
+  </div>
+
+  <template data-nested-form-target="template">
+    <%= form.fields_for :blocks, Darwin::Block.new, child_index: "NEW_RECORD" do |block_form| %>
+      <%= render "block_fields", f: block_form %>
+    <% end %>
+  </template>
+
+  <div data-nested-form-target="target"></div>
+
+  <div class="actions">
+    <%= link_to "Add Block", "#", data: { action: "nested-form#add" } %>
+    <%= form.submit %>
+  </div>
+<% end %>

@@ -1,0 +1,5 @@
+<%= f.hidden_field :block_type, value: f.object.block_type %>
+<div class="field">
+  <%= f.label :args_association_name, "Association Name" %>
+  <%= f.select :args_name, Darwin::Model.where.not(id: f.object.darwin_model.id).pluck(:name), { selected: f.object.args.try(:first) } %>
+</div>

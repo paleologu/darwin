@@ -1,0 +1,30 @@
+<div class="nested-fields" data-new-record="<%= form.object.new_record? %>">
+  <% association.klass.columns.each do |column| %>
+    <% next if column.name == 'id' || column.name == 'created_at' || column.name == 'updated_at' %>
+    <%# Skip foreign keys, as they are managed by the parent association %>
+    <% next if association.klass.reflect_on_all_associations(:belongs_to).map(&:foreign_key).include?(column.name) %>
+
+    <div class="field">
+      <%= form.label column.name.to_sym %>
+      <%= case column.type
+          when :string
+            form.text_field column.name.to_sym
+          when :text
+            form.text_area column.name.to_sym
+          when :integer, :float, :decimal
+            form.number_field column.name.to_sym
+          when :boolean
+            form.check_box column.name.to_sym
+          when :date
+            form.date_field column.name.to_sym
+          when :datetime
+            form.datetime_field column.name.to_sym
+          else
+            form.text_field column.name.to_sym
+          end %>
+    </div>
+  <% end %>
+
+  <%= form.hidden_field :_destroy %>
+  <%= link_to "Remove", "#", data: { action: "nested-form#remove" } %>
+</div>

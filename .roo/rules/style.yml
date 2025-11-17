@@ -1,0 +1,7 @@
+rules:
+  - name: Concise Code
+    description: "Avoid DSL overcomplication. Favor explicitness within Darwin::Interpreter."
+  - name: Pure Functions
+    description: "Prefer side-effect-free service classes (SchemaManager, Interpreter)."
+  - name: Self-Documenting Specs
+    description: "RSpec descriptions should read like documentation for behavior."

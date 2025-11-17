@@ -1,0 +1,11 @@
+rules:
+  - name: Test-First Mandate
+    description: "No implementation code should exist without a failing test first."
+  - name: Contextual Specs
+    description: "Each spec must describe behavior in context — e.g. 'Darwin::Runtime.reload_all!' should rebind constants idempotently."
+  - name: Fixture Safety
+    description: "Specs must use setup_test_data! helper; direct DB manipulation is forbidden."
+  - name: In-Memory Isolation
+    description: "All specs should run against the in-memory test DB defined in rails_helper.rb."
+  - name: Multi-Pass Validation
+    description: "For runtime model specs, verify both Pass 1 (shell definition) and Pass 2 (block evaluation) independently."
