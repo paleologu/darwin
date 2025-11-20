@@ -3,7 +3,7 @@
 # lib/darwin/runtime.rb
 module Darwin
   module Runtime
-    def self.reload_all!(current_model: nil)
+    def self.reload_all!(current_model: nil, builder: false)
       # Eager-load blocks to prevent N+1 queries
       models = Darwin::Model.includes(:blocks).all.to_a
       models << current_model if current_model && !models.find { |m| m.id == current_model.id }
@@ -18,7 +18,7 @@ module Darwin
       blocks = models.flat_map(&:blocks)
       blocks.sort_by { |b| block_priority(b.block_type) }.each do |block|
         klass = block.darwin_model.runtime_constant
-        Darwin::Interpreter.evaluate_block(klass, block)
+        Darwin::Interpreter.evaluate_block(klass, block, builder:)
       end
     end
 

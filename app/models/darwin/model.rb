@@ -83,12 +83,12 @@ module Darwin
 
     def sync_schema_and_reload_runtime_constant
       Darwin::SchemaManager.sync!(self)
-      Darwin::Runtime.reload_all!(current_model: self)
+      Darwin::Runtime.reload_all!(current_model: self, builder: true)
     end
 
     def drop_table_and_reload_runtime_constant
       Darwin::SchemaManager.drop!(self)
-      Darwin::Runtime.reload_all!
+      Darwin::Runtime.reload_all!(builder: true)
     end
   end
 end
