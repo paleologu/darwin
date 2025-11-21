@@ -6,10 +6,12 @@ module Darwin
       case block.block_type
       when 'attribute'
         name, type = block.args
-        return unless name.present? && type.present?
+        return unless name.present? && type.present? # This line shouldn't exist in the first place with validations in place.
 
+        if builder  
         Darwin::SchemaManager.ensure_column!(klass.table_name, name, type)
         klass.reset_column_information
+        end
         klass.attribute name.to_sym, type.to_sym
 
       when 'belongs_to'
