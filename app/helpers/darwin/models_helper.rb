@@ -1,16 +1,16 @@
 module Darwin::ModelsHelper
-  def available_block_types(model)
+  def available_method_names(model)
     runtime_constant = model.runtime_constant
-    block_types = %w[attribute]
+    method_names = %w[attribute]
     if runtime_constant.attribute_names.present?
-      block_types << "validates"
+      method_names << "validates"
     end
     if Darwin::Model.count > 1
-      block_types += %w[belongs_to has_many has_one]
+      method_names += %w[belongs_to has_many has_one]
     end
     if runtime_constant.reflect_on_all_associations.any?
-      block_types << "accepts_nested_attributes_for"
+      method_names << "accepts_nested_attributes_for"
     end
-    block_types
+    method_names
   end
 end

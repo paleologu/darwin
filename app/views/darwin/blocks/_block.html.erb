@@ -1,7 +1,7 @@
 <%= turbo_frame_tag dom_id(block) do %>
   <div class="flex items-center justify-between p-4 border rounded-lg">
     <div>
-      <span class="font-bold"><%= block.block_type %></span>
+      <span class="font-bold"><%= block.method_name %></span>
       <span class="ml-2 text-gray-500"><%= Array(block.args).join(", ") %></span>
     </div>
     <div>

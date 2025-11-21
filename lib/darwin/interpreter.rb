@@ -3,7 +3,7 @@
 module Darwin
   class Interpreter
     def self.evaluate_block(klass, block, builder: false)
-      case block.block_type
+      case block.method_name
       when 'attribute'
         name, type = block.args
         return unless name.present? && type.present? # This line shouldn't exist in the first place with validations in place.
@@ -48,9 +48,9 @@ module Darwin
           return unless target_model
 
           unless target_model.blocks.any? do |b|
-            b.block_type == 'belongs_to' && b.args.first == klass.name.demodulize.underscore
+            b.method_name == 'belongs_to' && b.args.first == klass.name.demodulize.underscore
           end
-          target_model.blocks.create!(block_type: 'belongs_to', args: [klass.name.demodulize.underscore])
+          target_model.blocks.create!(method_name: 'belongs_to', args: [klass.name.demodulize.underscore])
         end
 
         target_class = Darwin::Runtime.const_get(target_class_name)
@@ -79,9 +79,9 @@ module Darwin
         return unless target_model
 
         unless target_model.blocks.any? do |b|
-          b.block_type == 'belongs_to' && b.args.first == klass.name.demodulize.underscore
+          b.method_name == 'belongs_to' && b.args.first == klass.name.demodulize.underscore
         end
-        target_model.blocks.create!(block_type: 'belongs_to', args: [klass.name.demodulize.underscore])
+        target_model.blocks.create!(method_name: 'belongs_to', args: [klass.name.demodulize.underscore])
       end
 
       target_class = Darwin::Runtime.const_get(target_class_name)

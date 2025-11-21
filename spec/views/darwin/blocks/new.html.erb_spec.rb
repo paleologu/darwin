@@ -6,7 +6,7 @@ RSpec.describe "darwin/blocks/new", type: :view do
 
   before(:each) do
     assign(:model, book_model)
-    assign(:block, Darwin::Block.new(block_type: 'attribute'))
+    assign(:block, Darwin::Block.new(method_name: 'attribute'))
   end
 
   it "renders new block form" do

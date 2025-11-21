@@ -16,9 +16,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_26_150201) do
 
   create_table "darwin_blocks", force: :cascade do |t|
     t.jsonb "args", default: {}
-    t.string "block_type", null: false
     t.text "body"
     t.datetime "created_at", null: false
+    t.string "method_name", null: false
     t.bigint "model_id", null: false
     t.jsonb "options", default: {}
     t.integer "position", default: 0

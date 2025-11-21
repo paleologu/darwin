@@ -1,12 +1,12 @@
 <div class="nested-fields" data-controller="block-form" data-new-record="<%= f.object.new_record? %>">
   <div class="field">
-    <%= f.label :block_type %>
-    <%= f.select :block_type, %w[attribute validates belongs_to has_many has_one accepts_nested_attributes_for], { include_blank: 'Select a block type' }, { data: { action: "change->block-form#update" } } %>
+    <%= f.label :method_name %>
+    <%= f.select :method_name, %w[attribute validates belongs_to has_many has_one accepts_nested_attributes_for], { include_blank: 'Select a block type' }, { data: { action: "change->block-form#update" } } %>
   </div>
 
   <div data-block-form-target="fields">
-    <% if f.object.block_type.present? %>
-      <%= render partial: "darwin/models/block_forms/#{f.object.block_type}", locals: { f: f } %>
+    <% if f.object.method_name.present? %>
+      <%= render partial: "darwin/models/block_forms/#{f.object.method_name}", locals: { f: f } %>
     <% end %>
   </div>
 

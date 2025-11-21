@@ -29,13 +29,13 @@ RSpec.describe Darwin::Runtime do
 
       # Define has_one association from User to Profile
       @user_model.blocks.find_or_create_by!(
-        block_type: 'has_one',
+        method_name: 'has_one',
         args: ['profile']
       )
 
       # Define an attribute on Profile to test against
       @profile_model.blocks.find_or_create_by!(
-        block_type: 'attribute',
+        method_name: 'attribute',
         args: %w[bio string]
       )
 

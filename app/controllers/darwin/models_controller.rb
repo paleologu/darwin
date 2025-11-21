@@ -43,7 +43,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
   # def block_form
   #   @model = Darwin::Model.find(params[:id])
-  #   @block = Darwin::Block.new(block_type: params[:block_type], args: [])
+  #   @block = Darwin::Block.new(method_name: params[:method_name], args: [])
 
   #   # The form builder needs to be constructed for a nested object.
   #   # The name of the fields should be `darwin_model[blocks_attributes][<timestamp>][attribute_name]`
@@ -55,7 +55,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
   #     {}
   #   )
 
-  #   render partial: "darwin/models/block_forms/#{params[:block_type]}", locals: { f: form_builder }
+  #   render partial: "darwin/models/block_forms/#{params[:method_name]}", locals: { f: form_builder }
   # end
 
   def attribute_type
@@ -75,7 +75,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
     params.require(:darwin_model).permit(
       :name,
       blocks_attributes: [
-        :id, :block_type, :args_name, :args_type, { args: [] }, :position, :_destroy,
+        :id, :method_name, :args_name, :args_type, { args: [] }, :position, :_destroy,
         { options: [:default, :null, :limit, :precision, :scale] }
       ]
     )

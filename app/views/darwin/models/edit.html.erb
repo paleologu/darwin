@@ -25,8 +25,8 @@
 <div class="mt-8">
   <h3 class="font-bold text-lg">New Block</h3>
   <div class="mt-4 flex space-x-2">
-    <% available_block_types(@model).each do |block_type| %>
-      <%= button_to "Add #{block_type.humanize}", darwin.model_blocks_path(@model), params: { darwin_block: { block_type: block_type } }, method: :post, class: "btn-secondary" %>
+    <% available_method_names(@model).each do |method_name| %>
+      <%= button_to "Add #{method_name.humanize}", darwin.model_blocks_path(@model), params: { darwin_block: { method_name: method_name } }, method: :post, class: "btn-secondary" %>
     <% end %>
   </div>
 </div>

@@ -114,7 +114,7 @@ Darwin::Model.pluck(:name)
 
 # Inspect a specific model’s blocks
 m = Darwin::Model.find_by(name: "Article")
-m.blocks.pluck(:block_type, :args, :options)
+m.blocks.pluck(:method_name, :args, :options)
 ```
 
 ## 5. Known Issues & Idempotency

@@ -27,7 +27,7 @@ RSpec.describe Darwin::SchemaManager, type: :model do
 
     expect(ActiveRecord::Base.connection.column_exists?(table_name, :name)).to be true
 
-    attribute_block = model.blocks.where(block_type: 'attribute').find { |b| b.args == %w[name string] }
+    attribute_block = model.blocks.where(method_name: 'attribute').find { |b| b.args == %w[name string] }
     attribute_block.destroy
 
     expect(ActiveRecord::Base.connection.column_exists?(table_name, :name)).to be false
@@ -38,7 +38,7 @@ describe '.sync!' do
   it 'is idempotent and does not raise errors on subsequent calls' do
     # Create a model specifically for this test to avoid state leakage
     model = Darwin::Model.create!(name: 'TestIdempotency')
-    model.blocks.create!(block_type: 'attribute', args: %w[field string])
+    model.blocks.create!(method_name: 'attribute', args: %w[field string])
     table_name = 'darwin_test_idempotencies'
 
     # First sync
@@ -60,7 +60,7 @@ describe '.sync!' do
   end
   it 'handles column type changes idempotently' do
     model = Darwin::Model.create!(name: 'TestTypeChange')
-    model.blocks.create!(block_type: 'attribute', args: %w[field string])
+    model.blocks.create!(method_name: 'attribute', args: %w[field string])
     table_name = 'darwin_test_type_changes'
 
     # First sync: create with string type

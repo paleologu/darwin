@@ -43,7 +43,7 @@ module Darwin
         models_to_load = [self] + associated_models
         models_to_load.each(&:define_runtime_constant)
         blocks_to_interpret = models_to_load.flat_map(&:blocks)
-        blocks_to_interpret.sort_by { |b| Darwin::Runtime.block_priority(b.block_type) }.each do |block|
+        blocks_to_interpret.sort_by { |b| Darwin::Runtime.block_priority(b.method_name) }.each do |block|
           klass = block.darwin_model.runtime_constant
           Darwin::Interpreter.evaluate_block(klass, block)
         end
@@ -62,12 +62,12 @@ module Darwin
 
       visited << model
       direct_associations = model.blocks.each_with_object([]) do |block, acc|
-        next unless %w[has_many has_one belongs_to].include?(block.block_type)
+        next unless %w[has_many has_one belongs_to].include?(block.method_name)
 
         assoc_name = block.args.first
         class_name = if block.options && block.options['class_name']
                        block.options['class_name']
-                     elsif block.block_type == 'has_many'
+                     elsif block.method_name == 'has_many'
                        assoc_name.singularize.camelize
                      else
                        assoc_name.camelize

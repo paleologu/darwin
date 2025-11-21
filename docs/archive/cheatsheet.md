@@ -123,7 +123,7 @@ Inspect a specific model’s blocks:
 
 ```ruby
 m = Darwin::Model.find_by(name: "Article")
-m.blocks.pluck(:block_type, :args, :options)
+m.blocks.pluck(:method_name, :args, :options)
 # => [["attribute", ["title"], {}], ["belongs_to", ["author"], {}], ...]
 ```
 

@@ -16,14 +16,14 @@ module Darwin
     attr_writer :args_name, :args_type
 
     before_validation :assemble_args, if: lambda {
-      %w[attribute has_many belongs_to has_one validates accepts_nested_attributes_for].include?(block_type)
+      %w[attribute has_many belongs_to has_one validates accepts_nested_attributes_for].include?(method_name)
     }
-    before_validation :clean_options, if: -> { block_type == 'validates' }
+    before_validation :clean_options, if: -> { method_name == 'validates' }
     before_create :set_position
 
-    validates :block_type, presence: true
-    validate :validate_attribute_block, if: -> { block_type == 'attribute' }
-    validate :validate_validation_block, if: -> { block_type == 'validates' }
+    validates :method_name, presence: true
+    validate :validate_attribute_block, if: -> { method_name == 'attribute' }
+    validate :validate_validation_block, if: -> { method_name == 'validates' }
 
     def args=(value)
       if value.is_a?(String) && !value.blank?
@@ -52,18 +52,18 @@ module Darwin
     # Custom reader for args_name to pull from `args` array if not set by form
     def args_name
       @args_name || (args&.first if %w[attribute has_many belongs_to has_one validates
-                                       accepts_nested_attributes_for].include?(block_type) && args.is_a?(Array))
+                                       accepts_nested_attributes_for].include?(method_name) && args.is_a?(Array))
     end
 
     # Custom reader for args_type to pull from `args` array if not set by form
     def args_type
-      @args_type || (args&.second if block_type == 'attribute' && args.is_a?(Array))
+      @args_type || (args&.second if method_name == 'attribute' && args.is_a?(Array))
     end
 
     private
 
     def assemble_args
-      case block_type
+      case method_name
       when 'attribute'
         self.args = [@args_name, @args_type] if @args_name.present? || @args_type.present?
       when 'has_many', 'belongs_to', 'has_one', 'validates', 'accepts_nested_attributes_for'

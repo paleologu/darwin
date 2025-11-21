@@ -33,7 +33,7 @@ Key methods:
 Represents a building instruction for a runtime model.
 Each block has:
 
-* `block_type` — e.g. `"attribute"`, `"belongs_to"`, `"has_many"`, `"validates"`, etc.
+* `method_name` — e.g. `"attribute"`, `"belongs_to"`, `"has_many"`, `"validates"`, etc.
 * `args` — the arguments to the macro (e.g. attribute name).
 * `options` — options hash (e.g. `{ dependent: :destroy }`).
 
@@ -45,7 +45,7 @@ Translates each `Darwin::Block` into actual Ruby/Rails calls.
 Example:
 
 ```ruby
-case block_type
+case method_name
 when "attribute"
   klass.attribute *args
 when "has_many"

@@ -63,20 +63,20 @@ Darwin::Model.destroy_all
   comment_model = Darwin::Model.create!(name: "Comment")
 
   # Author attributes and validations
-  author_model.blocks.create!(block_type: "attribute", args: ["name", "string"])
-  author_model.blocks.create!(block_type: "validates", args: ["name"], options: { presence: true })
-  author_model.blocks.create!(block_type: "has_many", args: ["articles"])
+  author_model.blocks.create!(method_name: "attribute", args: ["name", "string"])
+  author_model.blocks.create!(method_name: "validates", args: ["name"], options: { presence: true })
+  author_model.blocks.create!(method_name: "has_many", args: ["articles"])
 
   # Article attributes, validations, and associations
-  article_model.blocks.create!(block_type: "attribute", args: ["title", "string"])
-  article_model.blocks.create!(block_type: "validates", args: ["title"], options: { presence: true })
-  article_model.blocks.create!(block_type: "has_many", args: ["comments"], options: { inverse_of: "article" })
-  article_model.blocks.create!(block_type: "accepts_nested_attributes_for", args: ["comments"])
+  article_model.blocks.create!(method_name: "attribute", args: ["title", "string"])
+  article_model.blocks.create!(method_name: "validates", args: ["title"], options: { presence: true })
+  article_model.blocks.create!(method_name: "has_many", args: ["comments"], options: { inverse_of: "article" })
+  article_model.blocks.create!(method_name: "accepts_nested_attributes_for", args: ["comments"])
 
 
   # Comment attributes, validations, and associations
-  comment_model.blocks.create!(block_type: "attribute", args: ["message", "text"])
-  comment_model.blocks.create!(block_type: "validates", args: ["message"], options: { presence: true })
+  comment_model.blocks.create!(method_name: "attribute", args: ["message", "text"])
+  comment_model.blocks.create!(method_name: "validates", args: ["message"], options: { presence: true })
 
 
 ```

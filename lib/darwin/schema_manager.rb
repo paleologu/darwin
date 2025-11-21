@@ -9,11 +9,11 @@ module Darwin
       ensure_table!(table_name)
 
       expected_columns = {}
-      model.blocks.where(block_type: 'attribute').each do |block|
+      model.blocks.where(method_name: 'attribute').each do |block|
         name, type = block.args
         expected_columns[name] = type.to_sym
       end
-      model.blocks.where(block_type: 'belongs_to').each do |block|
+      model.blocks.where(method_name: 'belongs_to').each do |block|
         assoc_name = block.args.first.to_sym
         options = Darwin::Interpreter.deep_symbolize_keys(block.options)
         foreign_key = options[:foreign_key] || "#{assoc_name}_id"

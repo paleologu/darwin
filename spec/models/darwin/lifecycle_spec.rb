@@ -16,7 +16,7 @@ RSpec.describe 'Darwin Model Lifecycle', type: :model do
     expect(ActiveRecord::Base.connection.table_exists?('darwin_authors')).to be true
 
     # 2. Add an attribute block
-    author_model.blocks.create!(block_type: 'attribute', args: %w[name string])
+    author_model.blocks.create!(method_name: 'attribute', args: %w[name string])
     expect(ActiveRecord::Base.connection.column_exists?('darwin_authors', :name)).to be true
 
     # 3. Create a second model
@@ -24,11 +24,11 @@ RSpec.describe 'Darwin Model Lifecycle', type: :model do
     expect(ActiveRecord::Base.connection.table_exists?('darwin_articles')).to be true
 
     # 4. Add a has_many association
-    author_model.blocks.create!(block_type: 'has_many', args: ['articles'])
+    author_model.blocks.create!(method_name: 'has_many', args: ['articles'])
 
     # Verify inverse association was created
     article_model.reload
-    belongs_to_block = article_model.blocks.find { |b| b.block_type == 'belongs_to' && b.args == ['author'] }
+    belongs_to_block = article_model.blocks.find { |b| b.method_name == 'belongs_to' && b.args == ['author'] }
     expect(belongs_to_block).not_to be_nil
 
     # Verify foreign key was added

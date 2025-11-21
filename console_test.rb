@@ -16,27 +16,27 @@ article_model = Darwin::Model.create!(name: 'Article')
 comment_model = Darwin::Model.create!(name: 'Comment')
 
 # Associations
-author_model.blocks.create!(block_type: 'has_many', args: ['articles'], position: 3)
-article_model.blocks.create!(block_type: 'has_many', args: ['comments'],
+author_model.blocks.create!(method_name: 'has_many', args: ['articles'], position: 3)
+article_model.blocks.create!(method_name: 'has_many', args: ['comments'],
                              options: { inverse_of: 'article', dependent: :destroy }, position: 5)
 
 # Author
-author_model.blocks.create!(block_type: 'attribute', args: %w[name string], position: 0)
-author_model.blocks.create!(block_type: 'attribute', args: %w[desc text], position: 1)
-author_model.blocks.create!(block_type: 'validates', args: ['name'], options: { presence: true }, position: 2)
+author_model.blocks.create!(method_name: 'attribute', args: %w[name string], position: 0)
+author_model.blocks.create!(method_name: 'attribute', args: %w[desc text], position: 1)
+author_model.blocks.create!(method_name: 'validates', args: ['name'], options: { presence: true }, position: 2)
 
 # Article
-article_model.blocks.create!(block_type: 'attribute', args: %w[title string], position: 0)
-article_model.blocks.create!(block_type: 'attribute', args: %w[content text], position: 1)
-article_model.blocks.create!(block_type: 'validates', args: ['title'], options: { presence: true }, position: 2)
-article_model.blocks.create!(block_type: 'validates', args: ['content'], options: { length: { maximum: 500 } },
+article_model.blocks.create!(method_name: 'attribute', args: %w[title string], position: 0)
+article_model.blocks.create!(method_name: 'attribute', args: %w[content text], position: 1)
+article_model.blocks.create!(method_name: 'validates', args: ['title'], options: { presence: true }, position: 2)
+article_model.blocks.create!(method_name: 'validates', args: ['content'], options: { length: { maximum: 500 } },
                              position: 3)
-article_model.blocks.create!(block_type: 'accepts_nested_attributes_for', args: ['comments'], options: {},
+article_model.blocks.create!(method_name: 'accepts_nested_attributes_for', args: ['comments'], options: {},
                              position: 12)
 
 # Comment
-comment_model.blocks.create!(block_type: 'attribute', args: %w[message text], position: 0)
-comment_model.blocks.create!(block_type: 'validates', args: ['message'],
+comment_model.blocks.create!(method_name: 'attribute', args: %w[message text], position: 0)
+comment_model.blocks.create!(method_name: 'validates', args: ['message'],
                              options: { presence: true, length: { maximum: 100 } }, position: 1)
 
 # ------------------------------

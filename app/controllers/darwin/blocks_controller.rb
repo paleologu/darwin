@@ -2,7 +2,7 @@ class Darwin::BlocksController < ApplicationController
   before_action :set_model
 
   def new
-    @block = @model.blocks.new(block_type: params[:block_type])
+    @block = @model.blocks.new(method_name: params[:method_name])
   end
 
   def create
@@ -43,7 +43,7 @@ class Darwin::BlocksController < ApplicationController
 
   def block_params
     params.require(:darwin_block).permit(
-      :block_type, :args_name, :args_type, :validation_type, { args: [] }, :position,
+      :method_name, :args_name, :args_type, :validation_type, { args: [] }, :position,
       options: [
         :presence, :numericality, :uniqueness,
         { length: [:minimum, :maximum] },

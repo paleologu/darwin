@@ -1,6 +1,6 @@
 <%= turbo_frame_tag "new_block" do %>
   <div data-controller="block-form">
-    <%= select_tag "block_type", options_for_select(available_block_types(model)), include_blank: "Select a block type", data: { action: "change->block-form#update" } %>
-    <%= link_to "New block", darwin.new_model_block(model, block_type: "attribute"), class: "btn-primary", data: { "block-form-target": "link" } %>
+    <%= select_tag "method_name", options_for_select(available_method_names(model)), include_blank: "Select a block type", data: { action: "change->block-form#update" } %>
+    <%= link_to "New block", darwin.new_model_block(model, method_name: "attribute"), class: "btn-primary", data: { "block-form-target": "link" } %>
   </div>
 <% end %>

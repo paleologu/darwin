@@ -2,9 +2,9 @@
 
 This document outlines the plan to refactor the `Darwin::Block` model to use a Single Table Inheritance (STI) architecture.
 
-### Analysis of `block_type` values
+### Analysis of `method_name` values
 
-Based on the search results, I've identified the following `block_type` values:
+Based on the search results, I've identified the following `method_name` values:
 
 -   `attribute`
 -   `validates`
@@ -37,7 +37,7 @@ This hierarchy provides a clear and organized structure for the different block 
 To support the STI architecture, the `darwin_blocks` table will be modified as follows:
 
 -   **Add a `type` column**: A `type` column (string) will be added to store the class name of the STI model (e.g., `"Darwin::Blocks::Attribute"`). This is the standard Rails convention for STI.
--   **Remove the `block_type` column**: The `block_type` column will be removed, as the `type` column will now serve this purpose.
+-   **Remove the `method_name` column**: The `method_name` column will be removed, as the `type` column will now serve this purpose.
 -   **Remove the `args` column**: The ambiguous `args` column will be removed.
 -   **Add specific, strongly-typed columns**: The `args` column will be replaced with specific columns for each subclass. This will provide a more robust and scalable solution.
 
@@ -63,8 +63,8 @@ The refactoring process will involve the following steps:
 1.  **Create a new migration**:
     -   Add the `type` column to the `darwin_blocks` table.
     -   Add the new columns (`name`, `attribute_type`).
-    -   Write a data migration to populate the new columns based on the existing `block_type` and `args` data.
-    -   Remove the `block_type` and `args` columns.
+    -   Write a data migration to populate the new columns based on the existing `method_name` and `args` data.
+    -   Remove the `method_name` and `args` columns.
 2.  **Create the new STI models**:
     -   Create the new STI model files (e.g., `app/models/darwin/blocks/attribute.rb`).
     -   Move the relevant logic from `Darwin::Block` to the new subclasses.

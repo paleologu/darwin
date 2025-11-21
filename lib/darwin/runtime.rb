@@ -16,7 +16,7 @@ module Darwin
 
       # Pass 2: Evaluate attributes for all models by priority
       blocks = models.flat_map(&:blocks)
-      blocks.sort_by { |b| block_priority(b.block_type) }.each do |block|
+      blocks.sort_by { |b| block_priority(b.method_name) }.each do |block|
         klass = block.darwin_model.runtime_constant
         Darwin::Interpreter.evaluate_block(klass, block, builder:)
       end
@@ -29,7 +29,7 @@ module Darwin
       end
     end
 
-    def self.block_priority(block_type)
+    def self.block_priority(method_name)
       @priority_map ||= {
         'attribute' => 0,
         'association' => 1,
@@ -39,13 +39,13 @@ module Darwin
         'callback' => 5,
         'scope' => 6
       }
-      case block_type
+      case method_name
       when 'has_many', 'has_one', 'belongs_to'
         @priority_map['association']
       when 'has_one_attached', 'has_many_attached'
         @priority_map['attachment']
       else
-        @priority_map[block_type] || 99
+        @priority_map[method_name] || 99
       end
     end
   end

@@ -57,7 +57,7 @@ RSpec.describe Darwin::Model, type: :model do
 
     it 'destroys dependent blocks when destroyed' do
       model = Darwin::Model.create!(name: 'TestModelForDeletion')
-      model.blocks.create!(block_type: 'attribute', args_name: 'attr1', args_type: 'string')
+      model.blocks.create!(method_name: 'attribute', args_name: 'attr1', args_type: 'string')
 
       expect { model.destroy }.to change { Darwin::Block.count }.by(-1)
     end

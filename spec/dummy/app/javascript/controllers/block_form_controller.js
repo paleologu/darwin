@@ -12,7 +12,7 @@ export default class extends Controller {
 
   update(event) {
     const blockType = event.target.value
-    const newPath = this.linkTarget.href.replace(/block_type=\w+/, `block_type=${blockType}`)
+    const newPath = this.linkTarget.href.replace(/method_name=\w+/, `method_name=${blockType}`)
     this.linkTarget.href = newPath
   }
 
