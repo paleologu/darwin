@@ -33,6 +33,8 @@ And then execute:
 $ bundle
 ```
 
+Darwin currently targets SQLite for the engine and dummy app. PostgreSQL adapters have been removed; migrations use `json` columns (not `jsonb`).
+
 Install the migrations and run them:
 
 ```bash
@@ -50,6 +52,8 @@ This guide will walk you through defining and using a set of dynamic models: `Au
 ### Step 1: Define the Models in the Database
 
 The first step is to create records in the `darwin_models` and `darwin_blocks` tables. These records define the structure and behavior of your runtime models.
+
+Association block arguments are normalized before persistence (`has_many :comment` is stored as `"comments"`, `belongs_to :Phone` as `"phone"`), so user-entered casing/pluralization is fixed at save time. The interpreter assumes stored values are already normalized.
 
 You can do this programmatically, for example in a Rails console (`rails c`):
 
@@ -128,6 +132,14 @@ The Darwin gem uses a self-contained, in-memory RSpec test suite. To run the tes
 
 ```bash
 bundle exec rspec
+```
+
+To prep the dummy app databases locally:
+
+```bash
+cd spec/dummy
+BUNDLE_WITHOUT=development bundle exec rails db:prepare
+BUNDLE_WITHOUT=development bundle exec rails db:prepare RAILS_ENV=test
 ```
 
 For detailed information on the testing setup and guidelines for writing new tests, please read the **[Testing Guidelines](docs/TESTING_GUIDELINES.md)**.
