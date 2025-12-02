@@ -5,7 +5,7 @@ module Darwin
     self.table_name = 'darwin_blocks'
 
     belongs_to :darwin_model, class_name: 'Darwin::Model', foreign_key: :model_id, touch: true
-   
+
 
     # https://www.visuality.pl/posts/active-record---store-vs-store-accessor
     attribute :args, :json, default: []
@@ -52,7 +52,7 @@ module Darwin
     # Custom reader for args_name to pull from `args` array if not set by form
     def args_name
       @args_name || (args&.first if %w[attribute has_many belongs_to has_one validates
-                                       accepts_nested_attributes_for].include?(method_name) && args.is_a?(Array))
+       accepts_nested_attributes_for].include?(method_name) && args.is_a?(Array))
     end
 
     # Custom reader for args_type to pull from `args` array if not set by form
@@ -94,4 +94,5 @@ module Darwin
       self.position = (darwin_model.blocks.maximum(:position) || 0) + 1
     end
   end
+
 end

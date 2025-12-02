@@ -4,10 +4,12 @@ module Darwin
   class Model < ::ApplicationRecord
     self.table_name = 'darwin_models'
 
+    serialize :columns, coder: Darwin::Column
     has_many :blocks, class_name: 'Darwin::Block', foreign_key: 'model_id', dependent: :destroy,
                       inverse_of: :darwin_model
 
     accepts_nested_attributes_for :blocks, allow_destroy: true
+
     validates :name, presence: true, uniqueness: true,
                      format: { with: /\A[a-zA-Z_][a-zA-Z0-9_]*\z/, message: 'must be a valid database identifier' }
 
@@ -38,7 +40,7 @@ module Darwin
       name.downcase_first
     end
 
-    def runtime_class 
+    def runtime_class
       @runtime_class ||= begin
         models_to_load = [self] + associated_models
         models_to_load.each(&:define_runtime_constant)
