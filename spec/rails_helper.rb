@@ -26,8 +26,11 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = false
 
   config.before(:suite) do
-    # Manually run migrations to ensure the test database is up-to-date
-    migration_paths = ActiveRecord::Migrator.migrations_paths
+    # Manually run migrations to ensure the test database is up-to-date.
+    # Include engine migrations so the darwin_models table has the columns field.
+    migration_paths = ActiveRecord::Migrator.migrations_paths.map { |p| File.expand_path(p, Rails.root) }
+    migration_paths << File.expand_path('../db/migrate', __dir__)
+    migration_paths.uniq!
     ActiveRecord::MigrationContext.new(migration_paths).migrate
     DatabaseCleaner.clean_with(:truncation)
   end

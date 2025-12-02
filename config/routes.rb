@@ -1,6 +1,6 @@
 Darwin::Engine.routes.draw do
   root to: 'models#index'
-  constraints format: :html do
+  constraints format: /html|turbo_stream/ do
     resources :models, param: :name, except: [:show], path: '/' do
       resources :blocks, only: [:new, :create, :destroy]
       get :attribute_type, on: :member

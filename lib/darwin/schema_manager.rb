@@ -14,7 +14,7 @@ module Darwin
         expected_columns[name] = type.to_sym
       end
       model.blocks.where(method_name: 'belongs_to').each do |block|
-        assoc_name = block.args.first.to_sym
+        assoc_name = block.args.first.to_s.underscore.to_sym
         options = Darwin::Interpreter.deep_symbolize_keys(block.options)
         foreign_key = options[:foreign_key] || "#{assoc_name}_id"
         expected_columns[foreign_key.to_s] = :integer
@@ -27,7 +27,7 @@ module Darwin
         if existing_columns[col_name]
           # Column exists, check type
           if existing_columns[col_name].type != col_type
-            connection.change_column(table_name, col_name, col_type, using: "CAST(#{col_name} AS #{col_type})")
+            connection.change_column(table_name, col_name, col_type)
           end
         else
           # Column doesn't exist, add it

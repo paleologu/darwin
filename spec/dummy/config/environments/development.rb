@@ -73,6 +73,4 @@ Rails.application.configure do
 
   # Ensures changes to the engine's files reflect without restarting the server dummy server.
   config.reload_engines = true
-    config.tidewave.allow_remote_access = true
-
 end

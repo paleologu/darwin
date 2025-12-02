@@ -5,4 +5,4 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in darwin.gemspec
 gemspec
 gem 'bootsnap', require: false
-gem 'pg'
+gem 'sqlite3', '~> 2.1'

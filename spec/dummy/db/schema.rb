@@ -11,16 +11,13 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.1].define(version: 2025_09_26_150200) do
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_catalog.plpgsql"
-
   create_table "darwin_blocks", force: :cascade do |t|
-    t.jsonb "args", default: {}
+    t.json "args", default: {}
     t.text "body"
     t.datetime "created_at", null: false
     t.string "method_name", null: false
     t.bigint "model_id", null: false
-    t.jsonb "options", default: {}
+    t.json "options", default: {}
     t.integer "position", default: 0
     t.datetime "updated_at", null: false
     t.index ["model_id"], name: "index_darwin_blocks_on_model_id"

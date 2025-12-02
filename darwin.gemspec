@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activerecord'
-  spec.add_dependency 'pg'
+  spec.add_dependency 'sqlite3', '~> 2.1'
   spec.add_dependency 'rails', '>= 7.0', '< 9.0'
   spec.add_dependency 'turbo-rails'
   spec.add_dependency 'importmap-rails'

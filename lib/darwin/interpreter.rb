@@ -2,6 +2,12 @@
 
 module Darwin
   class Interpreter
+    def self.normalize_association_name(name, macro)
+      normalized = name.to_s.underscore
+      normalized = macro == :has_many ? normalized.pluralize : normalized.singularize
+      normalized.to_sym
+    end
+
     def self.evaluate_block(klass, block, builder: false)
       case block.method_name
       when 'attribute'
@@ -16,13 +22,13 @@ module Darwin
 
       when 'belongs_to'
         return unless block.args.first.present?
-        assoc_name = block.args.first.to_sym
+        assoc_name = normalize_association_name(block.args.first, :belongs_to)
         return if klass.reflect_on_association(assoc_name)
 
         if builder
           options = deep_symbolize_keys(block.options)
           options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String)
-          options[:class_name] ||= assoc_name.to_s.camelize
+          options[:class_name] ||= block.args.first.to_s.camelize.singularize
           options[:foreign_key] ||= "#{assoc_name}_id"
           options[:optional] = false unless options.key?(:optional)
 
@@ -34,12 +40,12 @@ module Darwin
 
       when 'has_one'
         return unless block.args.first.present?
-        assoc_name = block.args.first.to_sym
+        assoc_name = normalize_association_name(block.args.first, :has_one)
         return if klass.reflect_on_association(assoc_name)
 
         if builder
           options = deep_symbolize_keys(block.options)
-          options[:class_name] ||= assoc_name.to_s.camelize
+          options[:class_name] ||= block.args.first.to_s.camelize.singularize
           options[:foreign_key] ||= "#{klass.name.demodulize.underscore}_id"
           options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String)
 
@@ -62,13 +68,14 @@ module Darwin
       klass.has_one assoc_name, **options
     when 'has_many'
       return unless block.args.first.present?
-      assoc_name = block.args.first.to_sym
+      assoc_name = normalize_association_name(block.args.first, :has_many)
       return if klass.reflect_on_association(assoc_name)
 
       if builder
         options = deep_symbolize_keys(block.options)
-        options[:class_name] ||= assoc_name.to_s.singularize.camelize
+        options[:class_name] ||= block.args.first.to_s.camelize.singularize
         options[:foreign_key] ||= "#{klass.name.demodulize.underscore}_id"
+        options[:inverse_of] ||= klass.name.demodulize.underscore.to_sym
 
         options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String) # The dependent option must be a symbol, but gets stored as a string.
 
@@ -105,7 +112,16 @@ module Darwin
         klass.validates(*validation_args.map(&:to_sym), **validation_options)
       when 'accepts_nested_attributes_for'
         return unless block.args.is_a?(Array)
-        klass.accepts_nested_attributes_for(*block.args.compact.map(&:to_sym))
+        nested_associations = block.args.compact.filter_map do |name|
+          assoc = normalize_association_name(name, :has_many)
+          if klass.reflect_on_association(assoc)
+            assoc
+          else
+            fallback = normalize_association_name(name, :belongs_to)
+            klass.reflect_on_association(fallback) ? fallback : name.to_sym
+          end
+        end
+        klass.accepts_nested_attributes_for(*nested_associations)
       end
     end
 
