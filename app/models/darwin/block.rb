@@ -18,6 +18,9 @@ module Darwin
     before_validation :assemble_args, if: lambda {
       %w[attribute has_many belongs_to has_one validates accepts_nested_attributes_for].include?(method_name)
     }
+    before_validation :normalize_association_args, if: lambda {
+      %w[has_many belongs_to has_one accepts_nested_attributes_for].include?(method_name)
+    }
     before_validation :clean_options, if: -> { method_name == 'validates' }
     before_create :set_position
 
@@ -69,6 +72,17 @@ module Darwin
       when 'has_many', 'belongs_to', 'has_one', 'validates', 'accepts_nested_attributes_for'
         self.args = [@args_name] if @args_name.present?
       end
+    end
+
+    def normalize_association_args
+      return unless args.present?
+
+      raw_name = args.is_a?(Array) ? args.first : args
+      normalized = raw_name.to_s.underscore
+      normalized = normalized.pluralize if method_name == 'has_many' || method_name == 'accepts_nested_attributes_for'
+      normalized = normalized.singularize if method_name == 'belongs_to' || method_name == 'has_one'
+
+      self.args = [normalized]
     end
 
     def validate_attribute_block

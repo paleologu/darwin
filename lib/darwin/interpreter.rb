@@ -2,12 +2,6 @@
 
 module Darwin
   class Interpreter
-    def self.normalize_association_name(name, macro)
-      normalized = name.to_s.underscore
-      normalized = macro == :has_many ? normalized.pluralize : normalized.singularize
-      normalized.to_sym
-    end
-
     def self.evaluate_block(klass, block, builder: false)
       case block.method_name
       when 'attribute'
@@ -22,7 +16,7 @@ module Darwin
 
       when 'belongs_to'
         return unless block.args.first.present?
-        assoc_name = normalize_association_name(block.args.first, :belongs_to)
+        assoc_name = block.args.first.to_sym
         return if klass.reflect_on_association(assoc_name)
 
         if builder
@@ -40,7 +34,7 @@ module Darwin
 
       when 'has_one'
         return unless block.args.first.present?
-        assoc_name = normalize_association_name(block.args.first, :has_one)
+        assoc_name = block.args.first.to_sym
         return if klass.reflect_on_association(assoc_name)
 
         if builder
@@ -68,7 +62,7 @@ module Darwin
       klass.has_one assoc_name, **options
     when 'has_many'
       return unless block.args.first.present?
-      assoc_name = normalize_association_name(block.args.first, :has_many)
+      assoc_name = block.args.first.to_sym
       return if klass.reflect_on_association(assoc_name)
 
       if builder
@@ -112,16 +106,7 @@ module Darwin
         klass.validates(*validation_args.map(&:to_sym), **validation_options)
       when 'accepts_nested_attributes_for'
         return unless block.args.is_a?(Array)
-        nested_associations = block.args.compact.filter_map do |name|
-          assoc = normalize_association_name(name, :has_many)
-          if klass.reflect_on_association(assoc)
-            assoc
-          else
-            fallback = normalize_association_name(name, :belongs_to)
-            klass.reflect_on_association(fallback) ? fallback : name.to_sym
-          end
-        end
-        klass.accepts_nested_attributes_for(*nested_associations)
+        klass.accepts_nested_attributes_for(*block.args.compact.map(&:to_sym))
       end
     end
 
