@@ -57,7 +57,7 @@ class Darwin::RecordsController < ApplicationController
   private
 
   def set_model
-    @model = Darwin::Model.find_by(name: params[:model_name].singularize.classify)
+    @model = Darwin::Model.find_by!(name: params[:model_name].singularize.classify)
   end
 
   def record_params
