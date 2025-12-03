@@ -161,11 +161,10 @@ Darwin ships editor and client importmaps managed inside the engine. Load them f
 
 ```erb
 <%= stylesheet_link_tag "darwin/tailwind", "data-turbo-track": "reload" %>
-<%= darwin_client_javascript_tags %>
 <%= darwin_editor_javascript_tags %>
 ```
 
-Stimulus controllers live in `app/assets/javascripts/darwin/{client,editor}` and are pinned via `config/client_importmap.rb` and `config/editor_importmap.rb`. Components follow the ViewComponent pattern under `app/components/darwin/**`, so engine-provided UI can ship co-located Stimulus controllers and Tailwind styles without depending on the host app’s asset pipeline.
+Stimulus controllers live in `app/assets/javascripts/darwin/editor` and are pinned via `config/editor_importmap.rb`. Components follow the ViewComponent pattern under `app/components/darwin/**`, so engine-provided UI can ship co-located Stimulus controllers and Tailwind styles without depending on the host app’s asset pipeline.
 
 ## 7. Debugging Cheat Sheet
 
