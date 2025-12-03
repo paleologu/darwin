@@ -4,7 +4,29 @@
 ENV['RAILS_ENV'] ||= 'test'
 
 # Load the Rails environment
-# Load the dummy Rails application
+require 'rails'
+
+# Ensure assets config exists for the dummy app (Rails 8 drops sprockets by default)
+if defined?(Rails::Application::Configuration) && !Rails::Application::Configuration.method_defined?(:assets)
+  class Rails::Application::Configuration
+    class SpecAssets < ActiveSupport::OrderedOptions
+      def initialize
+        super
+        self.paths ||= []
+        self.precompile ||= []
+      end
+    end
+
+    def assets
+      @assets ||= SpecAssets.new
+    end
+
+    def assets=(value)
+      @assets = value
+    end
+  end
+end
+
 require_relative 'dummy/config/environment'
 
 # Load RSpec and other test dependencies
