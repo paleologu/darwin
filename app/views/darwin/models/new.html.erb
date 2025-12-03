@@ -1,41 +1,60 @@
-<h1>New Darwin Model</h1>
-
-<%= form_with(model: @model, scope: :darwin_model, url: darwin.models_path) do |form| %>
-  <% if @model.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@model.errors.count, "error") %> prohibited this model from being saved:</h2>
-
-      <ul>
-        <% @model.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<div class="darwin-card">
+  <div class="darwin-card__header">
+    <div>
+      <div class="darwin-card__eyebrow">Builder</div>
+      <div class="darwin-card__title">New Model</div>
     </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= link_to "Back", darwin.root_path, class: "darwin-btn darwin-btn--ghost" %>
   </div>
 
-  <h2>Blocks</h2>
+  <div class="darwin-card__body">
+    <%= form_with(model: @model, scope: :darwin_model, url: darwin.models_path, html: { class: "darwin-form" }) do |form| %>
+      <% if @model.errors.any? %>
+        <div class="darwin-banner">
+          <div class="darwin-banner__title"><%= pluralize(@model.errors.count, "error") %> prevented saving:</div>
+          <ul class="list-disc list-inside text-sm text-red-700">
+            <% @model.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-  <div id="blocks">
-    <%= form.fields_for :blocks, @blocks do |block_form| %>
-      <%= render 'block_fields', f: block_form %>
+      <div class="darwin-form__group">
+        <%= form.label :name %>
+        <%= form.text_field :name %>
+      </div>
+
+      <div class="darwin-card darwin-border">
+        <div class="darwin-card__header">
+          <div>
+            <div class="darwin-card__eyebrow">Blocks</div>
+            <div class="darwin-card__title">Compose model behavior</div>
+          </div>
+          <%= link_to "Add Block", "#", data: { action: "nested-form#add" }, class: "darwin-btn darwin-btn--ghost" %>
+        </div>
+
+        <div class="darwin-card__body" data-controller="nested-form">
+          <div id="blocks" class="space-y-4">
+            <%= form.fields_for :blocks, @blocks do |block_form| %>
+              <%= render 'block_fields', f: block_form %>
+            <% end %>
+          </div>
+
+          <template data-nested-form-target="template">
+            <%= form.fields_for :blocks, Darwin::Block.new, child_index: "NEW_RECORD" do |block_form| %>
+              <%= render "block_fields", f: block_form %>
+            <% end %>
+          </template>
+
+          <div data-nested-form-target="target" class="space-y-4"></div>
+        </div>
+      </div>
+
+      <div class="darwin-actions">
+        <%= link_to "Cancel", darwin.root_path, class: "darwin-btn darwin-btn--ghost" %>
+        <%= form.submit "Create Model", class: "darwin-btn darwin-btn--primary" %>
+      </div>
     <% end %>
   </div>
-
-  <template data-nested-form-target="template">
-    <%= form.fields_for :blocks, Darwin::Block.new, child_index: "NEW_RECORD" do |block_form| %>
-      <%= render "block_fields", f: block_form %>
-    <% end %>
-  </template>
-
-  <div data-nested-form-target="target"></div>
-
-  <div class="actions">
-    <%= link_to "Add Block", "#", data: { action: "nested-form#add" } %>
-    <%= form.submit %>
-  </div>
-<% end %>
+</div>

@@ -1,25 +1,38 @@
-<h1>Darwin Models</h1>
+<div class="darwin-card">
+  <div class="darwin-card__header">
+    <div>
+      <div class="darwin-card__eyebrow">Overview</div>
+      <div class="darwin-card__title">Runtime Models</div>
+    </div>
+    <%= link_to "New Model", darwin.new_model_path, class: "darwin-btn darwin-btn--primary" %>
+  </div>
+  <div class="darwin-card__body space-y-4">
+    <%= render_darwin_banner(title: "Runtime builder", body: "Stimulus/Turbo assets are now served from the Darwin engine.") %>
 
-<%= render_darwin_banner(title: "Runtime builder", body: "Stimulus/Turbo assets are now served from the Darwin engine.") %>
+    <table class="darwin-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Table</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
 
-<%= link_to 'New Darwin Model', darwin.new_model_path %>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @models.each do |model| %>
-      <tr>
-        <td><%= model.name %></td>
-        <td><%= link_to 'Show', darwin.model_path(model) %></td>
-        <td><%= link_to 'Edit', darwin.edit_model_path(model) %></td>
-        <td><%= link_to 'Destroy', darwin.model_path(model), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+      <tbody>
+        <% @models.each do |model| %>
+          <tr>
+            <td><%= model.name %></td>
+            <td><span class="darwin-badge"><%= model.runtime_constant.table_name %></span></td>
+            <td>
+              <div class="darwin-actions justify-end">
+                <%= link_to 'Show', darwin.model_path(model), class: "darwin-btn darwin-btn--ghost" %>
+                <%= link_to 'Edit', darwin.edit_model_path(model), class: "darwin-btn darwin-btn--ghost" %>
+                <%= link_to 'Destroy', darwin.model_path(model), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "darwin-btn darwin-btn--danger" %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
