@@ -36,3 +36,6 @@ node_modules/
 /spec/dummy/storage/*
 !/spec/dummy/storage/.keep
 /console_test.log
+
+/db/*.sqlite3
+/db/*.sqlite3-*
