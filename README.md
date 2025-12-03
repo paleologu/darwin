@@ -144,7 +144,18 @@ BUNDLE_WITHOUT=development bundle exec rails db:prepare RAILS_ENV=test
 
 For detailed information on the testing setup and guidelines for writing new tests, please read the **[Testing Guidelines](docs/TESTING_GUIDELINES.md)**.
 
-## 5. Debugging Cheat Sheet
+## 5. Running the Dummy App in Development
+
+Use the Procfile runner to boot both the Rails server and Solid Queue worker so background jobs such as `Darwin::DemoJob` can process.
+
+```bash
+cd spec/dummy
+PORT=3000 bundle exec foreman start -f Procfile.dev
+```
+
+This command launches `./bin/rails server` and `./bin/jobs start` together. Do not rely on `bin/dev` or `rails server` alone because they won’t start the Solid Queue worker and queued jobs will sit idle.
+
+## 6. Debugging Cheat Sheet
 
 Here are some useful commands for debugging the Darwin runtime in a Rails console.
 

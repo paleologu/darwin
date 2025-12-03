@@ -29,6 +29,7 @@ This project is a Rails engine that builds runtime ActiveRecord models from DB-s
 - Using bare `rails` in repo root may invoke the generator; use `bundle exec rails ...` (via shim) instead.
 - Tidewave was removed; keep `BUNDLE_WITHOUT=development` for test env prep to avoid that gem.
 - If DB errors mention missing `columns` field, ensure engine migration ran and SQLite DBs aren’t stale (delete `spec/dummy/db/*.sqlite3` and re-prepare).
+- Development stack requires both the web server and Solid Queue worker. Run `cd spec/dummy && PORT=3000 bundle exec foreman start -f Procfile.dev` to start `bin/rails server` and `bin/jobs start` together. Do not run `bin/dev` or `rails server` by themselves because the Solid Queue process will be missing and jobs won’t run.
 
 ## Quick Debug Commands
 - Reload runtime after editing blocks: `Darwin::Runtime.reload_all!(builder: true)`.

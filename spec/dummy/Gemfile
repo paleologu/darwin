@@ -48,6 +48,8 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  gem "foreman"
 end
 
 group :development do
@@ -63,5 +65,3 @@ end
   gem "database_cleaner-active_record"
 
 gemspec path: '../..'
-# PD already in the gemspec.
-#gem 'pg'

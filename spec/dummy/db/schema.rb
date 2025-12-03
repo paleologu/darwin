@@ -23,10 +23,25 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_26_150200) do
     t.index ["model_id"], name: "index_darwin_blocks_on_model_id"
   end
 
+  create_table "darwin_comments", force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.integer "phone_id"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "darwin_models", force: :cascade do |t|
     t.json "columns", default: []
     t.datetime "created_at", null: false
     t.string "name", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "darwin_phones", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "desc"
+    t.datetime "dob"
+    t.string "name"
     t.datetime "updated_at", null: false
   end
 

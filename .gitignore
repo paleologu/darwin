@@ -1,0 +1,7 @@
+# Dummy app runtime artifacts
+spec/dummy/db/*.sqlite3
+spec/dummy/db/*.sqlite3-*
+spec/dummy/tmp/
+
+# macOS
+.DS_Store
