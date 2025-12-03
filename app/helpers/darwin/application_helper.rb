@@ -22,9 +22,5 @@ module Darwin
         "\n"
       )
     end
-
-    def render_darwin_banner(title:, body: nil)
-      render Darwin::Ui::BannerComponent.new(title:, body:)
-    end
   end
 end
