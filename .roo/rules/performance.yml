@@ -1,7 +1,0 @@
-rules:
-  - name: Schema Sync Efficiency
-    description: "SchemaManager operations must be idempotent and execute minimal SQL per change."
-  - name: Reload Cost Guard
-    description: "Darwin::Runtime.reload_all! must complete under 200ms with <5 models."
-  - name: Spec Runtime Budget
-    description: "Individual spec files must execute in <1s. Use shared examples to reduce duplication."

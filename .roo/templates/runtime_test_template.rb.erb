@@ -1,8 +1,0 @@
-RSpec.describe Darwin::Runtime do
-  it "reloads all models without redefining associations" do
-    Darwin::Runtime.reload_all!
-    model = Darwin::Model.find_by(name: "Article")
-    klass = model.runtime_constant
-    expect(klass.reflect_on_association(:comments)).to be_present
-  end
-end
