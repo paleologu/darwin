@@ -5,3 +5,6 @@ spec/dummy/tmp/
 
 # macOS
 .DS_Store
+
+# Queue persistence
+spec/dummy/db/queue_development.sqlite3

@@ -155,7 +155,19 @@ PORT=3000 bundle exec foreman start -f Procfile.dev
 
 This command launches `./bin/rails server` and `./bin/jobs start` together. Do not rely on `bin/dev` or `rails server` alone because they won’t start the Solid Queue worker and queued jobs will sit idle.
 
-## 6. Debugging Cheat Sheet
+## 6. Frontend stack (Stimulus, Turbo, importmap, ViewComponent, Tailwind)
+
+Darwin ships editor and client importmaps managed inside the engine. Load them from your host layout:
+
+```erb
+<%= stylesheet_link_tag "darwin/tailwind", "data-turbo-track": "reload" %>
+<%= darwin_client_javascript_tags %>
+<%= darwin_editor_javascript_tags %>
+```
+
+Stimulus controllers live in `app/assets/javascripts/darwin/{client,editor}` and are pinned via `config/client_importmap.rb` and `config/editor_importmap.rb`. Components follow the ViewComponent pattern under `app/components/darwin/**`, so engine-provided UI can ship co-located Stimulus controllers and Tailwind styles without depending on the host app’s asset pipeline.
+
+## 7. Debugging Cheat Sheet
 
 Here are some useful commands for debugging the Darwin runtime in a Rails console.
 

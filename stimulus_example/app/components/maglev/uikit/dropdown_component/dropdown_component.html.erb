@@ -1,0 +1,18 @@
+<%= tag.div(
+  class: 'relative',
+  data: {
+    controller: 'uikit-dropdown',
+    'uikit-dropdown-placement-value': placement
+  }
+) do %>
+  <%= trigger %>
+
+  <div 
+    class="hidden z-50 opacity-0 scale-95 shadow-lg rounded p-1 text-sm bg-white w-max fixed" 
+    data-aria-orientation="vertical"
+    data-aria-labelledby="dropdown-button"
+    data-uikit-dropdown-target="content"
+  >
+    <%= content %>
+  </div>
+<% end %>

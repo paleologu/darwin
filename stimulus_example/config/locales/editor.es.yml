@@ -1,0 +1,268 @@
+es:
+  maglev:
+    editor:
+      header_nav:
+        pages: "Páginas:"
+        page_settings: "Configuración de página"
+        preview_site: "Vista previa"
+        preview_toggler:
+          button: "Vista previa del sitio"
+          draft_link: "Versión borrador"
+          live_link: "Versión en vivo"
+        publish_button:
+          default: "Publicar página"
+          in_progress: "Publicando..."
+          success: "¡Publicado!"
+          fail: "¡Falló!"
+        save_button:
+          default: "Guardar"
+          in_progress: "Guardando..."
+          success: "¡Guardado!"
+          fail: "¡Falló!"
+      sidebar_nav:
+        list_pages_tooltip: "Gestionar las páginas de tu sitio"
+        manage_page_sections_tooltip: "Reordenar / eliminar las secciones de la página"
+        edit_style_tooltip: "Cambiar el estilo de tu sitio"
+        open_image_library_tooltip: "Abrir la galería de imágenes"
+        leave_editor_tooltip: "Volver a la aplicación principal"
+      page_preview:
+        loading: "Cargando..."
+        empty:
+          title: "Tu página está vacía"
+          message: "Por favor agrega la primera sección haciendo clic en el botón %{button} en la barra lateral izquierda."
+      pages:
+        list:
+          title: "Lista de páginas"
+          sub_title: "Gestionar las páginas de tu sitio"
+          new_button: "Nueva página"
+          search_placeholder: "Escribe el título o la ruta aquí..."
+          empty: "No se encontraron páginas"
+        actions:
+          edit: "Editar configuración"
+          preview: "Vista previa de la página"
+          draft_preview: "Versión borrador"
+          live_preview: "Versión en vivo"
+          clone: "Clonar página"
+          hide: "Ocultar página"
+          show: "Mostrar página"
+          delete: "Eliminar página"
+          confirm_delete: "¿Estás seguro de que quieres eliminar esta página?"
+          copy_url_to_clipboard: "Copiar URL"
+          copy_url_to_clipboard_success: "¡Copiado al portapapeles!"
+        new:
+          title: "Crear una nueva página"
+          submit_button:
+            default: "Crear página"
+            in_progress: "Creando..."
+            success: "¡Creada!"
+            fail: "¡Falló!"
+          cancel_button: "Cancelar"
+        edit:
+          title: "Editando una página"
+          current_page:
+            title: "Editando la página actual"
+          submit_button:
+            default: "Actualizar página"
+            in_progress: "Actualizando..."            
+          cancel_button: "Cancelar"
+        form:
+          tabs:
+            main: "Principal"
+            seo: "SEO"          
+      sections:
+        breadcrumb: "Secciones"
+        index:
+          title: "Organizar secciones"
+          sub_title: "Reordenar / eliminar las secciones de la página"
+          empty: "No hay secciones."
+          add_button: "Agregar una nueva sección"
+          confirm_delete: "¿Estás seguro de que quieres eliminarlo?"          
+        new:
+          title: "Agregar una sección"
+          empty_category: "Sin secciones"
+        edit:
+          tabs:
+            main: "Contenido"
+            advanced: "Avanzado"
+            blocks: "Bloques"            
+      section_blocks:
+        breadcrumb: "Bloques"
+        index:
+          add_button: "Agregar nuevo elemento"
+          confirm_delete: "¿Estás seguro de que quieres eliminarlo?"
+          empty: "No hay elementos."
+        edit:
+          tabs:
+            main: "Contenido"
+            advanced: "Avanzado"       
+      settings:
+        collection_item:
+          placeholder: "Seleccionar un elemento de colección"
+      style:
+        edit:
+          title: "Estilizar tu sitio"
+          submit_button:
+            default: "Actualizar estilo"
+            in_progress: "Actualizando..."
+            success: "¡Actualizado!"
+            fail: "¡Falló!"      
+      image_library:
+        title: "Lista de imágenes"
+        picker_title: "Seleccionar una imagen"
+        search_placeholder: "Buscar por nombre de archivo"
+        pagination:
+          label: "%{start} - %{end} de %{totalItems} imágenes"
+          no_items: "Sin imágenes"
+        confirm_destroy: "¿Estás seguro?"
+        uploader:
+          wrong_files: "Asegúrate de que el tamaño de cada imagen no sea mayor que %{limit}."
+          upload_button:
+            default: "Subir imágenes"
+            in_progress: "Subiendo..."            
+      icon_input:
+        add_button: "Agregar icono"
+        replace_button: "Reemplazar icono"
+        clear_button: "Limpiar"
+      icon_library:
+        title: "Elegir un icono"
+        search_placeholder: "Buscar un icono"
+        no_items: "No se encontraron iconos"
+      link_input:
+        placeholder: "Haz clic aquí para seleccionar un enlace"
+        with_nested_text_label: "Habilitar texto"
+        nested_text_placeholder: "Texto"
+      link_picker:
+        title: "Seleccionar un enlace"
+        insert_title: "Insertar un enlace"
+        page:
+          name: "Página"
+          input:
+            label: "Página"
+            placeholder: "Seleccionar una página"
+            search_placeholder: "Buscar..."
+            empty_label: "No se encontraron páginas"
+          section_input:
+            label: "Sección"
+            placeholder: "Seleccionar una sección"
+            empty_label: "Ninguna sección seleccionada"
+        url:
+          name: "Url"
+          input:
+            label: "Url"
+        email:
+          name: "Email"
+          input:
+            label: "Email"
+        shared:
+          main_button:
+            select: "Seleccionar"
+            insert: "Agregar"
+          cancel_button: "Cancelar"
+          new_window_input:
+            label: "Abrir en nueva ventana"
+      pagination:
+        default_label: "%{start} - %{end} de %{totalItems} elementos"
+        default_no_items: "Ninguno"
+      confirmation_button:
+        text: "¿Estás seguro de que quieres realizar esta acción?"
+        confirm_button_label: "Sí"
+        cancel_button_label: "No"
+      error_modals:
+        stale_object:
+          title: "Lo sentimos 🙇"
+          message: "<p>No pudimos guardar tus cambios porque alguien más actualizó el contenido mientras tanto.</p><p>Por favor recarga la página para continuar — de lo contrario, se perderán tus cambios.</p>"
+          button: "Recargar página"
+        not_authorized:
+          title: "Lo sentimos 🙇"
+          message: "No tienes permiso para hacer esto. Consulta con tu administrador."
+          button: "Cerrar"
+        standard_error:
+          title: "Ups 😬"
+          message: "Algo salió mal. Por favor intenta de nuevo más tarde o contacta soporte."
+          button: "Cerrar"
+      errors:
+        standard_error: "Ocurrió un error. Por favor, inténtalo de nuevo."
+      links:
+        edit:
+          title: "Seleccionar un enlace"
+          tabs:
+            page: "Página"
+            url: "Url"
+            email: "Email"
+          page:
+            placeholder: "Seleccionar una página"
+            section_prompt: "Seleccionar una sección"
+      support:
+        human:
+          locales:
+            fr: 'Français'
+            en: 'English'
+            de: 'Deutsch'
+            it: 'Italiano'
+            es: 'Español'
+            ar: 'Arabic'
+            pt: 'Português'            
+          storage_units:
+            format: "%{number} %{unit}"
+            units:
+              byte:
+                one: "Byte"
+                other: "Bytes"
+              kb: "KB"
+              mb: "MB"
+              gb: "GB"
+      flash:
+        pages:
+          create:
+            error: "¡Falló!"
+          update:
+            success: "¡Guardado!"
+            error: "¡Falló!"
+          destroy:
+            success: "¡Eliminada!"     
+        page_clone:
+          create:
+            success: "¡Clonada!"
+        sections:
+          sort:
+            success: '¡Ordenado!'
+            error: '¡Falló!'
+          create:
+            success: "¡Agregada!"
+            error: "¡Falló!"
+          update:
+            success: "¡Guardada!"
+            error: "¡Falló!"
+          destroy:
+            success: "¡Eliminada!"
+            error: "¡Falló!"
+        section_blocks:
+          create:
+            success: "¡Agregado!"
+            error: "¡Falló!"
+          update:
+            success: "¡Guardado!"
+            error: "¡Falló!"
+          sort:
+            success: "¡Ordenado!"
+            error: "¡Falló!"
+          destroy:
+            success: "¡Eliminado!"
+            error: "¡Falló!"
+        links:
+          update:
+            error: "Se encontraron errores"
+        style:
+          update:
+            success: "¡Actualizado!"
+            error: "¡Falló!"
+        assets:
+          create:
+            success:
+              one: "¡Subida!"
+              other: "¡%{count} archivos subidos!"
+          destroy:
+            success: "¡%{name} eliminado!"
+      placeholders:
+        pages:
+          visible_placeholder: "Mostrar/Ocultar la versión en vivo de la página"

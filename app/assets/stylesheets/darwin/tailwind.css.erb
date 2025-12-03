@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@source "<%= Darwin::Engine.root.join('app') %>";
+@source "<%= Darwin::Engine.root.join('lib') %>";
+@source "<%= Rails.root.join('app') %>";
+
+@utility darwin-border {
+  @apply border border-zinc-200 rounded-md;
+}
+
+@layer components {
+  .darwin-banner {
+    @apply darwin-border bg-white shadow-sm p-4 flex flex-col gap-2;
+  }
+
+  .darwin-banner.is-hidden {
+    @apply hidden;
+  }
+
+  .darwin-banner__header {
+    @apply flex items-center justify-between gap-2;
+  }
+
+  .darwin-banner__title {
+    @apply text-lg font-semibold text-zinc-900;
+  }
+
+  .darwin-banner__toggle {
+    @apply text-sm px-3 py-1 rounded bg-zinc-900 text-white hover:bg-zinc-800;
+  }
+
+  .darwin-banner__body {
+    @apply text-sm text-zinc-700 leading-relaxed;
+  }
+}

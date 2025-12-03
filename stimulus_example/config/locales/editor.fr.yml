@@ -1,0 +1,268 @@
+fr:
+  maglev:
+    editor:
+      header_nav:
+        pages: "Pages :"
+        page_settings: "Paramètres de page"
+        preview_site: "Aperçu"
+        preview_toggler:
+          button: "Aperçu du site"
+          draft_link: "Version brouillon"
+          live_link: "Version en direct"
+        publish_button:
+          default: "Publier la page"
+          in_progress: "Publication..."
+          success: "Publié !"
+          fail: "Échec !"
+        save_button:
+          default: "Enregistrer"
+          in_progress: "Enregistrement..."
+          success: "Enregistré !"
+          fail: "Échec !"
+      sidebar_nav:
+        list_pages_tooltip: "Gérer les pages de votre site"
+        manage_page_sections_tooltip: "Réorganiser / supprimer les sections de la page"
+        edit_style_tooltip: "Modifier le style de votre site"
+        open_image_library_tooltip: "Ouvrir la galerie d'images"
+        leave_editor_tooltip: "Retour à l'application principale"
+      page_preview:
+        loading: "Chargement..."
+        empty:
+          title: "Votre page est vide"
+          message: "Veuillez ajouter la première section en cliquant sur le bouton %{button} dans la barre latérale gauche."
+      pages:
+        list:
+          title: "Liste des pages"
+          sub_title: "Gérer les pages de votre site"
+          new_button: "Nouvelle page"
+          search_placeholder: "Tapez le titre ou le chemin ici..."
+          empty: "Aucune page trouvée"
+        actions:
+          edit: "Modifier les paramètres"
+          preview: "Aperçu de la page"
+          draft_preview: "Version brouillon"
+          live_preview: "Version en direct"
+          clone: "Cloner la page"
+          hide: "Masquer la page"
+          show: "Afficher la page"
+          delete: "Supprimer la page"
+          confirm_delete: "Êtes-vous sûr de vouloir supprimer cette page ?"
+          copy_url_to_clipboard: "Copier l'URL"
+          copy_url_to_clipboard_success: "Copié dans le presse-papiers !"
+        new:
+          title: "Créer une nouvelle page"
+          submit_button:
+            default: "Créer la page"
+            in_progress: "Création..."
+            success: "Créée !"
+            fail: "Échec !"
+          cancel_button: "Annuler"
+        edit:
+          title: "Modification d'une page"
+          current_page:
+            title: "Modification de la page actuelle"
+          submit_button:
+            default: "Mettre à jour la page"
+            in_progress: "Mise à jour..."            
+          cancel_button: "Annuler"
+        form:
+          tabs:
+            main: "Principal"
+            seo: "SEO"          
+      sections:
+        breadcrumb: "Sections"
+        index:
+          title: "Organiser les sections"
+          sub_title: "Réorganiser / supprimer les sections de la page"
+          empty: "Il n'y a pas de sections."
+          add_button: "Ajouter une nouvelle section"
+          confirm_delete: "Êtes-vous sûr de vouloir le supprimer ?"          
+        new:
+          title: "Ajouter une section"
+          empty_category: "Aucune section"
+        edit:
+          tabs:
+            main: "Contenu"
+            advanced: "Avancé"
+            blocks: "Blocs"            
+      section_blocks:
+        breadcrumb: "Blocs"
+        index:
+          add_button: "Ajouter un nouvel élément"
+          confirm_delete: "Êtes-vous sûr de vouloir le supprimer ?"
+          empty: "Il n'y a pas d'éléments."
+        edit:
+          tabs:
+            main: "Contenu"
+            advanced: "Avancé"       
+      settings:
+        collection_item:
+          placeholder: "Sélectionner un élément de collection"
+      style:
+        edit:
+          title: "Styliser votre site"
+          submit_button:
+            default: "Mettre à jour le style"
+            in_progress: "Mise à jour..."
+            success: "Mis à jour !"
+            fail: "Échec !"      
+      image_library:
+        title: "Liste des images"
+        picker_title: "Sélectionner une image"
+        search_placeholder: "Rechercher par nom de fichier"
+        pagination:
+          label: "%{start} - %{end} sur %{totalItems} images"
+          no_items: "Aucune image"
+        confirm_destroy: "Êtes-vous sûr ?"
+        uploader:
+          wrong_files: "Assurez-vous que la taille de chaque image ne soit pas supérieure à %{limit}."
+          upload_button:
+            default: "Télécharger des images"
+            in_progress: "Téléchargement..."            
+      icon_input:
+        add_button: "Ajouter une icône"
+        replace_button: "Remplacer l'icône"
+        clear_button: "Effacer"
+      icon_library:
+        title: "Choisir une icône"
+        search_placeholder: "Rechercher une icône"
+        no_items: "Aucune icône trouvée"
+      link_input:
+        placeholder: "Cliquez ici pour sélectionner un lien"
+        with_nested_text_label: "Activer le texte"
+        nested_text_placeholder: "Texte"
+      link_picker:
+        title: "Sélectionner un lien"
+        insert_title: "Insérer un lien"
+        page:
+          name: "Page"
+          input:
+            label: "Page"
+            placeholder: "Sélectionner une page"
+            search_placeholder: "Rechercher..."
+            empty_label: "Aucune page trouvée"
+          section_input:
+            label: "Section"
+            placeholder: "Sélectionner une section"
+            empty_label: "Aucune section sélectionnée"
+        url:
+          name: "Url"
+          input:
+            label: "Url"
+        email:
+          name: "Email"
+          input:
+            label: "Email"
+        shared:
+          main_button:
+            select: "Sélectionner"
+            insert: "Ajouter"
+          cancel_button: "Annuler"
+          new_window_input:
+            label: "Ouvrir dans une nouvelle fenêtre"
+      pagination:
+        default_label: "%{start} - %{end} sur %{totalItems} éléments"
+        default_no_items: "Aucun"
+      confirmation_button:
+        text: "Êtes-vous sûr de vouloir effectuer cette action ?"
+        confirm_button_label: "Oui"
+        cancel_button_label: "Non"
+      error_modals:
+        stale_object:
+          title: "Nous sommes désolés 🙇"
+          message: "<p>Nous n'avons pas pu sauvegarder vos modifications car quelqu'un d'autre a mis à jour le contenu entre-temps.</p><p>Veuillez recharger la page pour continuer — sinon, vos modifications seront perdues.</p>"
+          button: "Recharger la page"
+        not_authorized:
+          title: "Nous sommes désolés 🙇"
+          message: "Vous n'êtes pas autorisé à faire cela. Vérifiez avec votre administrateur."
+          button: "Fermer"
+        standard_error:
+          title: "Oups 😬"
+          message: "Quelque chose s'est mal passé. Veuillez réessayer plus tard ou contacter le support."
+          button: "Fermer"
+      errors:
+        standard_error: "Une erreur s'est produite. Veuillez réessayer."
+      links:
+        edit:
+          title: "Sélectionner un lien"
+          tabs:
+            page: "Page"
+            url: "Url"
+            email: "Email"
+          page:
+            placeholder: "Sélectionner une page"
+            section_prompt: "Sélectionner une section"
+      support:
+        human:
+          locales:
+            fr: 'Français'
+            en: 'English'
+            de: 'Deutsch'
+            it: 'Italiano'
+            es: 'Español'
+            ar: 'Arabic'
+            pt: 'Português'            
+          storage_units:
+            format: "%{number} %{unit}"
+            units:
+              byte:
+                one: "Octet"
+                other: "Octets"
+              kb: "KB"
+              mb: "MB"
+              gb: "GB"
+      flash:
+        pages:
+          create:
+            error: "Échec !"
+          update:
+            success: "Enregistré !"
+            error: "Échec !"
+          destroy:
+            success: "Supprimée !"     
+        page_clone:
+          create:
+            success: "Clonée !"
+        sections:
+          sort:
+            success: 'Trié !'
+            error: 'Échec !'
+          create:
+            success: "Ajoutée !"
+            error: "Échec !"
+          update:
+            success: "Enregistrée !"
+            error: "Échec !"
+          destroy:
+            success: "Supprimée !"
+            error: "Échec !"
+        section_blocks:
+          create:
+            success: "Ajouté !"
+            error: "Échec !"
+          update:
+            success: "Enregistré !"
+            error: "Échec !"
+          sort:
+            success: "Trié !"
+            error: "Échec !"
+          destroy:
+            success: "Supprimé !"
+            error: "Échec !"
+        links:
+          update:
+            error: "Erreur(s) trouvée(s)"
+        style:
+          update:
+            success: "Mis à jour !"
+            error: "Échec !"
+        assets:
+          create:
+            success:
+              one: "Téléchargée !"
+              other: "%{count} fichiers téléchargés !"
+          destroy:
+            success: "%{name} supprimé !"
+      placeholders:
+        pages:
+          visible_placeholder: "Afficher/Masquer la version en direct de la page"

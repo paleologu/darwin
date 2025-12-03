@@ -1,0 +1,110 @@
+# Name of the section displayed in the editor UI
+name: "<%= section_name %>"
+
+# Category of the section in the editor UI (headers, features, testimonials, ...etc)
+category: <%= category %>
+
+# A section might have the same content all over the site, like a menu or a footer for instance.
+# To enable this behavior, uncomment the following statement
+# site_scoped: true
+
+# Display or not the button to insert a new section after this one
+# insert_button: false
+
+# Insert this section at the top or the bottom of the page (default: nil)
+# insert_at: top
+
+# One single instance per page?
+# singleton: true
+
+# Definition of the settings:
+# A setting type can be one of the following values: text, image, link, collection_item, checkbox, color and icon.
+# Please visit: https://docs.maglev.dev/concepts/setting for more explanation.
+settings:
+<%- settings.each do |setting| -%>
+- label: "<%= setting.label %>"
+  id: <%= setting.id %>
+  type: <%= setting.type %>
+  <%- case setting.type -%>
+  <%- when 'text' -%>
+  # html: true
+  # line_break: true
+  # nb_rows: 5
+  <%- when 'link' -%>
+  with_text: true
+  <%- when 'select', 'radio' -%>
+  select_options:
+  - label: Option 1
+    value: option_1
+  - label: Option 2
+    value: option_2
+  <%- when 'color' -%>
+  presets: ['#E5E7EB', '#FECACA', '#FDE68A', '#A7F3D0', '#BFDBFE']
+  <%- when 'collection_item' -%>
+  collection_id: products # check your config/initializers/maglev.rb to register your collection
+  <%- end -%>
+  <% if setting.value? -%>default: <%= setting.default %><% end -%>
+
+<%- end -%>
+# Definition of the blocks.
+# You can define as many types of blocks as you want.
+blocks:<%- if blocks.blank? -%> []
+<% end %>
+<%- blocks.each do |(type, settings)| -%>
+- name: "<%= type.humanize %>"
+  type: <%= type %>
+  settings:
+  <%- settings.each do |setting| -%>
+  - label: "<%= setting.label %>"
+    id: <%= setting.id %>
+    type: <%= setting.type %>
+    <%- case setting.type -%>
+    <%- when 'text' -%>
+    # html: true
+    # line_break: true
+    # nb_rows: 5
+    <%- when 'link' -%>
+    with_text: true
+    <%- when 'select', 'radio' -%>
+    select_options:
+    - label: Option 1
+      value: option_1
+    - label: Option 2
+      value: option_2
+    <%- when 'collection_item' -%>
+    collection_id: products # check your config/initializers/maglev.rb to register your collection
+    <%- end -%>
+    <%- if setting.value? -%>
+    default: <%= setting.default %>
+    <%- end -%>
+  <%- end -%>
+
+<%- end -%>
+# By default, in the editor UI, blocks will be listed below the "Content" title.
+# The title can be changed with the following property:
+# blocks_label: "My list of items"
+
+# By default, blocks are presented as a list in the editor UI.
+# If you like to use blocks to build a menu with sub menu items,
+# consider using the tree presentation
+# blocks_presentation: "tree"
+
+# In order to get a section with "meaning" content for the editors,
+# you can set the default content of a new instance of this section.
+# (it's also be useful when taking a screenshot of the section).
+# sample:
+#   settings:
+    <%- settings.each do |setting| -%>
+#     <% if setting.value? -%><%= setting.id %>: <%= setting.default %><% end -%>
+
+    <%- end -%>
+#   blocks:<%- if blocks.blank? -%> []
+  <% end %>
+  <%- blocks.each do |(type, settings)| -%>
+#   - type: <%= type %>
+#     settings:
+       <%- settings.each do |setting| -%>
+#       <% if setting.value? -%><%= setting.id %>: <%= setting.default %><% end -%>
+
+       <%- end -%>
+  <%- end -%>

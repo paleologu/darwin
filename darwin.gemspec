@@ -19,14 +19,16 @@ Gem::Specification.new do |spec|
   spec.metadata['changelog_uri'] = "#{spec.homepage}/blob/main/CHANGELOG.md"
   spec.metadata['rubygems_mfa_required'] = 'true'
 
-  spec.files         = Dir['{app,db,lib}/**/*', 'MIT-LICENSE', 'README.md']
+  spec.files         = Dir['{app,db,lib,config,vendor}/**/*', 'MIT-LICENSE', 'README.md']
   spec.require_paths = ['lib']
 
   spec.add_dependency 'activerecord'
   spec.add_dependency 'sqlite3', '~> 2.1'
   spec.add_dependency 'rails', '>= 7.0', '< 9.0'
-  spec.add_dependency 'turbo-rails'
-  spec.add_dependency 'importmap-rails'
+  spec.add_dependency 'class_variants', '~> 1.1'
+  spec.add_dependency 'importmap-rails', '< 3', '>= 2'
+  spec.add_dependency 'turbo-rails', '< 3', '>= 2'
+  spec.add_dependency 'view_component', '~> 4.1.0'
 
   spec.add_development_dependency 'database_cleaner-active_record'
   spec.add_development_dependency 'rspec-rails'

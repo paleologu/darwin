@@ -1,0 +1,24 @@
+<%= render Maglev::Uikit::PageLayoutComponent.new(back_path: editor_real_root_path(maglev_editing_route_context)) do |page_layout| %>
+  <% page_layout.with_title_content t('maglev.editor.style.edit.title') %>
+  <% page_layout.with_notification_content maglev_flash_message %>
+
+  <%= form_with url: editor_style_path(**maglev_editing_route_context), method: :put, id: 'editor-style-form', data: {    
+    controller: 'editor-style-form',
+    'editor-style-form-style-value': @style,
+    action: %(
+      editor-setting:change->editor-style-form#update
+      editor-style-form:onUpdate->editor-preview-notification-center#updateStyle
+    )
+  } do %>
+    <%= hidden_field_tag :lock_version, maglev_site.lock_version %>
+    <%= style_form_settings(@style, maglev_theme) %>    
+  <% end %>
+
+  <% page_layout.with_footer do %>
+    <%= submit_tag t('maglev.editor.style.edit.submit_button.default'), 
+      form: 'editor-style-form',
+      class: maglev_button_classes(color: :primary, size: :big),
+      data: { turbo_submits_with: t('maglev.editor.style.edit.submit_button.in_progress') }
+    %>
+  <% end %>
+<% end %>

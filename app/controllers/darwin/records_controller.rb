@@ -1,4 +1,4 @@
-class Darwin::RecordsController < ApplicationController
+class Darwin::RecordsController < Darwin::ApplicationController
   include Rails.application.routes.url_helpers
   before_action :set_model
 

@@ -1,0 +1,13 @@
+<section class="darwin-banner" data-controller="editor-banner darwin-dom">
+  <header class="darwin-banner__header">
+    <h2 class="darwin-banner__title"><%= title %></h2>
+    <button type="button"
+            class="darwin-banner__toggle"
+            data-action="click->editor-banner#toggle click->darwin-dom#toggle">
+      Toggle
+    </button>
+  </header>
+  <% if body.present? %>
+    <p class="darwin-banner__body"><%= body %></p>
+  <% end %>
+</section>

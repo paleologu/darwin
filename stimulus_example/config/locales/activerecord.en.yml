@@ -1,0 +1,31 @@
+en:
+  activerecord:
+    attributes:
+      'maglev/page':
+        title: Title
+        cloned_title: "%{title} COPY"
+        paths:
+          value: Path
+        visible: Visible
+        seo_title: Meta title
+        meta_description: Meta description
+        og_title: "og:title"
+        og_description: "og:description"
+        og_image_url: "og:image"
+    errors:
+      models:
+        maglev/page_path:
+          attributes:
+            value:
+              invalid_path: "is not a valid path"
+
+  activemodel:
+    attributes:
+      'maglev/content/editor_link':
+        link_id: Page
+        section_id: Section
+        email: Email
+        url_href: URL
+        open_new_window: "Open in new window"
+
+    

@@ -1,0 +1,13 @@
+import { application } from "darwin-editor-controllers/application"
+
+import PanelController from "darwin-editor-controllers/panel_controller"
+import RichtextController from "darwin-editor-controllers/richtext_controller"
+import BannerController from "darwin-editor-controllers/banner_controller"
+import BlockFormController from "darwin-editor-controllers/block_form_controller"
+import NestedFormController from "darwin-editor-controllers/nested_form_controller"
+
+application.register("editor-panel", PanelController)
+application.register("editor-richtext", RichtextController)
+application.register("editor-banner", BannerController)
+application.register("block-form", BlockFormController)
+application.register("nested-form", NestedFormController)

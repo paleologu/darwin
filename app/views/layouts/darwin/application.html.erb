@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Darwin Engine</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "darwin/tailwind", "data-turbo-track": "reload" %>
+    <%= darwin_editor_javascript_tags %>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

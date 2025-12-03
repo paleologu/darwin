@@ -1,0 +1,268 @@
+en:
+  maglev:
+    editor:
+      header_nav:
+        pages: "Pages:"
+        page_settings: "Page settings"
+        preview_site: "Preview"
+        preview_toggler:
+          button: "Preview site"
+          draft_link: "Draft version"
+          live_link: "Live version"
+        publish_button:
+          default: "Publish page"
+          in_progress: "Publishing..."
+          success: "Published!"
+          fail: "Fail!"
+        save_button:
+          default: "Save"
+          in_progress: "Saving..."
+          success: "Saved!"
+          fail: "Fail!"
+      sidebar_nav:
+        list_pages_tooltip: "Manage the pages of your site"
+        manage_page_sections_tooltip: "Re-order / delete the sections of the page"
+        edit_style_tooltip: "Change the style of your site"
+        open_image_library_tooltip: "Open the gallery of images"
+        leave_editor_tooltip: "Back to the main app"
+      page_preview:
+        loading: "Loading..."
+        empty:
+          title: "Your page is blank"
+          message: "Please add the first section by clicking on the %{button} button in the left sidebar."
+      pages:
+        list:
+          title: "List of pages"
+          sub_title: "Manage the pages of your site"
+          new_button: "New page"
+          search_placeholder: "Type the title or the path here..."
+          empty: "No pages found"
+        actions:
+          edit: "Edit settings"
+          preview: "Preview page"
+          draft_preview: "Draft version"
+          live_preview: "Live version"
+          clone: "Clone page"
+          hide: "Hide page"
+          show: "Show page"
+          delete: "Delete page"
+          confirm_delete: "Are you sure you want to delete this page?"
+          copy_url_to_clipboard: "Copy URL"
+          copy_url_to_clipboard_success: "Copied to clipboard!"
+        new:
+          title: "Create a new page"
+          submit_button:
+            default: "Create page"
+            in_progress: "Creating..."
+            success: "Created!"
+            fail: "Fail!"
+          cancel_button: "Cancel"
+        edit:
+          title: "Edit a page"
+          current_page:
+            title: "Edit the current page"
+          submit_button:
+            default: "Update page"
+            in_progress: "Updating..."            
+          cancel_button: "Cancel"
+        form:
+          tabs:
+            main: "Main"
+            seo: "SEO"          
+      sections:
+        breadcrumb: "Sections"
+        index:
+          title: "Organize sections"
+          sub_title: "Re-order / delete the sections of the page"
+          empty: "There are no sections."
+          add_button: "Add a new section"
+          confirm_delete: "Are you sure you want to delete it?"          
+        new:
+          title: "Add a section"
+          empty_category: "No sections"
+        edit:
+          tabs:
+            main: "Content"
+            advanced: "Advanced"
+            blocks: "Blocks"            
+      section_blocks:
+        breadcrumb: "Blocks"
+        index:
+          add_button: "Add a new item"
+          confirm_delete: "Are you sure you want to delete it?"
+          empty: "There are no items."
+        edit:
+          tabs:
+            main: "Content"
+            advanced: "Advanced"       
+      settings:
+        collection_item:
+          placeholder: "Select a collection item"
+      style:
+        edit:
+          title: "Style your site"
+          submit_button:
+            default: "Update style"
+            in_progress: "Updating..."
+            success: "Updated!"
+            fail: "Fail!"      
+      image_library:
+        title: "List of images"
+        picker_title: "Select an image"
+        search_placeholder: "Search for a filename"
+        pagination:
+          label: "%{start} - %{end} of %{totalItems} images"
+          no_items: "No images"
+        confirm_destroy: "Are you sure?"
+        uploader:
+          wrong_files: "Make sure the size of each image is not greater than %{limit}."
+          upload_button:
+            default: "Upload images"
+            in_progress: "Uploading..."            
+      icon_input:
+        add_button: "Add icon"
+        replace_button: "Replace icon"
+        clear_button: "Clear"
+      icon_library:
+        title: "Pick an icon"
+        search_placeholder: "Search for an icon"
+        no_items: "No icons found"
+      link_input:
+        placeholder: "Click here to select a link"
+        with_nested_text_label: "Enable text"
+        nested_text_placeholder: "Text"
+      link_picker:
+        title: "Select a link"
+        insert_title: "Insert a link"
+        page:
+          name: "Page"
+          input:
+            label: "Page"
+            placeholder: "Select a page"
+            search_placeholder: "Search..."
+            empty_label: "No pages found"
+          section_input:
+            label: "Section"
+            placeholder: "Select a section"
+            empty_label: "No section selected"
+        url:
+          name: "Url"
+          input:
+            label: "Url"
+        email:
+          name: "Email"
+          input:
+            label: "Email"
+        shared:
+          main_button:
+            select: "Select"
+            insert: "Add"
+          cancel_button: "Cancel"
+          new_window_input:
+            label: "Open in new window"
+      links:
+        edit:
+          title: "Select a link"
+          tabs:
+            page: "Page"
+            url: "Url"
+            email: "Email"
+          page:
+            placeholder: "Select a page"
+            section_prompt: "Select a section"
+      pagination:
+        default_label: "%{start} - %{end} of %{totalItems} items"
+        default_no_items: "None"
+      confirmation_button:
+        text: "Are you sure to perform this action?"
+        confirm_button_label: "Yes"
+        cancel_button_label: "No"            
+      error_modals:
+        stale_object:
+          title: "Sorry about that 🙇"
+          message: "<p>We couldn’t save your changes because someone else updated the content in the meantime.</p><p>Please reload the page to continue — otherwise, your changes will be lost.</p>"
+          button: "Reload page"
+        not_authorized:
+          title: "Sorry about that 🙇"
+          message: "You're not permitted to do this. Check with your administrator."
+          button: "Close"
+        standard_error:
+          title: "Oops 😬"
+          message: "Something went wrong. Please try again later or contact support."
+          button: "Close"
+      errors:
+        standard_error: "An error occurred. Please try again."
+      support:
+        human:
+          locales:
+            fr: 'Français'
+            en: 'English'
+            de: 'Deutsch'
+            it: 'Italiano'
+            es: 'Español'
+            ar: 'Arabic'
+            pt: 'Português'            
+          storage_units:
+            format: "%{number} %{unit}"
+            units:
+              byte:
+                one: "Byte"
+                other: "Bytes"
+              kb: "KB"
+              mb: "MB"
+              gb: "GB"
+      flash:
+        pages:
+          create:
+            error: "Failed!"
+          update:
+            success: "Saved!"
+            error: "Failed!"
+          destroy:
+            success: "Deleted!"     
+        page_clone:
+          create:
+            success: "Cloned!"
+        sections:
+          sort:
+            success: 'Sorted!'
+            error: 'Failed!'
+          create:
+            success: "Added!"
+            error: "Failed!"
+          update:
+            success: "Saved!"
+            error: "Failed!"
+          destroy:
+            success: "Deleted!"
+            error: "Failed!"
+        section_blocks:
+          create:
+            success: "Added!"
+            error: "Failed!"
+          update:
+            success: "Saved!"
+            error: "Failed!"
+          sort:
+            success: "Sorted!"
+            error: "Failed!"
+          destroy:
+            success: "Deleted!"
+            error: "Failed!"
+        links:
+          update:
+            error: "Error(s) found"
+        style:
+          update:
+            success: "Updated!"
+            error: "Failed!"
+        assets:
+          create:
+            success:
+              one: "Uploaded!"
+              other: "%{count} files uploaded!"
+          destroy:
+            success: "%{name} deleted!"
+      placeholders:
+        pages:
+          visible_placeholder: "Show/Hide the live version of the page"

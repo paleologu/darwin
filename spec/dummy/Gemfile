@@ -50,6 +50,8 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   gem "foreman"
+  gem "concise_errors"
+
 end
 
 group :development do
