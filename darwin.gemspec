@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'importmap-rails', '< 3', '>= 2'
   spec.add_dependency 'turbo-rails', '< 3', '>= 2'
   spec.add_dependency 'view_component', '~> 4.1.0'
+  spec.add_dependency 'servus'
 
   spec.add_development_dependency 'database_cleaner-active_record'
   spec.add_development_dependency 'rspec-rails'
