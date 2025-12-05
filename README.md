@@ -2,6 +2,15 @@
 
 Darwin is a Rails engine that allows you to define ActiveRecord models, attributes, validations, and associations at runtime. These definitions are stored in the database and evaluated into live Ruby classes, providing a powerful way to build highly dynamic, data-driven applications.
 
+## Architecture Cheat Sheet
+
+- **Universal DSL** – every macro call (`attribute`, `has_many`, `validates`, etc.) is persisted as `method_name`, `args`, `options`, and optional `body` in `darwin_blocks`. That uniform shape is what makes the runtime deterministic.
+- **Multi-Pass Initialization** – runtime reloads run in two passes: Pass 1 defines empty classes under `Darwin::Runtime`, Pass 2 sorts blocks by [`Darwin::Runtime.block_priority`](docs/runtime_architecture.md#block-priority) and evaluates them via the interpreter so dependencies (columns → associations → validations) are satisfied.
+- **Schema Sync** – builder-mode operations (`builder: true`) call `Darwin::SchemaManager` to create/alter backing tables before runtime-only reloads (`builder: false`) hydrate classes.
+- **Servus Services** – complex workflows live in Servus service objects (`app/services/**`), generated via `rails g servus:service`. See [docs/servus.md](docs/servus.md) for conventions.
+
+For the full runtime walkthrough (flow diagrams, block types, troubleshooting), read [docs/runtime_architecture.md](docs/runtime_architecture.md).
+
 ## 1. Core Concept: Dynamic Runtime
 
 Darwin's primary feature is its ability to construct ActiveRecord models dynamically based on schema definitions stored in the database. This allows for immense flexibility but introduces a unique architectural pattern to handle model interdependencies.
@@ -93,6 +102,8 @@ Once the definitions are in the database, you need to tell the Darwin runtime to
 Darwin::Runtime.reload_all!
 ```
 
+> 💡 **Builder vs Runtime mode**: UI interactions and seed scripts that mutate schema should call `Darwin::Runtime.reload_all!(builder: true)` so `Darwin::SchemaManager` stays in sync. Application boot typically runs without the flag (defaults to `builder: false`) because the schema is already prepared.
+
 ### Step 3: Assign the Runtime Classes to Constants
 
 To use the newly defined models as you would any other ActiveRecord class, assign them to constants.
@@ -142,7 +153,6 @@ BUNDLE_WITHOUT=development bundle exec rails db:prepare
 BUNDLE_WITHOUT=development bundle exec rails db:prepare RAILS_ENV=test
 ```
 
-For detailed information on the testing setup and guidelines for writing new tests, please read the **[Testing Guidelines](docs/TESTING_GUIDELINES.md)**.
 
 ## 5. Running the Dummy App in Development
 
@@ -169,6 +179,14 @@ Stimulus controllers live in `app/assets/javascripts/darwin/editor` and are pinn
 ## 7. Debugging Cheat Sheet
 
 Here are some useful commands for debugging the Darwin runtime in a Rails console.
+
+## 8. Services 
+Business logic & non-standard operations are delegated to Servus services. Read the **[servus documentation](docs/servus.md)** (and use Deepwiki) before adding new workflows.
+
+- Generate scaffolding with `rails g servus:service namespace/action args` so the service, spec, and JSON schemas stay in sync.
+- Entry points inherit from `Servus::Base`, take keyword args only, and expose a zero-argument `#call` that returns a `Servus::Support::Response` via `success(...)` / `failure(...)` helpers.
+- Always call services and downstream services via `.call` (or `.call_async`) to get logging, schema validation, benchmarking, and consistent error handling.
+- Support classes live under `app/services/.../support` and should never inherit from `Servus::Base` nor be invoked directly.
 
 ### Reset Runtime Environment
 
@@ -216,3 +234,13 @@ Article.attribute_names
 
 # Check column metadata
 Article.columns_hash.keys
+```
+
+### Author
+My name is John.
+
+## 9. Further Reading
+
+- [docs/runtime_architecture.md](docs/runtime_architecture.md) – how multi-pass reloads, block priority, and schema sync interplay.
+- [docs/model_workflow.md](docs/model_workflow.md) – step-by-step cookbook for defining and using runtime models.
+- [docs/servus.md](docs/servus.md) – service layer conventions, generators, and error-handling helpers.
