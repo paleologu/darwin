@@ -5,9 +5,12 @@ import RichtextController from "darwin-editor-controllers/richtext_controller"
 import BannerController from "darwin-editor-controllers/banner_controller"
 import BlockFormController from "darwin-editor-controllers/block_form_controller"
 import NestedFormController from "darwin-editor-controllers/nested_form_controller"
+import { registerControllers } from "ui"
 
 application.register("editor-panel", PanelController)
 application.register("editor-richtext", RichtextController)
 application.register("editor-banner", BannerController)
 application.register("block-form", BlockFormController)
 application.register("nested-form", NestedFormController)
+
+registerControllers(application)

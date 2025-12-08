@@ -1,13 +1,18 @@
 <%= turbo_frame_tag dom_id(block) do %>
-  <div class="flex items-center justify-between p-4 border rounded-lg">
-    <div>
-      <span class="font-bold"><%= block.method_name %></span>
-      <span class="ml-2 text-gray-500"><%= Array(block.args).join(", ") %></span>
-    </div>
-    <div>
+  <%= render "ui/card" do %>
+    <%= render "ui/card/content", classes: "flex items-center justify-between" do %>
+      <div class="flex items-center gap-2">
+        <%= render "ui/badge", classes: "uppercase tracking-wide" do %><%= block.method_name %><% end %>
+        <span class="text-sm text-muted-foreground"><%= Array(block.args).join(", ") %></span>
+      </div>
       <%= form_with(url: darwin.model_block_path(@model, block), method: :delete) do |form| %>
-        <%= form.submit "Delete", class: "btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+        <%= render "ui/button",
+                    variant: "destructive",
+                    type: "submit",
+                    attributes: { data: { turbo_confirm: "Are you sure?" } } do %>
+          Delete
+        <% end %>
       <% end %>
-    </div>
-  </div>
+    <% end %>
+  <% end %>
 <% end %>

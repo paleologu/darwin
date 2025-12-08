@@ -1,5 +1,16 @@
 <%= f.hidden_field :method_name, value: f.object.method_name %>
-<div class="field">
-  <%= f.label :args_name, "Association" %>
-  <%= f.select :args_name, f.object.darwin_model.runtime_constant.reflect_on_all_associations.map(&:name) %>
-</div>
+
+<%= render "ui/field" do %>
+  <%= render "ui/field/label" do %>Association<% end %>
+  <%= render "ui/field/content" do %>
+    <%= render "ui/select", value: f.object.args_name do %>
+      <%= render "ui/select/trigger", placeholder: "Select association", classes: "w-full" %>
+      <%= render "ui/select/content" do %>
+        <% f.object.darwin_model.runtime_constant.reflect_on_all_associations.map(&:name).each do |association_name| %>
+          <%= render "ui/select/item", value: association_name do %><%= association_name.to_s.humanize %><% end %>
+        <% end %>
+      <% end %>
+      <%= f.hidden_field :args_name, data: { "ui--select-target": "hiddenInput" }, value: f.object.args_name %>
+    <% end %>
+  <% end %>
+<% end %>

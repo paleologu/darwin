@@ -1,46 +1,99 @@
 <%= f.hidden_field :method_name, value: f.object.method_name %>
-<div class="darwin-form__group">
-  <%= f.label :args_name, "Attribute Name" %>
-  <%= f.text_field :args_name, value: f.object.args_name %>
-  <% if f.object.errors[:args_name].any? %>
-    <p class="text-sm text-red-600"><%= f.object.errors.full_messages_for(:args_name).join(", ") %></p>
+<div class="space-y-4">
+  <% name_id = f.field_id(:args_name) %>
+  <% name_name = f.field_name(:args_name) %>
+  <%= render "ui/field" do %>
+    <%= render "ui/field/label", for_id: name_id do %>Attribute Name<% end %>
+    <%= render "ui/field/content" do %>
+      <%= render "ui/input", id: name_id, name: name_name, value: f.object.args_name %>
+    <% end %>
+    <% if f.object.errors[:args_name].any? %>
+      <%= render "ui/field/error", content: f.object.errors.full_messages_for(:args_name).join(", ") %>
+    <% end %>
   <% end %>
-</div>
-<div class="darwin-form__group">
-  <%= f.label :args_type, "Type" %>
-  <%= f.select :args_type, %w[string integer boolean text datetime date float decimal], { selected: f.object.args_type }, { data: { block_form_target: "attributeType", action: "change->block-form#toggleAttributeFields" } } %>
-  <% if f.object.errors[:args_type].any? %>
-    <p class="text-sm text-red-600"><%= f.object.errors.full_messages_for(:args_type).join(", ") %></p>
+
+  <% type_id = f.field_id(:args_type) %>
+  <% type_name = f.field_name(:args_type) %>
+  <% attribute_types = %w[string integer boolean text datetime date float decimal] %>
+  <%= render "ui/field" do %>
+    <%= render "ui/field/label", for_id: type_id do %>Type<% end %>
+    <%= render "ui/field/content" do %>
+      <%= render "ui/select", value: f.object.args_type do %>
+        <%= render "ui/select/trigger", placeholder: "Select a type", classes: "w-full" %>
+        <%= render "ui/select/content" do %>
+          <% attribute_types.each do |attr_type| %>
+            <%= render "ui/select/item", value: attr_type do %><%= attr_type.titleize %><% end %>
+          <% end %>
+        <% end %>
+        <%= f.hidden_field :args_type,
+                            data: { "ui--select-target": "hiddenInput", block_form_target: "attributeType", action: "change->block-form#toggleAttributeFields" },
+                            value: f.object.args_type %>
+      <% end %>
+    <% end %>
+    <% if f.object.errors[:args_type].any? %>
+      <%= render "ui/field/error", content: f.object.errors.full_messages_for(:args_type).join(", ") %>
+    <% end %>
   <% end %>
-</div>
-<div class="darwin-form__group" data-attribute-type="all">
-  <%= f.label :options_default, "Default" %>
-  <%= f.fields_for :options do |options_form| %>
-    <%= options_form.text_field :default, value: f.object.options ? f.object.options['default'] : '' %>
-  <% end %>
-  <p class="darwin-hint">Optional default value for this column.</p>
-</div>
-<div class="darwin-form__group" data-attribute-type="all">
-  <%= f.label :options_null, "Null" %>
-  <%= f.fields_for :options do |options_form| %>
-    <%= options_form.check_box :null, checked: f.object.options ? f.object.options['null'] : false %>
-  <% end %>
-</div>
-<div class="darwin-form__group" data-attribute-type="string text integer binary">
-  <%= f.label :options_limit, "Limit" %>
-  <%= f.fields_for :options do |options_form| %>
-    <%= options_form.number_field :limit, value: f.object.options ? f.object.options['limit'] : '' %>
-  <% end %>
-</div>
-<div class="darwin-form__group" data-attribute-type="decimal">
-  <%= f.label :options_precision, "Precision" %>
-  <%= f.fields_for :options do |options_form| %>
-    <%= options_form.number_field :precision, value: f.object.options ? f.object.options['precision'] : '' %>
-  <% end %>
-</div>
-<div class="darwin-form__group" data-attribute-type="decimal">
-  <%= f.label :options_scale, "Scale" %>
-  <%= f.fields_for :options do |options_form| %>
-    <%= options_form.number_field :scale, value: f.object.options ? f.object.options['scale'] : '' %>
-  <% end %>
+
+  <div class="grid gap-4" data-attribute-type="all">
+    <%# Default %>
+    <% f.fields_for :options do |options_form| %>
+      <% default_id = options_form.field_id(:default) %>
+      <% default_name = options_form.field_name(:default) %>
+      <%= render "ui/field" do %>
+        <%= render "ui/field/label", for_id: default_id do %>Default<% end %>
+        <%= render "ui/field/content" do %>
+          <%= render "ui/input", id: default_id, name: default_name, value: f.object.options ? f.object.options['default'] : "" %>
+        <% end %>
+        <%= render "ui/field/description", content: "Optional default value for this column." %>
+      <% end %>
+
+      <% null_id = options_form.field_id(:null) %>
+      <% null_name = options_form.field_name(:null) %>
+      <%= render "ui/field" do %>
+        <%= render "ui/field/label", for_id: null_id do %>Null<% end %>
+        <%= render "ui/field/content", classes: "flex items-center gap-3" do %>
+          <%= options_form.hidden_field :null, value: 0 %>
+          <%= render "ui/switch", id: null_id, name: null_name, checked: f.object.options ? f.object.options['null'] : false %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Limit %>
+  <div class="grid gap-4" data-attribute-type="string text integer binary">
+    <% f.fields_for :options do |options_form| %>
+      <% limit_id = options_form.field_id(:limit) %>
+      <% limit_name = options_form.field_name(:limit) %>
+      <%= render "ui/field" do %>
+        <%= render "ui/field/label", for_id: limit_id do %>Limit<% end %>
+        <%= render "ui/field/content" do %>
+          <%= render "ui/input", id: limit_id, name: limit_name, value: f.object.options ? f.object.options['limit'] : "", type: "number" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Precision / Scale %>
+  <div class="grid gap-4" data-attribute-type="decimal">
+    <% f.fields_for :options do |options_form| %>
+      <% precision_id = options_form.field_id(:precision) %>
+      <% precision_name = options_form.field_name(:precision) %>
+      <%= render "ui/field" do %>
+        <%= render "ui/field/label", for_id: precision_id do %>Precision<% end %>
+        <%= render "ui/field/content" do %>
+          <%= render "ui/input", id: precision_id, name: precision_name, value: f.object.options ? f.object.options['precision'] : "", type: "number" %>
+        <% end %>
+      <% end %>
+
+      <% scale_id = options_form.field_id(:scale) %>
+      <% scale_name = options_form.field_name(:scale) %>
+      <%= render "ui/field" do %>
+        <%= render "ui/field/label", for_id: scale_id do %>Scale<% end %>
+        <%= render "ui/field/content" do %>
+          <%= render "ui/input", id: scale_id, name: scale_name, value: f.object.options ? f.object.options['scale'] : "", type: "number" %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
 </div>

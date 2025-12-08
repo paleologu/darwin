@@ -1,6 +1,22 @@
-<h1>Editing <%= @model.name %> Record</h1>
+<div class="space-y-6">
+  <%= render "ui/card" do %>
+    <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
+      <div>
+        <%= render "ui/card/description", content: "Editing" %>
+        <%= render "ui/card/title", content: @model.name %>
+      </div>
+      <div class="flex gap-2">
+        <%= render "ui/navigation_menu/link", href: darwin.record_path(@model.name.pluralize.underscore, @record), trigger_style: true do %>
+          Show
+        <% end %>
+        <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.name.pluralize.underscore), trigger_style: true do %>
+          Back
+        <% end %>
+      </div>
+    <% end %>
 
-<%= render 'form' %>
-
-<%= link_to 'Show', darwin.record_path(@model.name.pluralize.underscore, @record) %> |
-<%= link_to 'Back', darwin.records_path(@model.name.pluralize.underscore) %>
+    <%= render "ui/card/content" do %>
+      <%= render 'form' %>
+    <% end %>
+  <% end %>
+</div>

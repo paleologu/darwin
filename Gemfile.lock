@@ -4,6 +4,7 @@ PATH
     darwin (0.1.0)
       activerecord
       class_variants (~> 1.1)
+      fernandes-ui
       importmap-rails (>= 2, < 3)
       rails (>= 7.0, < 9.0)
       servus
@@ -115,6 +116,10 @@ GEM
     drb (2.2.3)
     erb (5.1.1)
     erubi (1.13.1)
+    fernandes-ui (0.1.6)
+      lucide-rails (~> 0.1)
+      rails (>= 6.0, < 9.0)
+      tailwind_merge (~> 0.13)
     globalid (1.3.0)
       activesupport (>= 6.1)
     i18n (1.14.7)
@@ -137,6 +142,8 @@ GEM
     loofah (2.24.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
+    lucide-rails (0.7.1)
+      railties (>= 4.1.0)
     mail (2.9.0)
       logger
       mini_mime (>= 0.1.1)
@@ -250,6 +257,7 @@ GEM
       json-schema (~> 5)
     shoulda-matchers (6.5.0)
       activesupport (>= 5.2.0)
+    sin_lru_redux (2.5.2)
     sqlite3 (2.8.1-aarch64-linux-gnu)
     sqlite3 (2.8.1-aarch64-linux-musl)
     sqlite3 (2.8.1-arm-linux-gnu)
@@ -259,6 +267,8 @@ GEM
     sqlite3 (2.8.1-x86_64-linux-gnu)
     sqlite3 (2.8.1-x86_64-linux-musl)
     stringio (3.1.7)
+    tailwind_merge (0.16.0)
+      sin_lru_redux (~> 2.5)
     thor (1.4.0)
     timeout (0.4.3)
     tsort (0.2.0)

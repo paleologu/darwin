@@ -1,9 +1,17 @@
 <%= turbo_frame_tag "new_block_form" do %>
-  <%= form_with(model: [block.darwin_model, block], scope: :darwin_block) do |form| %>
-    <%= render partial: "darwin/models/block_forms/#{block.method_name}", locals: { f: form } %>
-    <div class="actions">
-      <%= form.submit "Save" %>
-      <%= link_to "Cancel", darwin.edit_model_path(block.darwin_model) %>
-    </div>
+  <%= render "ui/card" do %>
+    <%= render "ui/card/content", classes: "space-y-4" do %>
+      <%= form_with(model: [block.darwin_model, block], scope: :darwin_block) do |form| %>
+        <%= render partial: "darwin/models/block_forms/#{block.method_name}", locals: { f: form } %>
+        <div class="flex justify-end gap-3">
+          <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(block.darwin_model), trigger_style: true do %>
+            Cancel
+          <% end %>
+          <%= render "ui/button", type: "submit" do %>
+            Save
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>

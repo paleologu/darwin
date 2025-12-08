@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'sqlite3', '~> 2.1'
   spec.add_dependency 'rails', '>= 7.0', '< 9.0'
   spec.add_dependency 'class_variants', '~> 1.1'
+  spec.add_dependency 'fernandes-ui'
   spec.add_dependency 'importmap-rails', '< 3', '>= 2'
   spec.add_dependency 'turbo-rails', '< 3', '>= 2'
   spec.add_dependency 'view_component', '~> 4.1.0'

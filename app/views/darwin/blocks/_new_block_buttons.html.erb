@@ -1,8 +1,12 @@
-<div class="mt-8">
-  <h3 class="font-bold text-lg">New Block</h3>
-  <div class="mt-4 flex space-x-2">
+<div class="space-y-3">
+  <%= render "ui/card/title", content: "New Block" %>
+  <div class="flex flex-wrap gap-2">
     <% available_method_names(model).each do |method_name| %>
-      <%= link_to "Add #{method_name.humanize}", darwin.new_model_block(@model, method_name: method_name), class: "btn-secondary" %>
+      <%= render "ui/navigation_menu/link",
+                  href: darwin.new_model_block(model, method_name: method_name),
+                  trigger_style: true do %>
+        Add <%= method_name.humanize %>
+      <% end %>
     <% end %>
   </div>
 </div>

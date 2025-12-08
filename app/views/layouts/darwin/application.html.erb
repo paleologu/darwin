@@ -9,22 +9,42 @@
     <%= stylesheet_link_tag "darwin/tailwind", "data-turbo-track": "reload" %>
     <%= darwin_editor_javascript_tags %>
   </head>
-  <body class="darwin-shell">
-    <header class="darwin-header">
-      <div class="darwin-header__inner">
-        <div>
-          <div class="darwin-header__title">Darwin Studio</div>
-          <div class="darwin-header__subtitle">Runtime models, blocks & records</div>
-        </div>
-        <div class="darwin-actions">
-          <%= link_to "Models", darwin.root_path, class: "darwin-btn darwin-btn--ghost" %>
-          <%= link_to "New Model", darwin.new_model_path, class: "darwin-btn darwin-btn--primary" %>
-        </div>
-      </div>
-    </header>
+  <body class="min-h-screen bg-background text-foreground antialiased">
+    <div class="flex min-h-screen flex-col">
+      <header class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+        <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-4">
+          <div>
+            <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Darwin Studio</p>
+            <p class="text-base font-medium text-foreground">Runtime models, blocks &amp; records</p>
+          </div>
 
-    <main class="darwin-page">
-      <%= yield %>
-    </main>
+          <div class="flex items-center gap-3">
+            <div class="hidden md:flex">
+              <%= render "ui/navigation_menu", classes: "justify-end" do %>
+                <%= render "ui/navigation_menu/list", classes: "gap-2" do %>
+                  <%= render "ui/navigation_menu/item" do %>
+                    <%= render "ui/navigation_menu/link",
+                                href: darwin.root_path,
+                                trigger_style: true do %>
+                      Models
+                    <% end %>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+            <%= render "ui/button", variant: "default", type: "button",
+                        attributes: { onclick: "Turbo.visit('#{darwin.new_model_path}')" } do %>
+              New Model
+            <% end %>
+          </div>
+        </div>
+      </header>
+
+      <main class="flex-1 bg-muted/30">
+        <div class="mx-auto w-full max-w-6xl px-6 py-10">
+          <%= yield %>
+        </div>
+      </main>
+    </div>
   </body>
 </html>

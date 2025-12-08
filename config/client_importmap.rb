@@ -6,3 +6,7 @@ pin_all_from File.expand_path('../app/assets/javascripts/darwin/client/controlle
              to: 'darwin/client/controllers'
 
 pin 'darwin-client', to: 'darwin/client/index.js'
+
+# Fernandez UI (components + Stimulus controllers)
+pin 'ui', to: 'ui.esm.js', preload: true
+pin_all_from File.expand_path('../app/assets/javascripts/ui/controllers', UI::Engine.root), under: 'ui/controllers'

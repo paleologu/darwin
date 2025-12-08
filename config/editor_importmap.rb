@@ -9,6 +9,10 @@ pin_all_from File.expand_path('../app/assets/javascripts/darwin/editor/controlle
 
 pin 'darwin-editor', to: 'darwin/editor/index.js'
 
+# Fernandez UI (components + Stimulus controllers)
+pin 'ui', to: 'ui.esm.js', preload: true
+pin_all_from File.expand_path('../app/assets/javascripts/ui/controllers', UI::Engine.root), under: 'ui/controllers'
+
 # Core runtime dependencies for the editor bundle
 pin '@hotwired/turbo-rails', to: '@hotwired--turbo-rails.js'
 pin '@hotwired/turbo', to: '@hotwired--turbo.js'

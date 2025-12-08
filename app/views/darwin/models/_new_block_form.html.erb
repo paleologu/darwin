@@ -1,6 +1,31 @@
 <%= turbo_frame_tag "new_block" do %>
-  <div data-controller="block-form">
-    <%= select_tag "method_name", options_for_select(available_method_names(model)), include_blank: "Select a block type", data: { action: "change->block-form#update" } %>
-    <%= link_to "New block", darwin.new_model_block(model, method_name: "attribute"), class: "btn-primary", data: { "block-form-target": "link" } %>
-  </div>
+  <%= render "ui/card" do %>
+    <%= render "ui/card/content" do %>
+      <div data-controller="block-form" class="space-y-4">
+        <%= render "ui/field" do %>
+          <%= render "ui/field/label" do %>Block type<% end %>
+          <%= render "ui/field/content" do %>
+            <%= render "ui/select", classes: "w-full" do %>
+              <%= render "ui/select/trigger", placeholder: "Select a block type" %>
+              <%= render "ui/select/content" do %>
+                <% available_method_names(model).each do |method_name| %>
+                  <%= render "ui/select/item", value: method_name do %><%= method_name.titleize %><% end %>
+                <% end %>
+              <% end %>
+              <%= hidden_field_tag :method_name,
+                                   nil,
+                                   data: { "ui--select-target": "hiddenInput", action: "change->block-form#update" } %>
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <%= render "ui/navigation_menu/link",
+                    href: darwin.new_model_block(model, method_name: "attribute"),
+                    trigger_style: true,
+                    attributes: { data: { "block-form-target": "link" } } do %>
+          New block
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
 <% end %>

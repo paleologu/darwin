@@ -1,5 +1,18 @@
-<h1>New <%= @model.name %></h1>
+<% base_btn = "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius,0.5rem)] text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] has-[>svg]:px-3 h-9" %>
+<% ghost_btn = [base_btn, "hover:bg-accent hover:text-accent-foreground px-3"].join(" ") %>
 
-<%= render 'form' %>
+<div class="space-y-6">
+  <%= render "ui/card" do %>
+    <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
+      <div>
+        <%= render "ui/card/description", content: "Create" %>
+        <%= render "ui/card/title", content: "New #{@model.name}" %>
+      </div>
+      <%= link_to 'Back', darwin.records_path(@model.name.pluralize.underscore), class: ghost_btn %>
+    <% end %>
 
-<%= link_to 'Back', darwin.records_path(@model.name.pluralize.underscore) %>
+    <%= render "ui/card/content" do %>
+      <%= render 'form' %>
+    <% end %>
+  <% end %>
+</div>

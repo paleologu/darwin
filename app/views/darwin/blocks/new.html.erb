@@ -1,12 +1,18 @@
 <%= turbo_frame_tag "new_block" do %>
-  <% if @block.method_name.present? %>
-    <%= form_with(model: @block, scope: :darwin_block, url: darwin.model_blocks_path(@model)) do |form| %>
-      <%= render partial: "darwin/models/block_forms/#{@block.method_name}", locals: { f: form } %>
-      <div class="actions">
-        <%= form.submit "Save" %>
-      </div>
+  <%= render "ui/card" do %>
+    <%= render "ui/card/content", classes: "space-y-4" do %>
+      <% if @block.method_name.present? %>
+        <%= form_with(model: @block, scope: :darwin_block, url: darwin.model_blocks_path(@model)) do |form| %>
+          <%= render partial: "darwin/models/block_forms/#{@block.method_name}", locals: { f: form } %>
+          <div class="flex justify-end">
+            <%= render "ui/button", type: "submit" do %>
+              Save
+            <% end %>
+          </div>
+        <% end %>
+      <% else %>
+        <%= render partial: "darwin/blocks/new_block_buttons", locals: { model: @model } %>
+      <% end %>
     <% end %>
-  <% else %>
-    <%= render partial: "darwin/blocks/new_block_buttons", locals: { model: @model } %>
   <% end %>
 <% end %>

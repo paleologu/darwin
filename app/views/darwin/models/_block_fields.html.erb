@@ -1,22 +1,45 @@
-<div class="nested-fields darwin-card" data-controller="block-form" data-new-record="<%= f.object.new_record? %>">
-  <div class="darwin-card__body space-y-4">
-    <div class="darwin-form__group">
-      <%= f.label :method_name, "Block type" %>
-      <%= f.select :method_name,
-                   %w[attribute validates belongs_to has_many has_one accepts_nested_attributes_for],
-                   { include_blank: 'Select a block type' },
-                   { data: { action: "change->block-form#update" } } %>
-    </div>
+<%= render "ui/card",
+            classes: "nested-fields",
+            attributes: { data: { controller: "block-form", new_record: f.object.new_record? } } do %>
+  <%= render "ui/card/content", classes: "space-y-5" do %>
+    <% block_types = %w[attribute validates belongs_to has_many has_one accepts_nested_attributes_for] %>
+    <%= render "ui/field" do %>
+      <%= render "ui/field/label", content: "Block type" %>
+      <%= render "ui/field/content" do %>
+        <%= render "ui/select",
+                    classes: "w-full",
+                    value: f.object.method_name.presence do %>
+          <%= render "ui/select/trigger", placeholder: "Select a block" %>
+          <%= render "ui/select/content" do %>
+            <% block_types.each do |type| %>
+              <%= render "ui/select/item", value: type do %>
+                <%= type.titleize %>
+              <% end %>
+            <% end %>
+          <% end %>
+          <%= f.hidden_field :method_name,
+                              data: {
+                                "ui--select-target": "hiddenInput",
+                                action: "change->block-form#update"
+                              } %>
+        <% end %>
+      <% end %>
+    <% end %>
 
-    <div data-block-form-target="fields" class="space-y-3">
+    <div data-block-form-target="fields" class="space-y-4">
       <% if f.object.method_name.present? %>
         <%= render partial: "darwin/models/block_forms/#{f.object.method_name}", locals: { f: f } %>
       <% end %>
     </div>
 
-    <div class="darwin-actions justify-between">
-      <span class="darwin-badge">Block</span>
-      <%= link_to "Remove", "#", data: { action: "nested-form#remove" }, class: "darwin-btn darwin-btn--danger" %>
+    <div class="flex items-center justify-between rounded-md border border-dashed px-3 py-2">
+      <%= render "ui/badge", classes: "uppercase tracking-wide" do %>
+        Block
+      <% end %>
+      <%= render "ui/button", variant: "destructive", type: "button",
+                  attributes: { data: { action: "nested-form#remove" } } do %>
+        Remove
+      <% end %>
     </div>
-  </div>
-</div>
+  <% end %>
+<% end %>

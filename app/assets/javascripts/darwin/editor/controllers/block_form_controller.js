@@ -11,39 +11,40 @@ export default class extends Controller {
   }
 
   update(event) {
+    if (!this.hasLinkTarget) return
     const blockType = event.target.value
-    const newPath = this.linkTarget.href.replace(/method_name=\w+/, `method_name=${blockType}`)
-    this.linkTarget.href = newPath
+    if (!blockType) return
+
+    try {
+      const url = new URL(this.linkTarget.href)
+      url.searchParams.set("method_name", blockType)
+      this.linkTarget.href = url.toString()
+    } catch (_error) {
+      // Fall back to the original behavior if URL parsing fails
+      this.linkTarget.href = this.linkTarget.href.replace(/method_name=\w+/, `method_name=${blockType}`)
+    }
   }
 
   populateValidationTypes() {
     const attributeName = this.attributeSelectTarget.value
     if (!attributeName) {
-      this.validationTypeContainerTarget.style.display = "none"
+      this.hideValidationOptions()
       return
     }
 
     fetch(`/darwin/models/${this.modelNameValue}/attribute_type?attribute_name=${attributeName}`)
       .then((response) => response.json())
       .then((data) => {
-        const validationTypeSelect = this.validationTypeContainerTarget.querySelector("select")
-        validationTypeSelect.innerHTML = ""
-
         const validValidations = this.getValidationsForType(data.type)
-        validValidations.forEach((validation) => {
-          const option = document.createElement("option")
-          option.value = validation
-          option.text = validation.charAt(0).toUpperCase() + validation.slice(1)
-          validationTypeSelect.add(option)
-        })
-
-        this.validationTypeContainerTarget.style.display = "block"
-        this.toggleValidationFields()
+        this.showValidationOptions(validValidations)
+      })
+      .catch(() => {
+        this.hideValidationOptions()
       })
   }
 
   toggleValidationFields() {
-    const selectedValidation = this.validationTypeContainerTarget.querySelector("select").value
+    const selectedValidation = this.validationTypeValue()
     this.validationFieldTargets.forEach((field) => {
       if (field.dataset.validationType === selectedValidation) {
         field.style.display = "block"
@@ -65,5 +66,58 @@ export default class extends Controller {
       datetime: ["presence"],
     }
     return validations[type] || []
+  }
+
+  showValidationOptions(validValidations) {
+    if (!this.hasValidationTypeContainerTarget) return
+
+    const container = this.validationTypeContainerTarget
+    container.style.display = validValidations.length ? "block" : "none"
+
+    const hiddenInput =
+      container.querySelector('[data-ui--select-target="hiddenInput"]') || container.querySelector("select")
+    const items = container.querySelectorAll('[data-ui--select-target="item"]')
+
+    items.forEach((item) => {
+      const enabled = validValidations.length === 0 || validValidations.includes(item.dataset.value)
+      item.dataset.disabled = enabled ? "false" : "true"
+      item.hidden = !enabled
+      item.setAttribute("aria-hidden", (!enabled).toString())
+    })
+
+    if (!hiddenInput) return
+
+    const nextValue = validValidations.includes(hiddenInput.value) ? hiddenInput.value : validValidations[0] || ""
+    if (hiddenInput.value !== nextValue) {
+      hiddenInput.value = nextValue
+      hiddenInput.dispatchEvent(new Event("change", { bubbles: true }))
+    }
+
+    const selectController = this.uiSelectController(container)
+    if (selectController && nextValue) {
+      selectController.valueValue = nextValue
+    }
+    this.toggleValidationFields()
+  }
+
+  hideValidationOptions() {
+    if (!this.hasValidationTypeContainerTarget) return
+    this.validationTypeContainerTarget.style.display = "none"
+    this.validationFieldTargets.forEach((field) => (field.style.display = "none"))
+  }
+
+  validationTypeValue() {
+    const selectValue = this.validationTypeContainerTarget?.querySelector('[data-ui--select-target="hiddenInput"]')?.value
+    if (selectValue) return selectValue
+
+    const fallbackSelect = this.validationTypeContainerTarget?.querySelector("select")
+    return fallbackSelect ? fallbackSelect.value : ""
+  }
+
+  uiSelectController(container) {
+    if (!container) return null
+    const selectElement = container.querySelector('[data-controller="ui--select"]')
+    if (!selectElement || !this.application.getControllerForElementAndIdentifier) return null
+    return this.application.getControllerForElementAndIdentifier(selectElement, "ui--select")
   }
 }
