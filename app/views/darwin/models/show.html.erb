@@ -15,6 +15,10 @@
   <% end %>
 
   <%= render "ui/card/content", classes: "space-y-4" do %>
+    <p class="text-sm text-muted-foreground">
+      Table name: <code class="font-mono text-foreground"><%= @model.runtime_constant.table_name %></code>
+    </p>
+
     <%= render "ui/table", classes: "w-full" do %>
       <%= render "ui/table/header" do %>
         <%= render "ui/table/row" do %>

@@ -23,6 +23,10 @@ module Dummy
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
+    # Rails 8 freezes autoload_once_paths; duplicate so engines that append paths (e.g., importmap-rails)
+    # do not raise FrozenError during initialization.
+    config.autoload_once_paths = config.autoload_once_paths.dup
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.

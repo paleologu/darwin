@@ -3,6 +3,7 @@
 require 'turbo-rails'
 require 'importmap-rails'
 require 'class_variants'
+require 'fernandes-ui'
 require 'view_component'
 
 module Darwin
@@ -58,6 +59,21 @@ module Darwin
           before_action { Engine.importmaps[:client].cache_sweeper.execute_if_updated }
         end
       end
+    end
+
+    initializer 'darwin.fernandes_ui.view_paths' do
+      ui_views = Pathname.new(Gem::Specification.find_by_name('fernandes-ui').gem_dir).join('app/views')
+
+      ActiveSupport.on_load(:action_controller_base) do
+        prepend_view_path ui_views
+      end
+
+      ActiveSupport.on_load(:action_mailer) do
+        prepend_view_path ui_views
+      end
+
+      # RSpec view specs rely on ActionController::Base.view_paths; update it directly
+      ActionController::Base.prepend_view_path(ui_views) if defined?(ActionController::Base)
     end
   end
 end
