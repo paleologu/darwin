@@ -8,3 +8,9 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Animations used by fernandes-ui components */
+@import "./tw-animate.css";
+
+/* Base styles and CSS variables from fernandes-ui */
+@import "ui/application.css";
