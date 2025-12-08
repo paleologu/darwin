@@ -6,6 +6,7 @@ PATH
       class_variants (~> 1.1)
       fernandes-ui
       importmap-rails (>= 2, < 3)
+      phlex-rails (~> 2.0)
       rails (>= 7.0, < 9.0)
       servus
       sqlite3 (~> 2.1)
@@ -180,6 +181,12 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.10-x86_64-linux-musl)
       racc (~> 1.4)
+    phlex (2.3.1)
+      zeitwerk (~> 2.7)
+    phlex-rails (2.3.1)
+      phlex (~> 2.3.0)
+      railties (>= 7.1, < 9)
+      zeitwerk (~> 2.7)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)

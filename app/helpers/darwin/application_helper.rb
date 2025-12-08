@@ -22,5 +22,13 @@ module Darwin
         "\n"
       )
     end
+
+    def model_active?(model)
+      if @model.present? && @model == model
+        true
+      else
+        false
+      end
+    end
   end
 end

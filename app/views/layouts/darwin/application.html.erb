@@ -10,6 +10,81 @@
     <%= darwin_editor_javascript_tags %>
   </head>
   <body class="min-h-screen bg-background text-foreground antialiased">
+
+<%= render UI::SidebarProvider.new(open: true) do %>
+  <%= render UI::Sidebar.new(side: :left) do %>
+    <%= render UI::SidebarHeader.new do %>
+      <%= render UI::SidebarMenu.new do %>
+
+        <%= render UI::SidebarMenuItem.new do %>
+        <%= link_to darwin.root_path do %>
+          <%= render UI::SidebarMenuButton.new(size: :lg) do %>
+            <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+              <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+              </svg>
+            </div>
+            <div class="grid flex-1 text-left text-sm leading-tight">
+              <span class="truncate font-medium">Darwin Studio</span>
+              <span class="truncate text-xs">V1</span>
+            </div>
+          <% end %>
+        <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= render UI::SidebarContent.new do %>
+      <%= render UI::SidebarGroup.new do %>
+        <%= render UI::SidebarGroupLabel.new { "Models" } %>
+        <%= render UI::SidebarGroupContent.new do %>
+          <%= render UI::SidebarMenu.new do %>
+
+            <%= render UI::SidebarMenuItem.new do %>
+            <%= link_to darwin.root_path do %>
+              <%= render UI::SidebarMenuButton.new(active: darwin.root_path == request.path) do %>
+                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
+                <span>Dashboard</span>
+              <% end %>
+            <% end %>
+            <% end %>
+
+            <%= render UI::SidebarMenuItem.new do %>
+            <%= link_to darwin.new_model_path do %>
+              <%= render UI::SidebarMenuButton.new(active: darwin.new_model_path == request.path) do %>
+                <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                <span>New model</span>
+              <% end %>
+            <% end %>
+            <% end %>
+
+           <%= render UI::Separator.new(classes: "my-4") %>
+
+           <% Darwin::Model.all.each do |model| %>
+                          <%= render UI::SidebarMenuItem.new do %>
+                          <%= link_to darwin.model_path(model) do %>
+                            <%= render UI::SidebarMenuButton.new(active: model_active?(model)) do %>
+                              <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M14.5 14.5v.5h.5v-.5h-.5Zm0-14h.5V0h-.5v.5Zm-6 0V0h-.207l-.147.146L8.5.5Zm-8 8l-.354-.354L0 8.293V8.5h.5Zm0 6H0v.5h.5v-.5Zm4-4l-.224.447l.019.01l.02.007l.185-.464Zm0-6V4a.5.5 0 0 0-.5.5h.5Zm6 0l.464-.186l-.008-.019l-.009-.019l-.447.224Zm4.5 10V.5h-1v14h1ZM14.5 0h-6v1h6V0ZM8.146.146l-8 8l.708.708l8-8l-.708-.708ZM0 8.5v6h1v-6H0ZM.5 15h14v-1H.5v1ZM14.146.146l-14 14l.708.708l14-14l-.708-.708ZM5 10.5v-6H4v6h1ZM4.5 5h6V4h-6v1Zm-.186 5.964l10 4l.372-.928l-10-4l-.372.928Zm5.722-6.278l4 10l.928-.372l-4-10l-.928.372ZM8.053.724l2 4l.894-.448l-2-4l-.894.448ZM.276 8.947l4 2l.448-.894l-4-2l-.448.894Z"/>
+                              </svg>
+                              <span><%= model.name %></span>
+                            <% end %>
+                            <% end %>
+                          <% end %>
+           <% end %>
+
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+  <%= render UI::SidebarInset.new do %>
+  <!-- Main content area -->
+
     <div class="flex min-h-screen flex-col">
       <header class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
         <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-4">
@@ -46,5 +121,9 @@
         </div>
       </main>
     </div>
+
+  <% end %>
+<% end %>
+
   </body>
 </html>
