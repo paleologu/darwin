@@ -3,6 +3,7 @@
   <head>
     <title>Darwin Engine</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="icon" href="https://files.svgcdn.io/devicon-plain/rails.svg" sizes="any">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -20,12 +21,13 @@
         <%= link_to darwin.root_path do %>
           <%= render UI::SidebarMenuButton.new(size: :lg) do %>
             <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<%#               <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-              </svg>
+              </svg> %>
+<svg xmlns="http://www.w3.org/2000/svg" class="size-6" viewBox="0 0 128 128"><path fill="#000000" fill-rule="evenodd" d="M109.682 14.737c-12.206-6.023-24.708-6.636-37.508-2.111c-11.779 4.164-21.175 11.615-28.16 21.763C32.195 51.561 23.61 70.298 18.799 90.652c-2.464 10.417-4.06 21.466-3.631 32.224c.035.873.165 1.124.251 3.124h60.366c-.173-2-.287-1.416-.437-1.797a153.86 153.86 0 0 1-7.428-25.198c-2.498-12.251-3.806-24.729-1.226-37.093c3.611-17.313 13.48-29.805 30.117-36.283c9.424-3.667 18.369-2.624 26.214 4.262c.072.063.22.025.412.056l2.565-3.883c-4.94-4.703-10.368-8.389-16.32-11.327zM3.336 94.394c-.46 3.923-.89 7.596-1.34 11.451l11.132 1.336l2.039-11.893l-11.831-.894zm21.85-34.186l-10.471-4.097l-3.384 9.607l10.671 3.42c1.08-3.031 2.096-5.882 3.184-8.93zm49.419 53.659c3.575.266 7.157.449 11.103.679c-1.433-2.979-2.706-5.673-4.039-8.335c-.146-.289-.639-.568-.974-.573c-3.033-.044-6.068-.025-9.291-.025c.726 2.628 1.357 5.053 2.096 7.443c.111.361.707.782 1.105.811zM42.933 31.103l-7.955-5.268l-6.359 7.105l8.178 5.496l6.136-7.333zm25.334 53.369c-.013.321.276.832.558.959c2.865 1.288 5.76 2.515 8.912 3.873c-.131-2.492-.219-4.575-.368-6.654c-.027-.374-.203-.912-.48-1.066c-2.631-1.456-5.299-2.847-8.216-4.395c-.159 2.665-.321 4.972-.406 7.283zM65.91 12.3l-5.446-6.181l-7.499 3.898l5.455 6.644l7.49-4.361zm3.415 49.176c-.163.374.052 1.167.373 1.456c2.175 1.962 4.424 3.84 6.926 5.981c.573-2.4 1.113-4.539 1.571-6.693c.081-.383-.032-1.016-.298-1.23c-1.946-1.569-3.955-3.063-6.037-4.651c-.915 1.815-1.802 3.443-2.535 5.137zm12.45-52.424c2.78.075 5.563.042 8.499.042c-.293-2.044-.433-3.593-.782-5.092c-.104-.446-.775-1.04-1.228-1.078c-2.787-.226-5.585-.313-8.651-.459c.409 2.063.721 3.881 1.162 5.668c.093.379.647.909 1 .919zm3.385 35.675c.142-.266.178-.749.029-.981c-1.366-2.137-2.785-4.241-4.254-6.455l-4.76 4.372l6.582 7.294c.884-1.539 1.675-2.868 2.403-4.23zM90.295 30.2l2.843 5.281c4.449-2.438 4.875-3.32 3.3-6.834L90.295 30.2zm21.287-16.273c1.851 1.142 3.806 2.115 5.792 3.185l1.33-2.07c-2.422-1.771-4.76-3.484-7.413-5.426c-.104 1.104-.259 1.875-.219 2.637c.032.581.129 1.44.51 1.674zM109 30.646c2 .217 5 .424 7 .643v-2.718c-2-.438-5-.872-7-1.323v3.398z" clip-rule="evenodd"/></svg>
             </div>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-medium">Darwin Studio</span>
+              <span class="truncate font-medium">Darwin</span>
               <span class="truncate text-xs">V1</span>
             </div>
           <% end %>
@@ -111,6 +113,43 @@
                         attributes: { onclick: "Turbo.visit('#{darwin.new_model_path}')" } do %>
               New Model
             <% end %>
+
+          <%# GitHub link %>
+          <%= link_to "https://github.com/paleologu/darwin", target: "_blank", rel: "noreferrer", data: { slot: "button" }, class: "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 h-8 shadow-none" do %>
+            <svg viewBox="0 0 438.549 438.549" class="size-4">
+              <path fill="currentColor" d="M409.132 114.573c-19.608-33.596-46.205-60.194-79.798-79.8-33.598-19.607-70.277-29.408-110.063-29.408-39.781 0-76.472 9.804-110.063 29.408-33.596 19.605-60.192 46.204-79.8 79.8C9.803 148.168 0 184.854 0 224.63c0 47.78 13.94 90.745 41.827 128.906 27.884 38.164 63.906 64.572 108.063 79.227 5.14.954 8.945.283 11.419-1.996 2.475-2.282 3.711-5.14 3.711-8.562 0-.571-.049-5.708-.144-15.417a2549.81 2549.81 0 01-.144-25.406l-6.567 1.136c-4.187.767-9.469 1.092-15.846 1-6.374-.089-12.991-.757-19.842-1.999-6.854-1.231-13.229-4.086-19.13-8.559-5.898-4.473-10.085-10.328-12.56-17.556l-2.855-6.57c-1.903-4.374-4.899-9.233-8.992-14.559-4.093-5.331-8.232-8.945-12.419-10.848l-1.999-1.431c-1.332-.951-2.568-2.098-3.711-3.429-1.142-1.331-1.997-2.663-2.568-3.997-.572-1.335-.098-2.43 1.427-3.289 1.525-.859 4.281-1.276 8.28-1.276l5.708.853c3.807.763 8.516 3.042 14.133 6.851 5.614 3.806 10.229 8.754 13.846 14.842 4.38 7.806 9.657 13.754 15.846 17.847 6.184 4.093 12.419 6.136 18.699 6.136 6.28 0 11.704-.476 16.274-1.423 4.565-.952 8.848-2.383 12.847-4.285 1.713-12.758 6.377-22.559 13.988-29.41-10.848-1.14-20.601-2.857-29.264-5.14-8.658-2.286-17.605-5.996-26.835-11.14-9.235-5.137-16.896-11.516-22.985-19.126-6.09-7.614-11.088-17.61-14.987-29.979-3.901-12.374-5.852-26.648-5.852-42.826 0-23.035 7.52-42.637 22.557-58.817-7.044-17.318-6.379-36.732 1.997-58.24 5.52-1.715 13.706-.428 24.554 3.853 10.85 4.283 18.794 7.952 23.84 10.994 5.046 3.041 9.089 5.618 12.135 7.708 17.705-4.947 35.976-7.421 54.818-7.421s37.117 2.474 54.823 7.421l10.849-6.849c7.419-4.57 16.18-8.758 26.262-12.565 10.088-3.805 17.802-4.853 23.134-3.138 8.562 21.509 9.325 40.922 2.279 58.24 15.036 16.18 22.559 35.787 22.559 58.817 0 16.178-1.958 30.497-5.853 42.966-3.9 12.471-8.941 22.457-15.125 29.979-6.191 7.521-13.901 13.85-23.131 18.986-9.232 5.14-18.182 8.85-26.84 11.136-8.662 2.286-18.415 4.004-29.263 5.146 9.894 8.562 14.842 22.077 14.842 40.539v60.237c0 3.422 1.19 6.279 3.572 8.562 2.379 2.279 6.136 2.95 11.276 1.995 44.163-14.653 80.185-41.062 108.068-79.226 27.88-38.161 41.825-81.126 41.825-128.906-.01-39.771-9.818-76.454-29.414-110.049z"></path>
+            </svg>
+          <% end %>
+        <%# Separator %>
+        <div data-orientation="vertical" role="none" data-slot="separator" class="bg-border shrink-0 h-4 w-px"></div>        
+        <%# Theme toggle %>
+         <div data-controller="theme">
+          <button data-action="theme#toggle" data-slot="button" class="relative inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 group/toggle extend-touch-target size-8" title="Toggle theme">
+            <%# Sun icon (light theme) %>
+            <svg data-theme-target="sunIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 hidden">
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+            <%# Moon icon (dark theme) %>
+            <svg data-theme-target="moonIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 hidden">
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+            <%# Monitor icon (system theme) %>
+            <svg data-theme-target="systemIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-5 hidden">
+              <rect x="2" y="3" width="20" height="14" rx="2"></rect>
+              <line x1="8" x2="16" y1="21" y2="21"></line>
+              <line x1="12" x2="12" y1="17" y2="21"></line>
+            </svg>
+            <span class="sr-only">Toggle theme</span>
+          </button>
+        </div>
           </div>
         </div>
       </header>
