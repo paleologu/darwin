@@ -41,22 +41,6 @@ class Darwin::ModelsController < Darwin::ApplicationController
     redirect_to darwin.models_path, notice: 'Model was successfully destroyed.'
   end
 
-  # def block_form
-  #   @model = Darwin::Model.find(params[:id])
-  #   @block = Darwin::Block.new(method_name: params[:method_name], args: [])
-
-  #   # The form builder needs to be constructed for a nested object.
-  #   # The name of the fields should be `darwin_model[blocks_attributes][<timestamp>][attribute_name]`
-  #   # The JavaScript that requests this form will replace 'NEW_RECORD' with a unique timestamp.
-  #   form_builder = ActionView::Helpers::FormBuilder.new(
-  #     "darwin_model[blocks_attributes][NEW_RECORD]",
-  #     @block,
-  #     view_context,
-  #     {}
-  #   )
-
-  #   render partial: "darwin/models/block_forms/#{params[:method_name]}", locals: { f: form_builder }
-  # end
 
   def attribute_type
     column = @model.runtime_constant.columns_hash[params[:attribute_name]]
