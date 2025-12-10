@@ -6,7 +6,7 @@ Darwin::Engine.routes.draw do
       get :attribute_type, on: :member
     end
     namespace :v2 do 
-      get '/editor' => 'models#editor', as: :editor
+      get '/editor(/:model_name)' => 'models#editor', as: :editor
     end
     get '/:model_name' => 'records#index', as: :records
     get '/:model_name/new' => 'records#new', as: :new_record

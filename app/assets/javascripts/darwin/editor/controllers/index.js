@@ -6,6 +6,7 @@ import BannerController from "darwin-editor-controllers/banner_controller"
 import BlockFormController from "darwin-editor-controllers/block_form_controller"
 import NestedFormController from "darwin-editor-controllers/nested_form_controller"
 import ThemeController from "darwin-editor-controllers/theme_controller"
+import EditorRedirectController from "darwin-editor-controllers/editor_redirect_controller"
 import { registerControllers } from "ui"
 
 application.register("editor-panel", PanelController)
@@ -14,5 +15,6 @@ application.register("editor-banner", BannerController)
 application.register("block-form", BlockFormController)
 application.register("nested-form", NestedFormController)
 application.register("theme", ThemeController)
+application.register("editor-redirect", EditorRedirectController)
 
 registerControllers(application)

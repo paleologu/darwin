@@ -1,4 +1,40 @@
 
+<%
+  frameworks = @models.map {|m| {value: m.name, label: m.name } }
+%>
+
+<%= render "ui/popover", placement: "bottom-start", data: { controller: "ui--popover ui--combobox editor-redirect", ui__combobox_value_value: "" } do %>
+  <%= render "ui/popover/trigger", as_child: true do |trigger_attrs| %>
+    <%= render "ui/button", **trigger_attrs, variant: :outline, classes: "w-[200px] justify-between" do %>
+      <span data-ui--combobox-target="text">Select framework...</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-2 h-4 w-4 shrink-0 opacity-50">
+        <path d="m7 15 5 5 5-5"/>
+        <path d="m7 9 5-5 5 5"/>
+      </svg>
+    <% end %>
+  <% end %>
+  <%= render "ui/popover/content", classes: "w-[200px] p-0" do %>
+    <%= render "ui/command" do %>
+      <%= render "ui/command/input", placeholder: "Search framework..." %>
+      <%= render "ui/command/list" do %>
+        <%= render "ui/command/empty" do %>No framework found.<% end %>
+        <%= render "ui/command/group" do %>
+          <% frameworks.each do |framework| %>
+            <%= render "ui/command/item", value: framework[:value], data: { ui__combobox_target: "item", editor_redirect_target: "item" } do %>
+              <span><%= framework[:label] %></span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-auto h-4 w-4 opacity-0">
+                <path d="M20 6 9 17l-5-5"/>
+              </svg>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
 
 
-<h1>EDITOR</h1>
+
+<h2>
+	Current model: <%= @model.name if @model %>
+</h2>

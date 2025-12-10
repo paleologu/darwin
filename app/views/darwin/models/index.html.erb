@@ -1,11 +1,6 @@
-  <div class="container-wrapper section-soft flex-1 pb-6 hidden md:block">
-    <div class="container overflow-hidden">
-      <section class="theme-container">
-        <div class="theme-container mx-auto grid gap-8 py-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 2xl:gap-8">
-
-
-
-          <div class="flex flex-col gap-6 *:[div]:w-full *:[div]:max-w-full">
+<div class="container overflow-hidden">
+  <section class="theme-container">
+    <div class="theme-container mx-auto grid gap-8 py-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 2xl:gap-8">
             <%= render "ui/card" do %>
             <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
             <div>
@@ -18,45 +13,69 @@
             <% end %>
 
             <%= render "ui/card/content", classes: "space-y-4" do %>
-            <%= render "ui/table", classes: "w-full" do %>
-            <%= render "ui/table/header" do %>
-            <%= render "ui/table/row" do %>
-            <%= render "ui/table/head" do %>Name<% end %>
-            <%= render "ui/table/head" do %>Table<% end %>
-            <%= render "ui/table/head", classes: "text-right" do %>Actions<% end %>
-            <% end %>
-            <% end %>
+      <p class="text-xs text-muted-foreground">Count: <%= Darwin::Model.all.count %></p>
 
-            <%= render "ui/table/body" do %>
-            <% @models.each do |model| %>
-            <%= render "ui/table/row" do %>
-            <%= render "ui/table/cell" do %><%= model.name %><% end %>
-            <%= render "ui/table/cell" do %>
-            <%= render "ui/badge" do %><%= model.runtime_constant.table_name %><% end %>
             <% end %>
-            <%= render "ui/table/cell", classes: "text-right" do %>
-            <div class="flex justify-end gap-2">
-              <%= render "ui/navigation_menu/link", href: darwin.model_path(model), trigger_style: true do %>Show<% end %>
-              <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(model), trigger_style: true do %>Edit<% end %>
-              <%= form_with url: darwin.model_path(model), method: :delete, data: { turbo_confirm: "Are you sure?" } do %>
-              <%= render "ui/button", variant: "destructive", type: "submit" do %>
-              Destroy
-              <% end %>
-              <% end %>
-            </div>
-            <% end %>
-            <% end %>
-            <% end %>
-            <% end %>
-            <% end %>
-            <% end %>
-            <% end %>
-          </div>
+           <% end %>
+
+
+
+             <%= render UI::Card.new do %>
+    <%= render UI::CardHeader.new do %>
+      <%= render UI::CardDescription.new { "Runtime" } %>
+      <%= render UI::CardTitle.new(classes: "text-2xl") {  Darwin::Runtime.constants.count } %>
+    <% end %>
+    <%= render UI::CardContent.new do %>
+      <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+    <% end %>
+  <% end %>
 
 
 
 
-        </div>
-      </section>
+             <%= render UI::Card.new do %>
+    <%= render UI::CardHeader.new do %>
+      <%= render UI::CardDescription.new { "Tables" } %>
+      <%= render UI::CardTitle.new(classes: "text-2xl") {  ActiveRecord::Base.connection.tables.select { |t| t.start_with?("darwin_") }
+  .reject { |t| ["darwin_models", "darwin_blocks"].include?(t) }.count } %>
+    <% end %>
+    <%= render UI::CardContent.new do %>
+      <p class="text-xs text-muted-foreground">+20.1% from last month</p>
+    <% end %>
+  <% end %>
+
     </div>
-  </div>
+  </section>
+</div>
+                <%= render "ui/table", classes: "w-full" do %>
+                 <%= render "ui/table/header" do %>
+                 <%= render "ui/table/row" do %>
+                  <%= render "ui/table/head" do %>Name<% end %>
+                  <%= render "ui/table/head" do %>Table<% end %>
+                  <%= render "ui/table/head", classes: "text-right" do %>Actions<% end %>
+                 <% end %>
+                 <% end %>
+
+                <%= render "ui/table/body" do %>
+                <% @models.each do |model| %>
+                 <%= render "ui/table/row" do %>
+                 <%= render "ui/table/cell" do %><%= model.name %><% end %>
+                  <%= render "ui/table/cell" do %>
+                     <%= render "ui/badge" do %><%= model.runtime_constant.table_name %><% end %>
+                 <% end %>
+                    <%= render "ui/table/cell", classes: "text-right" do %>
+                    <div class="flex justify-end gap-2">
+                      <%= render "ui/navigation_menu/link", href: darwin.model_path(model), trigger_style: true do %>Show<% end %>
+                      <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(model), trigger_style: true do %>Edit<% end %>
+                      <%= form_with url: darwin.model_path(model), method: :delete, data: { turbo_confirm: "Are you sure?" } do %>
+                       <%= render "ui/button", variant: "destructive", type: "submit" do %>
+                      Destroy
+                       <% end %>
+                       <% end %>
+                   </div>
+                    <% end %>
+                 <% end %>
+                <% end %>
+                <% end %>
+                <% end %>
+        
