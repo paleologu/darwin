@@ -27,7 +27,7 @@
         <% end %>
 
         <div class="flex justify-end">
-          <%= render "ui/button", type: "submit" do %>Update Name<% end %>
+          <%= render "ui/button", classes: "mt-2", type: "submit" do %>Update Name<% end %>
         </div>
       <% end %>
     <% end %>
@@ -41,11 +41,21 @@
           <% end %>
         </div>
       </div>
-      
+
   <%= render "ui/card", classes: "space-y-4" do %>
       <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
         <%= render "ui/card/title", content: "Blocks" %>
-        <div class="flex flex-wrap gap-2">
+      <% end %>
+
+    <%= render "ui/card/content", classes: "space-y-4" do %>
+      <div id="blocks" class="space-y-4">
+        <%= render @model.blocks %>
+      </div>
+    <% end %>
+  <% end %>
+
+
+          <div class="flex flex-wrap gap-2">
           <% available_method_names(@model).each do |method_name| %>
             <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
               <%= hidden_field_tag "darwin_block[method_name]", method_name %>
@@ -55,12 +65,4 @@
             <% end %>
           <% end %>
         </div>
-      <% end %>
-
-    <%= render "ui/card/content", classes: "space-y-4" do %>
-      <div id="blocks" class="space-y-4">
-        <%= render @model.blocks %>
-      </div>
-    <% end %>
-  <% end %>
 </div>
