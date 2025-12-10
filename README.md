@@ -169,6 +169,11 @@ This command launches `./bin/rails server` and `./bin/jobs start` together. Do n
 
 Darwin ships editor and client importmaps managed inside the engine. Load them from your host layout:
 
+Asset compilation:
+```erb
+rails darwin:tailwindcss:build 
+```
+
 ```erb
 <%= stylesheet_link_tag "darwin/tailwind", "data-turbo-track": "reload" %>
 <%= darwin_editor_javascript_tags %>

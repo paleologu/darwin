@@ -312,6 +312,7 @@ DEPENDENCIES
   bootsnap
   darwin!
   database_cleaner-active_record
+  rails (~> 8.1.0)
   rspec-rails
   shoulda-matchers
   sqlite3 (~> 2.1)
