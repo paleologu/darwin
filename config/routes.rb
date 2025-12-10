@@ -5,6 +5,9 @@ Darwin::Engine.routes.draw do
       resources :blocks, only: [:new, :create, :destroy]
       get :attribute_type, on: :member
     end
+    namespace :v2 do 
+      get '/editor' => 'models#editor', as: :editor
+    end
     get '/:model_name' => 'records#index', as: :records
     get '/:model_name/new' => 'records#new', as: :new_record
     post '/:model_name' => 'records#create'

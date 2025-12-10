@@ -1,45 +1,62 @@
-<%= render "ui/card" do %>
-  <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
-    <div>
-      <%= render "ui/card/description", content: "Overview" %>
-      <%= render "ui/card/title", content: "Runtime Models" %>
-    </div>
-    <%= render "ui/button", type: "button", attributes: { onclick: "Turbo.visit('#{darwin.new_model_path}')" } do %>
-      New Model
-    <% end %>
-  <% end %>
+  <div class="container-wrapper section-soft flex-1 pb-6 hidden md:block">
+    <div class="container overflow-hidden">
+      <section class="theme-container">
+        <div class="theme-container mx-auto grid gap-8 py-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6 2xl:gap-8">
 
-  <%= render "ui/card/content", classes: "space-y-4" do %>
-    <%= render "ui/table", classes: "w-full" do %>
-      <%= render "ui/table/header" do %>
-        <%= render "ui/table/row" do %>
-          <%= render "ui/table/head" do %>Name<% end %>
-          <%= render "ui/table/head" do %>Table<% end %>
-          <%= render "ui/table/head", classes: "text-right" do %>Actions<% end %>
-        <% end %>
-      <% end %>
 
-      <%= render "ui/table/body" do %>
-        <% @models.each do |model| %>
-          <%= render "ui/table/row" do %>
+
+          <div class="flex flex-col gap-6 *:[div]:w-full *:[div]:max-w-full">
+            <%= render "ui/card" do %>
+            <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
+            <div>
+              <%= render "ui/card/description", content: "Overview" %>
+              <%= render "ui/card/title", content: "Runtime Models" %>
+            </div>
+            <%= render "ui/button", type: "button", attributes: { onclick: "Turbo.visit('#{darwin.new_model_path}')" } do %>
+            New Model
+            <% end %>
+            <% end %>
+
+            <%= render "ui/card/content", classes: "space-y-4" do %>
+            <%= render "ui/table", classes: "w-full" do %>
+            <%= render "ui/table/header" do %>
+            <%= render "ui/table/row" do %>
+            <%= render "ui/table/head" do %>Name<% end %>
+            <%= render "ui/table/head" do %>Table<% end %>
+            <%= render "ui/table/head", classes: "text-right" do %>Actions<% end %>
+            <% end %>
+            <% end %>
+
+            <%= render "ui/table/body" do %>
+            <% @models.each do |model| %>
+            <%= render "ui/table/row" do %>
             <%= render "ui/table/cell" do %><%= model.name %><% end %>
             <%= render "ui/table/cell" do %>
-              <%= render "ui/badge" do %><%= model.runtime_constant.table_name %><% end %>
+            <%= render "ui/badge" do %><%= model.runtime_constant.table_name %><% end %>
             <% end %>
             <%= render "ui/table/cell", classes: "text-right" do %>
-              <div class="flex justify-end gap-2">
-                <%= render "ui/navigation_menu/link", href: darwin.model_path(model), trigger_style: true do %>Show<% end %>
-                <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(model), trigger_style: true do %>Edit<% end %>
-                <%= form_with url: darwin.model_path(model), method: :delete, data: { turbo_confirm: "Are you sure?" } do %>
-                  <%= render "ui/button", variant: "destructive", type: "submit" do %>
-                    Destroy
-                  <% end %>
-                <% end %>
-              </div>
+            <div class="flex justify-end gap-2">
+              <%= render "ui/navigation_menu/link", href: darwin.model_path(model), trigger_style: true do %>Show<% end %>
+              <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(model), trigger_style: true do %>Edit<% end %>
+              <%= form_with url: darwin.model_path(model), method: :delete, data: { turbo_confirm: "Are you sure?" } do %>
+              <%= render "ui/button", variant: "destructive", type: "submit" do %>
+              Destroy
+              <% end %>
+              <% end %>
+            </div>
             <% end %>
-          <% end %>
-        <% end %>
-      <% end %>
-    <% end %>
-  <% end %>
-<% end %>
+            <% end %>
+            <% end %>
+            <% end %>
+            <% end %>
+            <% end %>
+            <% end %>
+          </div>
+
+
+
+
+        </div>
+      </section>
+    </div>
+  </div>

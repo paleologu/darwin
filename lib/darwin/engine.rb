@@ -12,8 +12,7 @@ module Darwin
 
     def self.importmaps
       @importmaps ||= {
-        editor: ::Importmap::Map.new,
-        client: ::Importmap::Map.new
+        editor: ::Importmap::Map.new
       }
     end
 
@@ -42,7 +41,6 @@ module Darwin
 
     initializer 'darwin.importmap', after: 'importmap' do |app|
       Engine.importmaps[:editor].draw(Engine.root.join('config/editor_importmap.rb'))
-      Engine.importmaps[:client].draw(Engine.root.join('config/client_importmap.rb'))
 
       if (Rails.env.development? || Rails.env.test?) && !app.config.cache_classes
         Engine.importmaps[:editor].cache_sweeper(watches: [
@@ -50,30 +48,25 @@ module Darwin
                                                    Engine.root.join('app/components')
                                                  ])
 
-        Engine.importmaps[:client].cache_sweeper(watches: [
-                                                   Engine.root.join('app/assets/javascripts/darwin/client')
-                                                 ])
-
         ActiveSupport.on_load(:action_controller_base) do
           before_action { Engine.importmaps[:editor].cache_sweeper.execute_if_updated }
-          before_action { Engine.importmaps[:client].cache_sweeper.execute_if_updated }
         end
       end
     end
 
-    initializer 'darwin.fernandes_ui.view_paths' do
-      ui_views = Pathname.new(Gem::Specification.find_by_name('fernandes-ui').gem_dir).join('app/views')
+    # initializer 'darwin.fernandes_ui.view_paths' do
+    #   ui_views = Pathname.new(Gem::Specification.find_by_name('fernandes-ui').gem_dir).join('app/views')
 
-      ActiveSupport.on_load(:action_controller_base) do
-        prepend_view_path ui_views
-      end
+    #   ActiveSupport.on_load(:action_controller_base) do
+    #     prepend_view_path ui_views
+    #   end
 
-      ActiveSupport.on_load(:action_mailer) do
-        prepend_view_path ui_views
-      end
+    #   ActiveSupport.on_load(:action_mailer) do
+    #     prepend_view_path ui_views
+    #   end
 
-      # RSpec view specs rely on ActionController::Base.view_paths; update it directly
-      ActionController::Base.prepend_view_path(ui_views) if defined?(ActionController::Base)
-    end
+    #   # RSpec view specs rely on ActionController::Base.view_paths; update it directly
+    #   ActionController::Base.prepend_view_path(ui_views) if defined?(ActionController::Base)
+    # end
   end
 end
