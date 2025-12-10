@@ -1,14 +1,16 @@
-<div class="space-y-8">
-  <%= render "ui/card" do %>
-    <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
-      <div>
-        <%= render "ui/card/description", content: "Editing" %>
-        <%= render "ui/card/title", content: @model.name %>
-      </div>
+<%= content_for :heading, "Editing" %>
+<%= content_for :subheading, @model.name %>
+<%= content_for :nav_items do %>
+    <%= render "ui/navigation_menu/item" do %>
       <%= render "ui/navigation_menu/link", href: darwin.root_path, trigger_style: true do %>
         Back
       <% end %>
     <% end %>
+<% end %>
+
+
+<div class="space-y-8">
+  <%= render "ui/card" do %>
 
     <%= render "ui/card/content", classes: "space-y-5" do %>
       <%= form_with(model: @model, url: darwin.model_path(@model)) do |form| %>
@@ -28,6 +30,8 @@
           <%= render "ui/button", type: "submit" do %>Update Name<% end %>
         </div>
       <% end %>
+    <% end %>
+  <% end %>
 
       <div class="grid gap-2">
         <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Columns</p>
@@ -37,9 +41,7 @@
           <% end %>
         </div>
       </div>
-    <% end %>
-  <% end %>
-
+      
   <%= render "ui/card", classes: "space-y-4" do %>
       <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
         <%= render "ui/card/title", content: "Blocks" %>

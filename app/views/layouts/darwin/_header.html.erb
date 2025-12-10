@@ -1,28 +1,19 @@
       <header class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/75">
         <div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-4">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Darwin Studio</p>
-            <p class="text-base font-medium text-foreground">Runtime models, blocks &amp; records</p>
+            <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground"><%= content_for(:heading) || "Darwin Studio" %></p>
+            <p class="text-base font-medium text-foreground"><%= content_for(:subheading) || "Runtime models, blocks & records" %></p>
           </div>
 
           <div class="flex items-center gap-3">
             <div class="hidden md:flex">
               <%= render "ui/navigation_menu", classes: "justify-end" do %>
                 <%= render "ui/navigation_menu/list", classes: "gap-2" do %>
-                  <%= render "ui/navigation_menu/item" do %>
-                    <%= render "ui/navigation_menu/link",
-                                href: darwin.root_path,
-                                trigger_style: true do %>
-                      Models
-                    <% end %>
-                  <% end %>
+                    <%= yield :nav_items %>
                 <% end %>
               <% end %>
             </div>
-            <%= render "ui/button", variant: "default", type: "button",
-                        attributes: { onclick: "Turbo.visit('#{darwin.new_model_path}')" } do %>
-              New Model
-            <% end %>
+
 
           <%# GitHub link %>
           <%= link_to "https://github.com/paleologu/darwin", target: "_blank", rel: "noreferrer", data: { slot: "button" }, class: "inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 h-8 shadow-none" do %>

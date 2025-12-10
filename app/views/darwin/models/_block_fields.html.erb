@@ -1,5 +1,5 @@
 <%= render "ui/card",
-            classes: "nested-fields",
+            classes: "nested-fields mt-2",
             attributes: { data: { controller: "block-form", new_record: f.object.new_record? } } do %>
   <%= render "ui/card/content", classes: "space-y-5" do %>
     <% block_types = %w[attribute validates belongs_to has_many has_one accepts_nested_attributes_for] %>

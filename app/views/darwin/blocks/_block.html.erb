@@ -1,5 +1,5 @@
 <%= turbo_frame_tag dom_id(block) do %>
-  <%= render "ui/card" do %>
+  <%= render "ui/card", classes: "mb-2" do %>
     <%= render "ui/card/content", classes: "flex items-center justify-between" do %>
       <div class="flex items-center gap-2">
         <%= render "ui/badge", classes: "uppercase tracking-wide" do %><%= block.method_name %><% end %>

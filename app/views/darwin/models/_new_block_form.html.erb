@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "new_block" do %>
-  <%= render "ui/card" do %>
+  <%= render "ui/card", classes: "mt-2" do %>
     <%= render "ui/card/content" do %>
       <div data-controller="block-form" class="space-y-4">
         <%= render "ui/field" do %>

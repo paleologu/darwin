@@ -33,8 +33,42 @@
   <% end %>
 <% end %>
 
-
+<% if @model %>
 
 <h2>
 	Current model: <%= @model.name if @model %>
 </h2>
+<h2>Table: <%= @model.runtime_constant.table_name %></h2>
+<h2>Columns:  </h2>
+
+
+     <% @model.runtime_constant.column_names.without("id", "created_at", "updated_at").each do |name| %>
+<%= render UI::Dialog.new(attributes: { id: "phlex-edit-profile" }) do %>
+  <%= render UI::DialogTrigger.new { ":" + name} %>
+  <%= render UI::DialogOverlay.new do %>
+    <%= render UI::DialogContent.new(classes: "sm:max-w-[425px]") do %>
+      <%= render UI::DialogHeader.new do %>
+        <%= render UI::DialogTitle.new { "Edit profile" } %>
+        <%= render UI::DialogDescription.new { "Make changes to your profile here. Click save when you're done." } %>
+      <% end %>
+      <div class="grid gap-4 py-4">
+        <div class="grid grid-cols-4 items-center gap-4">
+          <label for="phlex-name" class="text-right text-sm font-medium">Name</label>
+          <input id="phlex-name" type="text" value="Pedro Duarte" class="col-span-3 flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm" />
+        </div>
+        <div class="grid grid-cols-4 items-center gap-4">
+          <label for="phlex-name" class="text-right text-sm font-medium">Name</label>
+          <input id="phlex-name" type="text" value="Pedro Duarte" class="col-span-3 flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm" />
+        </div>
+
+      </div>
+      <%= render UI::DialogFooter.new do %>
+        <%= render UI::DialogClose.new(variant: :default) { "Save changes" } %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+      <% end %>
+
+<% end %>
+
