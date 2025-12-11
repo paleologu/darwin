@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html class="light">
+  <head>
+    <script>
+      (function() {
+        const storageKey = 'ui-theme';
+        const theme = localStorage.getItem(storageKey) || 'system';
+        const root = document.documentElement;
+
+        if (theme === 'system') {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          root.classList.remove('light', 'dark');
+          root.classList.add(systemTheme);
+        } else {
+          root.classList.remove('light', 'dark');
+          root.classList.add(theme);
+        }
+      })();
+    </script>
+    <title><%= content_for?(:title) ? "#{content_for(:title)} - fernandes/ui" : "fernandes/ui" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="UI Demo">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag "darwin/tailwind", "data-turbo-track": "reload" %>
+    <%= darwin_editor_javascript_tags %>
+  </head>
+
+  <body class="group/body overscroll-none antialiased text-foreground [--footer-height:calc(var(--spacing)*14)] [--header-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]">
+    <div data-slot="layout" class="bg-background relative z-10 flex flex-col">
+      <%= render "layouts/fernandez/header" %>
+
+      <main class="flex flex-1 flex-col">
+        <%= yield %>
+      </main>
+
+      <%= render "layouts/fernandez/footer" %>
+    </div>
+
+    <%# Sonner Toaster - container for toast notifications %>
+    <ol class="toaster group"
+        data-controller="ui--sonner"
+        data-ui--sonner-position-value="bottom-right"
+        data-ui--sonner-theme-value="system"
+        data-ui--sonner-rich-colors-value="false"
+        data-ui--sonner-expand-value="false"
+        data-ui--sonner-duration-value="4000"
+        data-ui--sonner-close-button-value="false"
+        data-ui--sonner-visible-toasts-value="3">
+    </ol>
+  </body>
+</html>

@@ -7,6 +7,7 @@ Darwin::Engine.routes.draw do
     end
     namespace :v2 do 
       get '/editor(/:model_name)' => 'models#editor', as: :editor
+      get '/home' => "static#home", as: :home
     end
     get '/:model_name' => 'records#index', as: :records
     get '/:model_name/new' => 'records#new', as: :new_record
