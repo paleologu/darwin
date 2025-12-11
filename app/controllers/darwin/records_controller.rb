@@ -1,7 +1,6 @@
 class Darwin::RecordsController < Darwin::ApplicationController
   include Rails.application.routes.url_helpers
   before_action :set_model
-
   def index
     @records = @model.runtime_class.all
   end

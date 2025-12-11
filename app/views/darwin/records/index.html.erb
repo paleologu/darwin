@@ -1,8 +1,8 @@
+<%= content_for :heading, "Records" %>
+<%= content_for :subheading, @model.name.pluralize %>
 <%= render "ui/card" do %>
   <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
     <div>
-      <%= render "ui/card/description", content: @model.name %>
-      <%= render "ui/card/title", content: @model.name.pluralize %>
     </div>
     <div class="flex gap-2">
       <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(@model), trigger_style: true do %>Edit Schema<% end %>
