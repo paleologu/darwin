@@ -47,7 +47,7 @@ module Darwin
         blocks_to_interpret = models_to_load.flat_map(&:blocks)
         blocks_to_interpret.sort_by { |b| Darwin::Runtime.block_priority(b.method_name) }.each do |block|
           klass = block.darwin_model.runtime_constant
-          Darwin::Interpreter.evaluate_block(klass, block)
+          Darwin::V2::Interpreter.evaluate_block(klass, block)
         end
         runtime_constant
       end
