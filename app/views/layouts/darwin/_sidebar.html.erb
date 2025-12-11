@@ -59,7 +59,6 @@
 
 
            <%= render UI::Separator.new(classes: "my-4") %>
-           <%= Darwin::Runtime.constants %>
            <% Darwin::Model.all.each do |model| %>
                           <%= render UI::SidebarMenuItem.new do %>
                           <%= link_to darwin.model_path(model) do %>

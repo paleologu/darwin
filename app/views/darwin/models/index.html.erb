@@ -52,6 +52,7 @@
                  <%= render "ui/table/row" do %>
                   <%= render "ui/table/head" do %>Name<% end %>
                   <%= render "ui/table/head" do %>Table<% end %>
+                                    <%= render "ui/table/head" do %>Defined<% end %>
                   <%= render "ui/table/head", classes: "text-right" do %>Actions<% end %>
                  <% end %>
                  <% end %>
@@ -63,6 +64,7 @@
                   <%= render "ui/table/cell" do %>
                      <%= render "ui/badge" do %><%= model.runtime_constant.table_name %><% end %>
                  <% end %>
+                 <%= render "ui/table/cell" do %> <%= Darwin::Runtime.const_source_location model.runtime_constant.name.split("::").last.to_sym %> <% end %>
                     <%= render "ui/table/cell", classes: "text-right" do %>
                     <div class="flex justify-end gap-2">
                       <%= render "ui/navigation_menu/link", href: darwin.model_path(model), trigger_style: true do %>Show<% end %>
