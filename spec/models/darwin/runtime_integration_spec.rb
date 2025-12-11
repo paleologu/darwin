@@ -34,8 +34,10 @@ RSpec.describe 'Darwin Runtime Integration', type: :model do
 
     # Associations
     author_model.blocks.create!(method_name: 'has_many', args: ['articles'], position: 3)
+    article_model.blocks.create!(method_name: 'belongs_to', args: ['author'], position: 4)
     article_model.blocks.create!(method_name: 'has_many', args: ['comments'],
                                  options: { inverse_of: 'article', dependent: :destroy }, position: 5)
+    comment_model.blocks.create!(method_name: 'belongs_to', args: ['article'], position: 6)
 
     # Author
     author_model.blocks.create!(method_name: 'attribute', args: %w[name string], position: 0)
@@ -55,10 +57,10 @@ RSpec.describe 'Darwin Runtime Integration', type: :model do
                                  options: { presence: true, length: { maximum: 100 } }, position: 1)
 
     # 2. Define classes
-
-    Author = author_model.runtime_constant
-    Article = article_model.runtime_constant
-    Comment = comment_model.runtime_constant
+    Darwin::Runtime.reload_all!(builder: true)
+    Author = Darwin::Runtime.const_get('Author')
+    Article = Darwin::Runtime.const_get('Article')
+    Comment = Darwin::Runtime.const_get('Comment')
 
     # 3. Create test instances
     author = Author.create!(name: 'Jane Doe', desc: 'Writer')
@@ -81,9 +83,9 @@ RSpec.describe 'Darwin Runtime Integration', type: :model do
     expect { article.destroy }.to change { Comment.count }.by(-1)
 
     # 7. Table name and runtime verification
-    expect(author_model.runtime_constant.table_name).to eq('darwin_authors')
-    expect(article_model.runtime_constant.table_name).to eq('darwin_articles')
-    expect(comment_model.runtime_constant.table_name).to eq('darwin_comments')
+    expect(Author.table_name).to eq('darwin_authors')
+    expect(Article.table_name).to eq('darwin_articles')
+    expect(Comment.table_name).to eq('darwin_comments')
 
     runtime_constants = Darwin::Runtime.constants.map { |c| Darwin::Runtime.const_get(c).name }.compact
     expect(runtime_constants).to include('Darwin::Runtime::Author', 'Darwin::Runtime::Article', 'Darwin::Runtime::Comment')

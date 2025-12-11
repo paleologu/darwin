@@ -3,7 +3,10 @@ require 'rails_helper'
 RSpec.describe "darwin/models/edit", type: :view do
   helper Darwin::ModelsHelper
   before(:each) do
-    @model = assign(:model, Darwin::Model.create!(name: "Book"))
+    @model = assign(:model, Darwin::ModelBuilder::Create::Service.call(params: { name: "Book" }).data[:model])
+    Darwin::SchemaManager.sync!(@model)
+    Darwin::Runtime.reload_all!(builder: true)
+    assign(:runtime_class, Darwin::Runtime.const_get("Book"))
   end
 
   it "renders the edit model form" do

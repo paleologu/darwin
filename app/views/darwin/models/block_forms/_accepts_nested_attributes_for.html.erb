@@ -6,7 +6,8 @@
     <%= render "ui/select", value: f.object.args_name do %>
       <%= render "ui/select/trigger", placeholder: "Select association", classes: "w-full" %>
       <%= render "ui/select/content" do %>
-        <% f.object.darwin_model.runtime_constant.reflect_on_all_associations.map(&:name).each do |association_name| %>
+        <% runtime_class = runtime_class_for(f.object.darwin_model) %>
+        <% (runtime_class&.reflect_on_all_associations || []).map(&:name).each do |association_name| %>
           <%= render "ui/select/item", value: association_name do %><%= association_name.to_s.humanize %><% end %>
         <% end %>
       <% end %>

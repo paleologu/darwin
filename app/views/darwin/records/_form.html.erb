@@ -15,10 +15,12 @@
       <% end %>
     <% end %>
 
+    <% runtime = @runtime_class || runtime_class_for(@model) %>
+
     <div class="space-y-4">
-      <% @model.runtime_constant.columns.each do |column| %>
+      <% runtime.columns.each do |column| %>
         <% next if column.name == 'id' || column.name == 'created_at' || column.name == 'updated_at' %>
-        <% next if @model.runtime_constant.reflect_on_all_associations(:belongs_to).map(&:foreign_key).include?(column.name) %>
+        <% next if runtime.reflect_on_all_associations(:belongs_to).map(&:foreign_key).include?(column.name) %>
 
         <% field_id = form.field_id(column.name.to_sym) %>
         <% field_name = form.field_name(column.name.to_sym) %>
@@ -48,7 +50,7 @@
 
     <%# Belongs to associations %>
     <div class="space-y-4">
-      <% @model.runtime_constant.reflect_on_all_associations(:belongs_to).each do |association| %>
+      <% runtime.reflect_on_all_associations(:belongs_to).each do |association| %>
         <% field_id = form.field_id(association.foreign_key) %>
         <% field_name = form.field_name(association.foreign_key) %>
         <% options = association.klass.all %>
@@ -72,8 +74,8 @@
     </div>
 
     <%# Has many associations %>
-    <% @model.runtime_constant.reflect_on_all_associations(:has_many).each do |association| %>
-      <% next unless @model.runtime_constant.nested_attributes_options.key?(association.name) %>
+    <% runtime.reflect_on_all_associations(:has_many).each do |association| %>
+      <% next unless runtime.nested_attributes_options.key?(association.name) %>
 
       <%= render "ui/card", classes: "space-y-4", attributes: { data: { controller: "nested-form" } } do %>
         <%= render "ui/card/header", classes: "flex items-center justify-between" do %>

@@ -1,4 +1,5 @@
 <div class="space-y-6">
+  <% runtime = @runtime_class || runtime_class_for(@model) %>
   <%= render "ui/card" do %>
     <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
       <div>
@@ -17,8 +18,8 @@
 
     <%= render "ui/card/content", classes: "space-y-6" do %>
       <div class="grid gap-3">
-        <% @model.runtime_constant.columns.each do |column| %>
-          <% next if @model.runtime_constant.reflect_on_all_associations(:belongs_to).map(&:foreign_key).include?(column.name) %>
+        <% runtime.columns.each do |column| %>
+          <% next if runtime.reflect_on_all_associations(:belongs_to).map(&:foreign_key).include?(column.name) %>
           <div class="grid gap-1">
             <span class="text-xs uppercase tracking-wide text-muted-foreground"><%= column.name.humanize %></span>
             <span class="text-sm text-foreground"><%= @record.send(column.name) %></span>
@@ -27,7 +28,7 @@
       </div>
 
       <div class="space-y-4">
-        <% @model.runtime_constant.reflect_on_all_associations(:belongs_to).each do |association| %>
+        <% runtime.reflect_on_all_associations(:belongs_to).each do |association| %>
           <% associated_record = @record.send(association.name) %>
           <div class="grid gap-1">
             <span class="text-xs uppercase tracking-wide text-muted-foreground"><%= association.name.to_s.humanize %></span>
@@ -47,7 +48,7 @@
       </div>
 
       <div class="space-y-4">
-        <% (@model.runtime_constant.reflect_on_all_associations(:has_many) + @model.runtime_constant.reflect_on_all_associations(:has_one)).each do |association| %>
+        <% (runtime.reflect_on_all_associations(:has_many) + runtime.reflect_on_all_associations(:has_one)).each do |association| %>
           <% associated_records = Array.wrap(@record.send(association.name)) %>
           <div class="space-y-2">
             <span class="text-xs uppercase tracking-wide text-muted-foreground"><%= association.name.to_s.humanize %></span>

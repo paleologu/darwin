@@ -40,3 +40,4 @@ end
 
 Darwin::Runtime::Diagnostics.install!
 puts 'Loaded diagnostics.rb'
+ 

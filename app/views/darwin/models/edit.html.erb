@@ -1,68 +1,100 @@
 <%= content_for :heading, "Editing" %>
 <%= content_for :subheading, @model.name %>
 <%= content_for :nav_items do %>
-    <%= render "ui/navigation_menu/item" do %>
-      <%= render "ui/navigation_menu/link", href: darwin.root_path, trigger_style: true do %>
-        Back
-      <% end %>
-    <% end %>
+<%= render "ui/navigation_menu/item" do %>
+<%= render "ui/navigation_menu/link", href: darwin.root_path, trigger_style: true do %>
+Back
+<% end %>
+<% end %>
 <% end %>
 
 
 <div class="space-y-8">
-  <%= render "ui/card" do %>
 
-    <%= render "ui/card/content", classes: "space-y-5" do %>
+  <div class="grid gap-2">
+
+
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Table</p>
+    <div class="flex flex-wrap gap-2 text-sm text-muted-foreground">
+      <%= render UI::Dialog.new(attributes: { id: "phlex-edit-profile" }) do %>
+      <%= render UI::DialogTrigger.new { @runtime_class.name.split("::").last } %>
+      <%= render UI::DialogOverlay.new do %>
+      <%= render UI::DialogContent.new(classes: "sm:max-w-[425px]") do %>
+      <%= render UI::DialogHeader.new do %>
+      <%= render UI::DialogTitle.new { "Edit #{@runtime_class.name.split("::").last}" } %>
+      <%= render UI::DialogDescription.new { "Rename table: #{@runtime_class.table_name}" } %>
+      <% end %>
+
       <%= form_with(model: @model, url: darwin.model_path(@model)) do |form| %>
-        <% name_field_id = form.field_id(:name) %>
-        <% name_field_name = form.field_name(:name) %>
-        <%= render "ui/field" do %>
-          <%= render "ui/field/label", for_id: name_field_id do %>Name<% end %>
-          <%= render "ui/field/content" do %>
-            <%= render "ui/input", id: name_field_id, name: name_field_name, value: form.object.name %>
-          <% end %>
-          <% if form.object.errors[:name].any? %>
-            <%= render "ui/field/error", content: form.object.errors.full_messages_for(:name).to_sentence %>
-          <% end %>
-        <% end %>
+      <% name_field_id = form.field_id(:name) %>
+      <% name_field_name = form.field_name(:name) %>
 
-        <div class="flex justify-end">
-          <%= render "ui/button", classes: "mt-2", type: "submit" do %>Update Name<% end %>
-        </div>
+      <%= render "ui/field" do %>
+      <%= render "ui/field/label", for_id: name_field_id, classes: "text-right text-sm font-medium" do %>Name<% end %>
+      <%= render "ui/field/content" do %>
+      <%= render "ui/input", id: name_field_id, name: name_field_name, value: form.object.name, class: "col-span-3 flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm"%>
       <% end %>
+      <% if form.object.errors[:name].any? %>
+      <%= render "ui/field/error", content: form.object.errors.full_messages_for(:name).to_sentence %>
+      <% end %>
+      <% end %>
+      <%= render UI::DialogFooter.new do %>
+      <%= render "ui/button", classes: "mt-2", type: "submit" do %>Save Changes<% end %>
+      <% end %>
+      <% end %>
+
+      <% end %>
+      <% end %>
+      <% end %>
+    </div>
+ 
+    <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Columns</p>
+    <div class="flex flex-wrap gap-2 text-sm text-muted-foreground">
+      <%=  render collection: @runtime_class.columns.drop(3), partial: "darwin/models/table/column" %>
+   
+  <%= render UI::Drawer.new(direction: "right") do %>
+    <%= render UI::DrawerTrigger.new(size: :icon) do %>
+          <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    <% end %>
+    <%= render UI::DrawerOverlay.new %>
+    <%= render UI::DrawerContent.new(direction: "right") do %>
+      <%= render UI::DrawerHeader.new do %>
+        <%= render UI::DrawerTitle.new { "From Right" } %>
+      <% end %>
+      <div class="p-4">Content</div>
     <% end %>
   <% end %>
 
-      <div class="grid gap-2">
-        <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Columns</p>
-        <div class="flex flex-wrap gap-2 text-sm text-muted-foreground">
-          <% @model.runtime_constant.columns.each do |column| %>
-            <%= render "ui/badge" do %><%= column.name.humanize %><% end %>
-          <% end %>
-        </div>
-      </div>
 
-  <%= render "ui/card", classes: "space-y-4" do %>
-      <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
-        <%= render "ui/card/title", content: "Blocks" %>
-      <% end %>
+    </div>
+  </div>
 
-    <%= render "ui/card/content", classes: "space-y-4" do %>
-      <div id="blocks" class="space-y-4">
-        <%= render @model.blocks %>
-      </div>
+
+  <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Blocks</p>
+    <div id="blocks" class="flex w-full max-w-md flex-col gap-2">
+      <%= render @model.blocks %>
+    </div>
+
+  <div class="flex flex-wrap gap-2">
+    <% available_method_names(@model).each do |method_name| %>
+    <% next if method_name == "validates" %>
+    <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
+    <%= hidden_field_tag "darwin_block[method_name]", method_name %>
+    <%= render "ui/button", variant: "outline", type: "submit" do %>
+    Add <%= method_name.humanize %>
     <% end %>
-  <% end %>
+    <% end %>
+    <% end %>
 
-
-          <div class="flex flex-wrap gap-2">
-          <% available_method_names(@model).each do |method_name| %>
-            <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
-              <%= hidden_field_tag "darwin_block[method_name]", method_name %>
-              <%= render "ui/button", variant: "outline", type: "submit" do %>
-                Add <%= method_name.humanize %>
-              <% end %>
-            <% end %>
-          <% end %>
-        </div>
-</div>
+    <% if @runtime_class&.attribute_names&.any? %>
+    <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-flex items-center gap-2" } do %>
+    <%= hidden_field_tag "darwin_block[method_name]", "validates" %>
+    <%= select_tag "darwin_block[args_name]",
+    options_for_select(@runtime_class.attribute_names.map { |n| [n.humanize, n] }),
+    prompt: "Add validation",
+    class: "inline-flex h-9 items-center rounded-md border px-3 py-2 text-sm",
+     onchange: "this.form.submit()" %>
+     <% end %>
+     <% end %>
+   </div>
+ </div>

@@ -17,7 +17,7 @@ RSpec.describe Darwin::SchemaManager, type: :model do
     table_name = 'darwin_authors'
 
     expect(ActiveRecord::Base.connection.table_exists?(table_name)).to be true
-    model.destroy
+    Darwin::ModelBuilder::Destroy::Service.call(model: model)
     expect(ActiveRecord::Base.connection.table_exists?(table_name)).to be false
   end
 
@@ -29,6 +29,7 @@ RSpec.describe Darwin::SchemaManager, type: :model do
 
     attribute_block = model.blocks.where(method_name: 'attribute').find { |b| b.args == %w[name string] }
     attribute_block.destroy
+    Darwin::SchemaManager.sync!(model)
 
     expect(ActiveRecord::Base.connection.column_exists?(table_name, :name)).to be false
   end

@@ -18,8 +18,10 @@ module TestHelpers
 
     # Associations
     author_model.blocks.create!(method_name: 'has_many', args: ['articles'], position: 3)
+    article_model.blocks.create!(method_name: 'belongs_to', args: ['author'], position: 4)
     article_model.blocks.create!(method_name: 'has_many', args: ['comments'],
                                  options: { inverse_of: 'article', dependent: :destroy }, position: 5)
+    comment_model.blocks.create!(method_name: 'belongs_to', args: ['article'], position: 6)
 
     # Author
     author_model.blocks.create!(method_name: 'attribute', args: %w[name string], position: 0)
@@ -40,14 +42,12 @@ module TestHelpers
     comment_model.blocks.create!(method_name: 'validates', args: ['message'],
                                  options: { presence: true, length: { maximum: 100 } }, position: 1)
 
-    # Undefine classes if they exist
+    Darwin::Runtime.reload_all!(builder: true)
+
     %i[Author Article Comment].each do |const|
       Object.send(:remove_const, const) if Object.const_defined?(const)
+      Object.const_set(const, Darwin::Runtime.const_get(const))
     end
-
-    Object.const_set('Author', author_model.runtime_constant)
-    Object.const_set('Article', article_model.runtime_constant)
-    Object.const_set('Comment', comment_model.runtime_constant)
   end
 
   def clear_test_data!

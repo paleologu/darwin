@@ -11,7 +11,7 @@ This cheat sheet distills the Deepwiki runtime docs plus the implementation in `
 ## Multi-Pass Initialization Pattern
 
 1. `Darwin::Runtime.reload_all!` clears the `Darwin::Runtime` namespace and eager-loads every `Darwin::Model` with its blocks.
-2. **Pass 1 – Define shells:** each model calls `define_runtime_constant`, creating an empty ActiveRecord subclass under `Darwin::Runtime` with `table_name = "darwin_#{model.name.tableize}"`.
+2. **Pass 1 – Define shells:** runtime defines empty ActiveRecord subclasses under `Darwin::Runtime` with `table_name = "darwin_#{model.name.tableize}"` (no model callbacks involved).
 3. **Pass 2 – Evaluate blocks:** collect every block, sort by priority, then pipe them through `Darwin::Interpreter.evaluate_block`.
 - This guarantees that every association/validation runs against an already-defined class and a prepared schema (see below).
 

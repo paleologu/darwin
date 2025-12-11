@@ -1,13 +1,19 @@
+
+
 <%= turbo_frame_tag dom_id(block) do %>
-  <%= render "ui/card", classes: "mb-2" do %>
-    <%= render "ui/card/content", classes: "flex items-center justify-between" do %>
-      <div class="flex items-center gap-2">
-        <%= render "ui/badge", classes: "uppercase tracking-wide" do %><%= block.method_name %><% end %>
-        <span class="text-sm text-muted-foreground"><%= Array(block.args).join(", ") %></span>
+
+  <%= render UI::Item.new(variant: "outline") do %>
+    <%= render UI::ItemContent.new do %>
+    <div class="inline-block">
+        <%= render UI::Badge.new(variant: :outline) {  block.method_name  } %>
+        <span class="text-sm text-muted-foreground"> <%= Array(block.args).join(" :") %></span>
       </div>
+    <% end %>
+    <%= render UI::ItemActions.new do %>
       <%= form_with(url: darwin.model_block_path(@model, block), method: :delete) do |form| %>
         <%= render "ui/button",
-                    variant: "destructive",
+                    variant: "outline",
+                    size: "sm",
                     type: "submit",
                     attributes: { data: { turbo_confirm: "Are you sure?" } } do %>
           Delete
@@ -15,4 +21,5 @@
       <% end %>
     <% end %>
   <% end %>
+
 <% end %>

@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe "darwin/models/index", type: :view do
   before(:each) do
     assign(:models, [
-      Darwin::Model.create!(name: "Book"),
-      Darwin::Model.create!(name: "Author")
+      Darwin::ModelBuilder::Create::Service.call(params: { name: "Book" }).data[:model],
+      Darwin::ModelBuilder::Create::Service.call(params: { name: "Author" }).data[:model]
     ])
   end
 

@@ -39,13 +39,19 @@ RSpec.describe Darwin::Runtime do
         args: %w[bio string]
       )
 
+      # Ensure inverse belongs_to for Profile -> User
+      @profile_model.blocks.find_or_create_by!(
+        method_name: 'belongs_to',
+        args: ['user']
+      )
+
       # Undefine classes if they exist to ensure a clean load
       %i[User Profile].each do |const|
         Object.send(:remove_const, const) if Object.const_defined?(const)
       end
 
       # Reload the runtime to apply the new definitions
-      Darwin::Runtime.reload_all!
+      Darwin::Runtime.reload_all!(builder: true)
 
       # Define constants in the global namespace for the test
       Object.const_set('User', Darwin::Runtime.const_get('User'))

@@ -109,9 +109,10 @@ Darwin::Runtime.reload_all!
 To use the newly defined models as you would any other ActiveRecord class, assign them to constants.
 
 ```ruby
-Author  = Darwin::Model.find_by(name: "Author").runtime_constant
-Article = Darwin::Model.find_by(name: "Article").runtime_constant
-Comment = Darwin::Model.find_by(name: "Comment").runtime_constant
+Darwin::Runtime.reload_all!(builder: true) # or builder: false once schema is in sync
+Author  = Darwin::Runtime.const_get("Author")
+Article = Darwin::Runtime.const_get("Article")
+Comment = Darwin::Runtime.const_get("Comment")
 ```
 
 ### Step 4: Use Your Dynamic Models!
@@ -202,12 +203,12 @@ Business logic & non-standard operations are delegated to Servus services. Read 
 end
 
 # Reload all runtime models from the database
-Darwin::Runtime.reload_all!
+Darwin::Runtime.reload_all!(builder: true) # builder: false if schema already synced
 
 # Rebind constants to live runtime classes
-Author  = Darwin::Model.find_by(name: "Author").runtime_constant
-Article = Darwin::Model.find_by(name: "Article").runtime_constant
-Comment = Darwin::Model.find_by(name: "Comment").runtime_constant
+Author  = Darwin::Runtime.const_get("Author")
+Article = Darwin::Runtime.const_get("Article")
+Comment = Darwin::Runtime.const_get("Comment")
 ```
 
 ### Inspect Associations

@@ -16,7 +16,7 @@ RSpec.describe Darwin::Interpreter, type: :model do
 
     Darwin::Runtime.reload_all!(builder: true)
 
-    phone_class = phone_model.runtime_constant
+    phone_class = Darwin::Runtime.const_get('Phone')
 
     expect(phone_class.nested_attributes_options.keys).to include(:comments)
 

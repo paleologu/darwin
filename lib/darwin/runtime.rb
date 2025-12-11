@@ -12,12 +12,12 @@ module Darwin
       unload_runtime_constants!
 
       # Pass 1: Define all runtime classes without evaluating blocks
-      models.each(&:define_runtime_constant)
+      define_runtime_classes(models)
 
       # Pass 2: Evaluate attributes for all models by priority
       blocks = models.flat_map(&:blocks)
       blocks.sort_by { |b| block_priority(b.method_name) }.each do |block|
-        klass = block.darwin_model.runtime_constant
+        klass = runtime_class_for(block.darwin_model)
         Darwin::Interpreter.evaluate_block(klass, block, builder:)
       end
     end
@@ -32,26 +32,12 @@ module Darwin
       unload_runtime_constants!
 
       # Pass 1: Define all runtime classes without evaluating blocks
-      models.each do |model|
-          klass_name = model.name.classify
-      if Darwin::Runtime.const_defined?(klass_name, false)
-        runtime_constant = Darwin::Runtime.const_get(klass_name)
-      else
-        model_name = model.name
-        table_name = "darwin_#{model_name.to_s.tableize}"
-        klass = Class.new(::ApplicationRecord) do
-          self.table_name = table_name
-        end
-        Darwin::Runtime.const_set(klass_name, klass)
-      end
-    end
-
-
+      define_runtime_classes(models)
 
       # Pass 2: Evaluate attributes for all models by priority
       blocks = models.flat_map(&:blocks)
       blocks.sort_by { |b| block_priority(b.method_name) }.each do |block|
-        klass = block.darwin_model.runtime_constant
+        klass = runtime_class_for(block.darwin_model)
         Darwin::V2::Interpreter.evaluate_block(klass, block)
       end
     end
@@ -82,6 +68,22 @@ module Darwin
       else
         @priority_map[method_name] || 99
       end
+    end
+
+    def self.define_runtime_classes(models)
+      models.each do |model|
+        klass_name = model.name.classify
+        table_name = "darwin_#{model.name.to_s.tableize}"
+        Darwin::SchemaManager.ensure_table!(table_name)
+        klass = Class.new(::ApplicationRecord) do
+          self.table_name = table_name
+        end
+        Darwin::Runtime.const_set(klass_name, klass)
+      end
+    end
+
+    def self.runtime_class_for(model)
+      Darwin::Runtime.const_get(model.name.classify)
     end
   end
 end

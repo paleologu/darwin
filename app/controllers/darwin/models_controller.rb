@@ -7,50 +7,89 @@ class Darwin::ModelsController < Darwin::ApplicationController
   end
 
   def new
-    @model = Darwin::Model.new
+    result = Darwin::ModelBuilder::Build::Service.call
+    if result.success?
+      @model = result.data[:model]
+    else
+      redirect_to darwin.models_path, alert: result.error.message
+    end
   end
 
   def create
-    @model = Darwin::Model.new(model_params)
-    if @model.save!
-      redirect_to darwin.models_path, notice: 'Model was successfully created.'
-    else
-      @blocks = @model.blocks
-      render :new, status: :unprocessable_entity
-    end
+    result = Darwin::ModelBuilder::Create::Service.call(params: model_params)
+    return redirect_to(darwin.models_path, notice: 'Model was successfully created.') if result.success?
+
+    @model = result.data[:model] || Darwin::Model.new(model_params)
+    @blocks = @model.blocks
+    flash.now[:alert] = result.error.message
+    render :new, status: :unprocessable_entity
   end
 
   def show
-    @records = @model.runtime_constant.all
+    return if performed?
+
+    @runtime_class = runtime_for(@model)
+    return if performed?
+
+    @records = @runtime_class.all
   end
 
   def edit
+    return if performed?
+
+    @runtime_class = runtime_for(@model)
   end
 
   def update
-    if @model.update!(model_params)
-      redirect_to darwin.model_path(@model), notice: 'Model was successfully updated.'
-    else
-      @blocks = @model.blocks
-      render :edit, status: :unprocessable_entity
-    end
+    return if performed?
+
+    result = Darwin::ModelBuilder::Update::Service.call(model: @model, params: model_params)
+    return redirect_to(darwin.model_path(@model), notice: 'Model was successfully updated.') if result.success?
+
+    @model = result.data[:model] || @model
+    @blocks = @model.blocks
+    flash.now[:alert] = result.error.message
+    render :edit, status: :unprocessable_entity
   end
 
   def destroy
-    @model.destroy
-    redirect_to darwin.models_path, notice: 'Model was successfully destroyed.'
+    return if performed?
+
+    result = Darwin::ModelBuilder::Destroy::Service.call(model: @model)
+    if result.success?
+      redirect_to darwin.models_path, notice: 'Model was successfully destroyed.'
+    else
+      redirect_to darwin.models_path, alert: result.error.message
+    end
   end
 
 
   def attribute_type
-    column = @model.runtime_constant.columns_hash[params[:attribute_name]]
+    return if performed?
+
+    runtime = runtime_for(@model)
+    return if performed?
+
+    column = runtime.columns_hash[params[:attribute_name]]
     render json: { type: column&.type }
   end
 
   private
   def set_model
-    @model = Darwin::Model.find_by!(name: params[:name].singularize.classify)
-    # Works for models like car => cars, girl => girls but not for adsfg
+    name_param = params[:name].to_s
+    @model = Darwin::Model.where('lower(name) = ?', name_param.underscore).first ||
+             Darwin::Model.find_by(name: name_param.camelize)
+    unless @model
+      redirect_to darwin.models_path, alert: "Model not found"
+    end
+  end
+
+  def runtime_for(model, redirect_on_failure: true)
+    runtime_result = Darwin::RuntimeAccessor::Service.call(model:)
+    return runtime_result.data[:runtime_class] if runtime_result.success?
+
+    redirect_to(darwin.models_path, alert: runtime_result.error.message) if redirect_on_failure
+    nil
   end
 
   def model_params

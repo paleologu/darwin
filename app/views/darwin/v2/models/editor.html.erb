@@ -38,11 +38,12 @@
 <h2>
 	Current model: <%= @model.name if @model %>
 </h2>
-<h2>Table: <%= @model.runtime_constant.table_name %></h2>
+<% runtime_class = runtime_class_for(@model) %>
+<h2>Table: <%= runtime_class&.table_name %></h2>
 <h2>Columns:  </h2>
 
 
-     <% @model.runtime_constant.column_names.without("id", "created_at", "updated_at").each do |name| %>
+     <% (runtime_class&.column_names || []).without("id", "created_at", "updated_at").each do |name| %>
 <%= render UI::Dialog.new(attributes: { id: "phlex-edit-profile" }) do %>
   <%= render UI::DialogTrigger.new { ":" + name} %>
   <%= render UI::DialogOverlay.new do %>
@@ -71,4 +72,3 @@
       <% end %>
 
 <% end %>
-

@@ -1,19 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe "darwin/records/edit", type: :view do
-  let(:book_model) { Darwin::Model.create!(name: "Book") }
+  helper Darwin::ModelsHelper
+  let(:book_model) { Darwin::ModelBuilder::Create::Service.call(params: { name: "Book" }).data[:model] }
 
   before(:each) do
-    ActiveRecord::Schema.define do
-      create_table :books, force: true do |t|
-        t.string :name
-        t.timestamps
-      end
-    end
-    # Create a dummy class for Book
-    unless Object.const_defined?("Book")
-      Object.const_set("Book", Class.new(ApplicationRecord))
-    end
+    Darwin::SchemaManager.sync!(book_model)
+    Darwin::Runtime.reload_all!(builder: true)
+    Object.const_set("Book", Darwin::Runtime.const_get("Book")) unless Object.const_defined?("Book")
 
     assign(:model, book_model)
     @record = assign(:record, Book.create!())

@@ -59,12 +59,13 @@
 
                 <%= render "ui/table/body" do %>
                 <% @models.each do |model| %>
+                  <% runtime_class = runtime_class_for(model) %>
                  <%= render "ui/table/row" do %>
                  <%= render "ui/table/cell" do %><%= model.name %><% end %>
                   <%= render "ui/table/cell" do %>
-                     <%= render "ui/badge" do %><%= model.runtime_constant.table_name %><% end %>
+                     <%= render "ui/badge" do %><%= runtime_class&.table_name %><% end %>
                  <% end %>
-                 <%= render "ui/table/cell" do %> <%= Darwin::Runtime.const_source_location model.runtime_constant.name.split("::").last.to_sym %> <% end %>
+                 <%= render "ui/table/cell" do %> <%= runtime_class ? Darwin::Runtime.const_source_location(runtime_class.name.split("::").last.to_sym) : nil %> <% end %>
                     <%= render "ui/table/cell", classes: "text-right" do %>
                     <div class="flex justify-end gap-2">
                       <%= render "ui/navigation_menu/link", href: darwin.model_path(model), trigger_style: true do %>Show<% end %>

@@ -31,6 +31,11 @@ require_relative 'dummy/config/environment'
 
 # Load RSpec and other test dependencies
 require 'rspec/rails'
+require 'capybara/rspec'
+Capybara.run_server = false
+Capybara.app_host = 'http://localhost:3000'
+Capybara.default_driver = :selenium_chrome_headless
+Capybara.javascript_driver = :selenium_chrome_headless
 
 # Schema maintenance will be handled in the before(:suite) block
 
@@ -46,6 +51,9 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
   config.use_transactional_fixtures = false
+  config.before(:each, type: :system) do
+    driven_by :selenium_chrome_headless
+  end
 
   config.before(:suite) do
     # Manually run migrations to ensure the test database is up-to-date.

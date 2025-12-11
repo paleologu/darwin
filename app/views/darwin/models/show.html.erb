@@ -1,7 +1,7 @@
 <%= render "ui/card", classes: "space-y-6" do %>
   <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
     <div>
-      <%= render "ui/card/description", content: @model.runtime_constant.table_name %>
+      <%= render "ui/card/description", content: @runtime_class&.table_name %>
       <%= render "ui/card/title", content: @model.name %>
     </div>
     <div class="flex items-center gap-2">
@@ -16,13 +16,13 @@
 
   <%= render "ui/card/content", classes: "space-y-4" do %>
     <p class="text-sm text-muted-foreground">
-      Table name: <code class="font-mono text-foreground"><%= @model.runtime_constant.table_name %></code>
+      Table name: <code class="font-mono text-foreground"><%= @runtime_class&.table_name %></code>
     </p>
 
     <%= render "ui/table", classes: "w-full" do %>
       <%= render "ui/table/header" do %>
         <%= render "ui/table/row" do %>
-          <% @model.runtime_constant.columns.each do |column| %>
+          <% (@runtime_class&.columns || []).each do |column| %>
             <%= render "ui/table/head" do %><%= column.name.humanize %><% end %>
           <% end %>
         <% end %>
@@ -31,7 +31,7 @@
       <%= render "ui/table/body" do %>
         <% @records.each do |record| %>
           <%= render "ui/table/row" do %>
-            <% @model.runtime_constant.columns.each do |column| %>
+            <% (@runtime_class&.columns || []).each do |column| %>
               <%= render "ui/table/cell" do %>
                 <%= record.send(column.name) %>
               <% end %>

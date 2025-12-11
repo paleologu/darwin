@@ -36,6 +36,7 @@ module Darwin
     initializer 'darwin.helpers' do
       ActiveSupport.on_load(:action_controller_base) do
         helper Darwin::ApplicationHelper if defined?(Darwin::ApplicationHelper)
+        helper Darwin::ModelsHelper if defined?(Darwin::ModelsHelper)
       end
     end
 

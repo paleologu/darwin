@@ -10,18 +10,28 @@
   exclusion: %w[string text integer float decimal boolean]
 } %>
 <% selected_validation = f.object.validation_type.presence || f.object.options.keys.first %>
+<% runtime_class = runtime_class_for(f.object.darwin_model) %>
+<% attribute_choices = (runtime_class&.columns || []).map { |c| { name: c.name, type: c.type.to_s } } %>
 
 <div data-controller="block-form"
-     data-block-form-model-name-value="<%= f.object.darwin_model.name %>"
+     data-block-form-model-name-value="<%= f.object.darwin_model.to_param %>"
+     data-block-form-attribute-type-url-value="<%= attribute_type_model_path(f.object.darwin_model) %>"
+     data-block-form-attributes-value="<%= attribute_choices.to_json %>"
      class="space-y-4">
   <%= render "ui/field" do %>
     <%= render "ui/field/label" do %>Attribute<% end %>
     <%= render "ui/field/content" do %>
-      <%= render "ui/select", value: f.object.args_name do %>
+      <%= render "ui/select",
+                  value: f.object.args_name,
+                  data: { action: "ui--select:select->block-form#selectAttribute ui--select:change->block-form#selectAttribute" } do %>
         <%= render "ui/select/trigger", placeholder: "Pick an attribute", classes: "w-full" %>
         <%= render "ui/select/content" do %>
-          <% f.object.darwin_model.runtime_constant.attribute_names.each do |attr_name| %>
-            <%= render "ui/select/item", value: attr_name do %><%= attr_name.humanize %><% end %>
+          <% attribute_choices.each do |attr| %>
+            <%= render "ui/select/item",
+                        value: attr[:name],
+                        attributes: { data: { value: attr[:name], type: attr[:type], "ui--select-target": "item" }, action: "click->block-form#selectAttribute" } do %>
+              <%= attr[:name].humanize %>
+            <% end %>
           <% end %>
         <% end %>
         <%= f.hidden_field :args_name,
@@ -39,13 +49,23 @@
     <%= render "ui/field/label" do %>Validation<% end %>
     <%= render "ui/field/content",
                 attributes: { data: { "block-form-target": "validationTypeContainer" } } do %>
-      <%= render "ui/select", value: selected_validation, classes: "w-full" do %>
+      <%= render "ui/select",
+                  value: selected_validation,
+                  classes: "w-full",
+                  data: { action: "ui--select:select->block-form#selectValidation ui--select:change->block-form#selectValidation" } do %>
         <%= render "ui/select/trigger", placeholder: "Select validation" %>
         <%= render "ui/select/content" do %>
           <% validation_matrix.each do |validation, allowed_types| %>
             <%= render "ui/select/item",
                         value: validation,
-                        attributes: { data: { allowed_types: allowed_types.join(" ") } } do %>
+                        attributes: {
+                          data: {
+                            allowed_types: allowed_types.join(" "),
+                            value: validation,
+                            "ui--select-target": "item"
+                          },
+                          action: "click->block-form#selectValidation"
+                        } do %>
               <%= validation.to_s.humanize %>
             <% end %>
           <% end %>
@@ -65,11 +85,12 @@
               attributes: { data: { "block-form-target": "validationField", validation_type: "presence" }, style: "display: none;" } do %>
     <%= render "ui/field/label" do %>Presence<% end %>
     <%= render "ui/field/content", classes: "flex items-center gap-3" do %>
-      <%= f.fields_for :options do |options_form| %>
+      <% opts = f.object.options || {} %>
+      <%= f.fields_for :options, opts do |options_form| %>
         <%= render "ui/switch",
                     id: options_form.field_id(:presence),
                     name: options_form.field_name(:presence),
-                    checked: options_form.object['presence'] %>
+                    checked: opts['presence'] %>
       <% end %>
     <% end %>
     <%= render "ui/field/description", content: "Require this field to be present." %>
@@ -80,11 +101,12 @@
               attributes: { data: { "block-form-target": "validationField", validation_type: "numericality" }, style: "display: none;" } do %>
     <%= render "ui/field/label" do %>Numericality<% end %>
     <%= render "ui/field/content", classes: "flex items-center gap-3" do %>
-      <%= f.fields_for :options do |options_form| %>
+      <% opts = f.object.options || {} %>
+      <%= f.fields_for :options, opts do |options_form| %>
         <%= render "ui/switch",
                     id: options_form.field_id(:numericality),
                     name: options_form.field_name(:numericality),
-                    checked: options_form.object['numericality'] %>
+                    checked: opts['numericality'] %>
       <% end %>
     <% end %>
     <%= render "ui/field/description", content: "Limit to numeric values." %>
@@ -95,11 +117,12 @@
               attributes: { data: { "block-form-target": "validationField", validation_type: "uniqueness" }, style: "display: none;" } do %>
     <%= render "ui/field/label" do %>Uniqueness<% end %>
     <%= render "ui/field/content", classes: "flex items-center gap-3" do %>
-      <%= f.fields_for :options do |options_form| %>
+      <% opts = f.object.options || {} %>
+      <%= f.fields_for :options, opts do |options_form| %>
         <%= render "ui/switch",
                     id: options_form.field_id(:uniqueness),
                     name: options_form.field_name(:uniqueness),
-                    checked: options_form.object['uniqueness'] %>
+                    checked: opts['uniqueness'] %>
       <% end %>
     <% end %>
     <%= render "ui/field/description", content: "Ensure values are unique." %>
@@ -110,8 +133,9 @@
               attributes: { data: { "block-form-target": "validationField", validation_type: "length" }, style: "display: none;" } do %>
     <%= render "ui/field/label" do %>Length<% end %>
     <%= render "ui/field/content" do %>
-      <%= f.fields_for :options do |options_form| %>
-        <%= options_form.fields_for :length, (f.object.options['length'] || {}) do |length_form| %>
+      <% opts = f.object.options || {} %>
+      <%= f.fields_for :options, opts do |options_form| %>
+        <%= options_form.fields_for :length, opts.fetch('length', {}) do |length_form| %>
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <%= render "ui/input",
                         id: length_form.field_id(:minimum),
@@ -136,8 +160,9 @@
               attributes: { data: { "block-form-target": "validationField", validation_type: "format" }, style: "display: none;" } do %>
     <%= render "ui/field/label" do %>Format<% end %>
     <%= render "ui/field/content" do %>
-      <%= f.fields_for :options do |options_form| %>
-        <%= options_form.fields_for :format, (f.object.options['format'] || {}) do |format_form| %>
+      <% opts = f.object.options || {} %>
+      <%= f.fields_for :options, opts do |options_form| %>
+        <%= options_form.fields_for :format, opts.fetch('format', {}) do |format_form| %>
           <%= render "ui/input",
                       id: format_form.field_id(:with),
                       name: format_form.field_name(:with),
@@ -153,8 +178,9 @@
               attributes: { data: { "block-form-target": "validationField", validation_type: "inclusion" }, style: "display: none;" } do %>
     <%= render "ui/field/label" do %>Inclusion<% end %>
     <%= render "ui/field/content" do %>
-      <%= f.fields_for :options do |options_form| %>
-        <%= options_form.fields_for :inclusion, (f.object.options['inclusion'] || {}) do |inclusion_form| %>
+      <% opts = f.object.options || {} %>
+      <%= f.fields_for :options, opts do |options_form| %>
+        <%= options_form.fields_for :inclusion, opts.fetch('inclusion', {}) do |inclusion_form| %>
           <%= render "ui/input",
                       id: inclusion_form.field_id(:in),
                       name: inclusion_form.field_name(:in),
@@ -170,8 +196,9 @@
               attributes: { data: { "block-form-target": "validationField", validation_type: "exclusion" }, style: "display: none;" } do %>
     <%= render "ui/field/label" do %>Exclusion<% end %>
     <%= render "ui/field/content" do %>
-      <%= f.fields_for :options do |options_form| %>
-        <%= options_form.fields_for :exclusion, (f.object.options['exclusion'] || {}) do |exclusion_form| %>
+      <% opts = f.object.options || {} %>
+      <%= f.fields_for :options, opts do |options_form| %>
+        <%= options_form.fields_for :exclusion, opts.fetch('exclusion', {}) do |exclusion_form| %>
           <%= render "ui/input",
                       id: exclusion_form.field_id(:in),
                       name: exclusion_form.field_name(:in),

@@ -1,0 +1,30 @@
+<%= render UI::DropdownMenu.new do %>
+  <%= render UI::DropdownMenuTrigger.new(as_child: false) do  %>
+
+
+
+
+
+<%= render UI::Tooltip.new do %>
+  <%= render UI::TooltipTrigger.new(as_child: true) do |attrs| %>
+    <%= render UI::Button.new(**attrs, variant: :outline) { column.name.humanize } %>
+  <% end %>
+  <%= render UI::TooltipContent.new { column.type } %>
+<% end %>
+
+
+
+  <% end %>
+  <%= render UI::DropdownMenuContent.new(classes: "w-56") do %>
+    <%= render UI::DropdownMenuItem.new do %>
+      Edit
+    <% end %>
+    <%= render UI::DropdownMenuItem.new do %>
+      Drop
+    <% end %>
+
+  <% end %>
+<% end %>
+
+
+

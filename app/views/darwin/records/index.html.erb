@@ -1,5 +1,6 @@
 <%= content_for :heading, "Records" %>
 <%= content_for :subheading, @model.name.pluralize %>
+<% runtime = @runtime_class || runtime_class_for(@model) %>
 <%= render "ui/card" do %>
   <%= render "ui/card/header", classes: "flex items-center justify-between" do %>
     <div>
@@ -12,21 +13,21 @@
     </div>
   <% end %>
 
-  <%= render "ui/card/content" do %>
-    <%= render "ui/table", classes: "w-full" do %>
-      <%= render "ui/table/header" do %>
-        <%= render "ui/table/row" do %>
-          <% @model.runtime_constant.attribute_names.each do |attr_name| %>
-            <%= render "ui/table/head" do %><%= attr_name.humanize %><% end %>
+      <%= render "ui/card/content" do %>
+      <%= render "ui/table", classes: "w-full" do %>
+        <%= render "ui/table/header" do %>
+          <%= render "ui/table/row" do %>
+              <% runtime.attribute_names.each do |attr_name| %>
+                <%= render "ui/table/head" do %><%= attr_name.humanize %><% end %>
+              <% end %>
+              <%= render "ui/table/head", classes: "text-right" do %>Actions<% end %>
+            <% end %>
           <% end %>
-          <%= render "ui/table/head", classes: "text-right" do %>Actions<% end %>
-        <% end %>
-      <% end %>
 
       <%= render "ui/table/body" do %>
         <% @records.each do |record| %>
           <%= render "ui/table/row" do %>
-            <% @model.runtime_constant.attribute_names.each do |attr_name| %>
+            <% runtime.attribute_names.each do |attr_name| %>
               <%= render "ui/table/cell" do %>
                 <%= record.send(attr_name) %>
               <% end %>
