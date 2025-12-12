@@ -5,7 +5,7 @@ module Darwin
 
 
     validates :name, presence: true
-    validates :type, presence: true, inclusion: { in: %w[string integer boolean text datetime date float decimal] }
+    validates :column_type, presence: true, inclusion: { in: %w[string integer boolean text datetime date float decimal] }
 
 
   end

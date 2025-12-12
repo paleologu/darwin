@@ -16,7 +16,7 @@ module Darwin
     attr_writer :args_name, :args_type
 
     before_validation :assemble_args, if: lambda {
-      %w[attribute has_many belongs_to has_one validates accepts_nested_attributes_for].include?(method_name)
+      %w[has_many belongs_to has_one validates accepts_nested_attributes_for].include?(method_name)
     }
     before_validation :normalize_association_args, if: lambda {
       %w[has_many belongs_to has_one accepts_nested_attributes_for].include?(method_name)
