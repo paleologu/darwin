@@ -8,9 +8,9 @@ module Darwin
         name, type = block.args
         return unless name.present? && type.present? # This line shouldn't exist in the first place with validations in place.
 
-        if builder  
-        Darwin::SchemaManager.ensure_column!(klass.table_name, name, type)
-        klass.reset_column_information
+        if builder
+          Darwin::SchemaManager.ensure_column!(klass.table_name, name, type)
+          klass.reset_column_information
         end
         klass.attribute name.to_sym, type.to_sym
 
@@ -19,13 +19,13 @@ module Darwin
         assoc_name = block.args.first.to_sym
         return if klass.reflect_on_association(assoc_name)
 
-        if builder
-          options = deep_symbolize_keys(block.options)
-          options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String)
-          options[:class_name] ||= block.args.first.to_s.camelize.singularize
-          options[:foreign_key] ||= "#{assoc_name}_id"
-          options[:optional] = false unless options.key?(:optional)
+        options = deep_symbolize_keys(block.options)
+        options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String)
+        options[:class_name] ||= block.args.first.to_s.camelize.singularize
+        options[:foreign_key] ||= "#{assoc_name}_id"
+        options[:optional] = false unless options.key?(:optional)
 
+        if builder
           Darwin::SchemaManager.ensure_column!(klass.table_name, options[:foreign_key].to_s, :integer)
           klass.reset_column_information
         end
@@ -37,62 +37,58 @@ module Darwin
         assoc_name = block.args.first.to_sym
         return if klass.reflect_on_association(assoc_name)
 
-        if builder
-          options = deep_symbolize_keys(block.options)
-          options[:class_name] ||= block.args.first.to_s.camelize.singularize
-          options[:foreign_key] ||= "#{klass.name.demodulize.underscore}_id"
-          options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String)
+        options = deep_symbolize_keys(block.options)
+        options[:class_name] ||= block.args.first.to_s.camelize.singularize
+        options[:foreign_key] ||= "#{klass.name.demodulize.underscore}_id"
+        options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String)
+        target_class_name = options[:class_name]
 
-          target_class_name = options[:class_name]
+        if builder
           target_model = Darwin::Model.find_by_name(target_class_name)
           return unless target_model
 
-          unless target_model.blocks.any? do |b|
-            b.method_name == 'belongs_to' && b.args.first == klass.name.demodulize.underscore
+          unless target_model.blocks.any? { |b| b.method_name == 'belongs_to' && b.args.first == klass.name.demodulize.underscore }
+            target_model.blocks.create!(method_name: 'belongs_to', args: [klass.name.demodulize.underscore])
           end
-          target_model.blocks.create!(method_name: 'belongs_to', args: [klass.name.demodulize.underscore])
         end
 
-        target_class = Darwin::Runtime.const_get(target_class_name)
-        Darwin::SchemaManager.ensure_column!(target_class.table_name, options[:foreign_key].to_s, :integer)
+        if builder && Darwin::Runtime.const_defined?(target_class_name, false)
+          target_class = Darwin::Runtime.const_get(target_class_name)
+          Darwin::SchemaManager.ensure_column!(target_class.table_name, options[:foreign_key].to_s, :integer)
+          target_class.reset_column_information
+        end
 
-        target_class.reset_column_information
-      end
+        klass.has_one assoc_name, **options
+      when 'has_many'
+        return unless block.args.first.present?
+        assoc_name = block.args.first.to_sym
+        return if klass.reflect_on_association(assoc_name)
 
-      klass.has_one assoc_name, **options
-    when 'has_many'
-      return unless block.args.first.present?
-      assoc_name = block.args.first.to_sym
-      return if klass.reflect_on_association(assoc_name)
-
-      if builder
         options = deep_symbolize_keys(block.options)
         options[:class_name] ||= block.args.first.to_s.camelize.singularize
         options[:foreign_key] ||= "#{klass.name.demodulize.underscore}_id"
         options[:inverse_of] ||= klass.name.demodulize.underscore.to_sym
-
         options[:dependent] = options[:dependent].to_sym if options[:dependent].is_a?(String) # The dependent option must be a symbol, but gets stored as a string.
-
-
         target_class_name = options[:class_name]
-        target_model = Darwin::Model.find_by_name(target_class_name)
 
-        return unless target_model
+        if builder
+          target_model = Darwin::Model.find_by_name(target_class_name)
+          return unless target_model
 
-        unless target_model.blocks.any? do |b|
-          b.method_name == 'belongs_to' && b.args.first == klass.name.demodulize.underscore
+          unless target_model.blocks.any? { |b| b.method_name == 'belongs_to' && b.args.first == klass.name.demodulize.underscore }
+            target_model.blocks.create!(method_name: 'belongs_to', args: [klass.name.demodulize.underscore])
+          end
+
+          if Darwin::Runtime.const_defined?(target_class_name, false)
+            target_class = Darwin::Runtime.const_get(target_class_name)
+            Darwin::SchemaManager.ensure_column!(target_class.table_name, options[:foreign_key].to_s, :integer)
+            target_class.reset_column_information
+          end
         end
-        target_model.blocks.create!(method_name: 'belongs_to', args: [klass.name.demodulize.underscore])
-      end
 
-      target_class = Darwin::Runtime.const_get(target_class_name)
-      Darwin::SchemaManager.ensure_column!(target_class.table_name, options[:foreign_key].to_s, :integer)
-      target_class.reset_column_information
-    end
+        klass.has_many assoc_name, **options
 
-    klass.has_many assoc_name, **options
-
-  when 'validates'
+      when 'validates'
         # This is the definitive fix. It makes the interpreter completely
         # resilient to malformed validation blocks.
         return unless block.args.is_a?(Array)
