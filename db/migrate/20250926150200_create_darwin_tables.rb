@@ -6,7 +6,6 @@ class CreateDarwinTables < ActiveRecord::Migration[7.1]
       # t.string :owner_type, null: false
       # t.bigint :owner_id, null: false
       t.string :name, null: false
-      t.json :columns, default: []
       #t.string :table_name, null: false
       t.timestamps
 

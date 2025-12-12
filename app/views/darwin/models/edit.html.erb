@@ -54,6 +54,7 @@ Back
 </div>
 
     <%# NEW COLUMN FORM HERE %>
+    <!-- Does this even hit the add column action? -->
     <%= form_with url: darwin.columns_model_path(@model), method: :post, data: { controller: "columns", action: "submit->columns#submit change->columns#submit" }, html: { class: "flex items-center gap-2 mt-3" } do %>
       <%= text_field_tag "column[name]", nil, placeholder: "column name", class: "h-9 rounded-md border px-3 py-2 text-sm", required: true, data: { "columns-target": "nameField", action: "blur->columns#normalizeName" } %>
       <%= select_tag "column[type]",

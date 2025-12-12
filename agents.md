@@ -18,7 +18,6 @@ This project is a Rails engine that builds runtime ActiveRecord models from DB-s
 ## Runtime / Interpreter
 - Association args are normalized **before save** in `Darwin::Block` (has_many → plural underscore, belongs_to/has_one → singular underscore). Interpreter assumes persisted args are already normalized; do not “fix” them again.
 - `Darwin::SchemaManager` avoids SQLite-only issues (`change_column` without `using:`) and derives foreign keys from underscored belongs_to args.
-- `Darwin::Column` implements `dump/load` for serialized `columns` JSON.
 - Runtime reload uses the **Multi-Pass Initialization Pattern** (Pass 1: define class shells under `Darwin::Runtime`, Pass 2: evaluate stored blocks via `Darwin::Interpreter`).
 - Block priority is fixed (0: `attribute`, 1: `belongs_to/has_many/has_one`, 2: attachments, 3: `validates`, 4: `accepts_nested_attributes_for`, >4: scopes/callbacks). Never reorder without updating `Darwin::Runtime.block_priority` and docs.
 - `builder: true` tells the interpreter to touch schema via `Darwin::SchemaManager`; standard runtime reloads call it with `builder: false` once schema is in sync. Builder mode is for the UI / model editor only.

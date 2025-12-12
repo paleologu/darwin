@@ -24,7 +24,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_26_150200) do
   end
 
   create_table "darwin_models", force: :cascade do |t|
-    t.json "columns", default: []
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false

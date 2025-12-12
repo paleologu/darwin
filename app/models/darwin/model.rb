@@ -4,7 +4,6 @@ module Darwin
   class Model < ::ApplicationRecord
     self.table_name = 'darwin_models'
 
-    serialize :columns, coder: Darwin::Column
     has_many :blocks, class_name: 'Darwin::Block', foreign_key: 'model_id', dependent: :destroy,
                       inverse_of: :darwin_model
 
