@@ -16,7 +16,7 @@ module Darwin
                      format: { with: /\A[a-zA-Z_][a-zA-Z0-9_]*\z/, message: 'must be a valid database identifier' }
 
     def to_param
-      name.downcase_first
+      name.to_s.downcase
     end
 
     def collection_param

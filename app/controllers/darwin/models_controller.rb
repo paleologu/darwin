@@ -65,11 +65,13 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
 
   def attribute_type
-    return if performed?
+    result = Darwin::RuntimeAccessor::Service.call(model: @model)
+    unless result.success?
+      render json: { error: result.error&.message || "Runtime unavailable" }, status: :unprocessable_entity
+      return
+    end
 
-    runtime = runtime_for(@model)
-    return if performed?
-
+    runtime = result.data[:runtime_class]
     column = runtime.columns_hash[params[:attribute_name]]
     render json: { type: column&.type }
   end

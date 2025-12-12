@@ -65,7 +65,24 @@ class Darwin::BlocksController < ApplicationController
   private
 
   def set_model
-    @model = Darwin::Model.find_by(name: params[:model_name].singularize.classify)
+    name_param = params[:model_name].to_s
+    candidates = [
+      name_param.singularize,
+      name_param,
+      name_param.tableize.singularize,
+      name_param.tableize,
+      name_param.camelize.singularize,
+      name_param.camelize,
+      name_param.underscore.singularize
+    ].compact.map { |c| c.to_s.downcase }.uniq
+
+    @model = nil
+    candidates.each do |candidate|
+      @model = Darwin::Model.where('lower(name) = ?', candidate).first
+      break if @model
+    end
+
+    redirect_to(darwin.models_path, alert: "Model not found") unless @model
   end
 
   def block_params

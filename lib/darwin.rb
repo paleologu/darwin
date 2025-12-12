@@ -3,7 +3,6 @@
 require 'darwin/version'
 require 'darwin/engine'
 require 'darwin/interpreter'
-require 'darwin/v2/interpreter'
 require 'darwin/runtime'
 require 'darwin/schema_manager'
 # require "darwin/runtime/loader"

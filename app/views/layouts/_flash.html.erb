@@ -1,0 +1,8 @@
+<%= turbo_frame_tag "flash" do %>
+  <% flash.each do |type, message| %>
+    <div class="mb-2 rounded border border-muted bg-white/70 px-3 py-2 text-sm text-foreground shadow-sm">
+      <strong class="mr-2 capitalize"><%= type %>:</strong>
+      <%= message %>
+    </div>
+  <% end %>
+<% end %>
