@@ -22,27 +22,6 @@ module Darwin
       end
     end
 
-
-    def self.interpret_all!(current_model: nil)
-      # Eager-load blocks to prevent N+1 queries
-      models = Darwin::Model.includes(:blocks).all.to_a
-      models << current_model if current_model && !models.find { |m| m.id == current_model.id }
-
-      # Unload all existing runtime constants to ensure a clean slate.
-      unload_runtime_constants!
-
-      # Pass 1: Define all runtime classes without evaluating blocks
-      define_runtime_classes(models)
-
-      # Pass 2: Evaluate attributes for all models by priority
-      blocks = models.flat_map(&:blocks)
-      blocks.sort_by { |b| block_priority(b.method_name) }.each do |block|
-        klass = runtime_class_for(block.darwin_model)
-        Darwin::V2::Interpreter.evaluate_block(klass, block)
-      end
-    end
-
-
     def self.unload_runtime_constants!
       Darwin::Runtime.constants.each do |const_name|
         const = Darwin::Runtime.const_get(const_name)

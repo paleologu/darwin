@@ -31,7 +31,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'turbo-rails', '< 3', '>= 2'
   spec.add_dependency 'view_component', '~> 4.1.0'
   spec.add_dependency "phlex-rails", "~> 2.0"
-  #spec.add_dependency "view_component", "~> 3.0"
   spec.add_dependency 'servus'
 
   spec.add_development_dependency 'database_cleaner-active_record'
