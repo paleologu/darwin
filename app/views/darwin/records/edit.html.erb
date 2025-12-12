@@ -5,10 +5,10 @@
       <h1 class="text-2xl font-semibold text-foreground"><%= @model.name %></h1>
     </div>
     <div class="flex gap-2">
-      <%= render "ui/navigation_menu/link", href: darwin.record_path(@model.name.pluralize.underscore, @record), trigger_style: true do %>
+      <%= render "ui/navigation_menu/link", href: darwin.record_path(@model.collection_param, @record), trigger_style: true do %>
         Show
       <% end %>
-      <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.name.pluralize.underscore), trigger_style: true do %>
+      <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.collection_param), trigger_style: true do %>
         Back
       <% end %>
     </div>

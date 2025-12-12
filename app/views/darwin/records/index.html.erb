@@ -7,7 +7,7 @@
     </div>
     <div class="flex gap-2">
       <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(@model), trigger_style: true do %>Edit Schema<% end %>
-      <%= render "ui/button", type: "button", attributes: { onclick: "Turbo.visit('#{darwin.new_record_path(@model.name.pluralize.underscore)}')" } do %>
+      <%= render "ui/button", type: "button", attributes: { onclick: "Turbo.visit('#{darwin.new_record_path(@model.collection_param)}')" } do %>
         New <%= @model.name %>
       <% end %>
     </div>
@@ -34,9 +34,9 @@
             <% end %>
             <%= render "ui/table/cell", classes: "text-right" do %>
               <div class="flex justify-end gap-2">
-                <%= render "ui/navigation_menu/link", href: darwin.record_path(@model.name.pluralize.underscore, record), trigger_style: true do %>Show<% end %>
-                <%= render "ui/navigation_menu/link", href: darwin.edit_record_path(@model.name.pluralize.underscore, record), trigger_style: true do %>Edit<% end %>
-                <%= form_with url: darwin.record_path(@model.name.pluralize.underscore, record), method: :delete, data: { turbo_confirm: "Are you sure?" } do %>
+                <%= render "ui/navigation_menu/link", href: darwin.record_path(@model.collection_param, record), trigger_style: true do %>Show<% end %>
+                <%= render "ui/navigation_menu/link", href: darwin.edit_record_path(@model.collection_param, record), trigger_style: true do %>Edit<% end %>
+                <%= form_with url: darwin.record_path(@model.collection_param, record), method: :delete, data: { turbo_confirm: "Are you sure?" } do %>
                   <%= render "ui/button", variant: "destructive", type: "submit" do %>
                     Destroy
                   <% end %>

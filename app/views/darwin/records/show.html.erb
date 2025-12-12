@@ -7,10 +7,10 @@
         <%= render "ui/card/title", content: "Record" %>
       </div>
       <div class="flex gap-2">
-        <%= render "ui/navigation_menu/link", href: darwin.edit_record_path(@model.name.pluralize.underscore, @record), trigger_style: true do %>
+        <%= render "ui/navigation_menu/link", href: darwin.edit_record_path(@model.collection_param, @record), trigger_style: true do %>
           Edit
         <% end %>
-        <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.name.pluralize.underscore), trigger_style: true do %>
+        <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.collection_param), trigger_style: true do %>
           Back
         <% end %>
       </div>
@@ -35,7 +35,7 @@
             <% if associated_record %>
               <% associated_model = Darwin::Model.find_by(name: association.klass.name) %>
               <% if associated_model %>
-                <% link_path = darwin.record_path(associated_model.name.pluralize.underscore, associated_record) %>
+                <% link_path = darwin.record_path(associated_model.collection_param, associated_record) %>
                 <%= link_to associated_record.to_s, link_path, class: "text-primary underline-offset-4 hover:underline" %>
               <% else %>
                 <span class="text-sm"><%= associated_record.to_s %></span>
@@ -57,7 +57,7 @@
                 <% associated_records.each do |associated_record| %>
                   <% associated_model = Darwin::Model.find_by(name: association.klass.name) %>
                   <% if associated_model %>
-                    <% link_path = darwin.record_path(associated_model.name.pluralize.underscore, associated_record) %>
+                    <% link_path = darwin.record_path(associated_model.collection_param, associated_record) %>
                     <div><%= link_to associated_record.to_s, link_path, class: "text-sm text-primary underline-offset-4 hover:underline" %></div>
                   <% else %>
                     <div class="text-sm"><%= associated_record.to_s %></div>

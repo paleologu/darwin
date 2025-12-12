@@ -8,7 +8,7 @@
       <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(@model), trigger_style: true do %>
         Edit
       <% end %>
-      <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.name.pluralize.underscore), trigger_style: true do %>
+      <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.collection_param), trigger_style: true do %>
         Records
       <% end %>
     </div>

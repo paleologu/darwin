@@ -8,8 +8,8 @@ This project is a Rails engine that builds runtime ActiveRecord models from DB-s
 - Database: SQLite only. `pg` is removed; migrations use `json`, not `jsonb`.
 
 ## Migrations and Tests
-- Engine migration lives at `db/migrate/20250926150200_create_darwin_tables.rb` (JSON columns for `darwin_models.columns`, `darwin_blocks.args/options`).
-- `spec/rails_helper.rb` runs migrations from `db/migrate`; there are no dummy migrations. Don’t add conflicting migration names.
+- Engine migration lives at `db/migrate/20250926150200_create_darwin_tables.rb` (JSON columns for `darwin_blocks.args/options`, base tables for models/blocks/columns). Test helper also creates `darwin_columns` table if missing.
+- `spec/rails_helper.rb` runs engine migrations; no dummy migrations are needed. Don’t add conflicting migration names.
 - Preparing DBs manually:
   - `cd spec/dummy && BUNDLE_WITHOUT=development bundle exec rails db:prepare`
   - `cd spec/dummy && BUNDLE_WITHOUT=development bundle exec rails db:prepare RAILS_ENV=test`
@@ -17,14 +17,16 @@ This project is a Rails engine that builds runtime ActiveRecord models from DB-s
 
 ## Runtime / Interpreter
 - Association args are normalized **before save** in `Darwin::Block` (has_many → plural underscore, belongs_to/has_one → singular underscore). Interpreter assumes persisted args are already normalized; do not “fix” them again.
-- `Darwin::SchemaManager` avoids SQLite-only issues (`change_column` without `using:`) and derives foreign keys from underscored belongs_to args.
+- `Darwin::SchemaManager` avoids SQLite-only issues (`change_column` without `using:`) and derives foreign keys from underscored belongs_to args. Columns are now sourced from `darwin_columns` metadata plus belongs_to foreign keys; ad-hoc DDL is not the source of truth.
 - Runtime reload uses the **Multi-Pass Initialization Pattern** (Pass 1: define class shells under `Darwin::Runtime`, Pass 2: evaluate stored blocks via `Darwin::Interpreter`).
 - Block priority is fixed (0: `attribute`, 1: `belongs_to/has_many/has_one`, 2: attachments, 3: `validates`, 4: `accepts_nested_attributes_for`, >4: scopes/callbacks). Never reorder without updating `Darwin::Runtime.block_priority` and docs.
 - `builder: true` tells the interpreter to touch schema via `Darwin::SchemaManager`; standard runtime reloads call it with `builder: false` once schema is in sync. Builder mode is for the UI / model editor only.
+- Schema work is serialized through `Darwin::SchemaSyncJob` (per-model file lock). In test it runs inline; in other envs it enqueues on Solid Queue then reloads runtime. Persist metadata first (e.g., `Darwin::Column`) then enqueue.
 
 ## Routing / Forms
 - Engine routes are wrapped with `constraints format: /html|turbo_stream/` to avoid asset hits; `/icon.svg` should not reach controllers.
-- Model builder: `Darwin::Model` accepts nested attributes for `blocks` only (not `columns`).
+- Model builder: `Darwin::Model` accepts nested attributes for `blocks` and `columns`.
+- Use helper-based paths instead of hardcoded strings; model `collection_param` is `name.underscore.pluralize`.
 
 ## Known Gotchas
 - Using bare `rails` in repo root may invoke the generator; use `bundle exec rails ...` (via shim) instead.
@@ -41,6 +43,7 @@ This project is a Rails engine that builds runtime ActiveRecord models from DB-s
 - Prefer the Rails MCP server for project metadata and file read/write operations whenever it is more performant or token efficient, falling back to direct filesystem commands only when necessary.
 - Lean on Deepwiki for repository/domain knowledge before trying to reason everything out manually; cite those docs when they inform conclusions.
 - Reference the docs in `/docs` (runtime architecture, Servus, etc.) instead of restating large excerpts in responses. Mention file+line numbers when summarizing decisions.
+- Perf/concurrency specs are opt-in (see `benchmark/` and `spec/support/performance_helpers.rb`); don’t run heavy benchmarks in CI unless requested.
 
 ## Servus Services
 - Business logic belongs in Servus services. Use `rails g servus:service namespace/name args` to create new ones so schemas, specs, and directory structure stay consistent.

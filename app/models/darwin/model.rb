@@ -19,5 +19,9 @@ module Darwin
       name.downcase_first
     end
 
+    def collection_param
+      name.to_s.underscore.pluralize
+    end
+
   end
 end

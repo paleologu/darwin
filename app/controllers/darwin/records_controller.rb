@@ -30,11 +30,9 @@ class Darwin::RecordsController < Darwin::ApplicationController
     return if performed?
 
     @record = @runtime_class.new(record_params)
-    if @record.save
-      redirect_to darwin.record_path(@model.name.pluralize.underscore, @record), notice: 'Record was successfully created.'
-    else
-      render :new, status: :unprocessable_entity
-    end
+    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully created.') if @record.save
+
+    render :new, status: :unprocessable_entity
   end
 
   def edit
@@ -53,11 +51,9 @@ class Darwin::RecordsController < Darwin::ApplicationController
     return if performed?
 
     @record = @runtime_class.find(params[:id])
-    if @record.update(record_params)
-      redirect_to darwin.record_path(@model.name.pluralize.underscore, @record), notice: 'Record was successfully updated.'
-    else
-      render :edit, status: :unprocessable_entity
-    end
+    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully updated.') if @record.update(record_params)
+
+    render :edit, status: :unprocessable_entity
   end
 
   def destroy
@@ -65,7 +61,7 @@ class Darwin::RecordsController < Darwin::ApplicationController
 
     @record = @runtime_class.find(params[:id])
     @record.destroy
-    redirect_to darwin.records_path(@model.name.pluralize.underscore), notice: 'Record was successfully destroyed.'
+    redirect_to records_path_for(@model), notice: 'Record was successfully destroyed.'
   end
 
   private

@@ -2,12 +2,13 @@
 
 Darwin is a Rails engine that allows you to define ActiveRecord models, attributes, validations, and associations at runtime. These definitions are stored in the database and evaluated into live Ruby classes, providing a powerful way to build highly dynamic, data-driven applications.
 
-## Architecture Cheat Sheet
+## Architecture Cheat Sheet (active truths)
 
-- **Universal DSL** – every macro call (`attribute`, `has_many`, `validates`, etc.) is persisted as `method_name`, `args`, `options`, and optional `body` in `darwin_blocks`. That uniform shape is what makes the runtime deterministic.
-- **Multi-Pass Initialization** – runtime reloads run in two passes: Pass 1 defines empty classes under `Darwin::Runtime`, Pass 2 sorts blocks by [`Darwin::Runtime.block_priority`](docs/runtime_architecture.md#block-priority) and evaluates them via the interpreter so dependencies (columns → associations → validations) are satisfied.
-- **Schema Sync** – builder-mode operations (`builder: true`) call `Darwin::SchemaManager` to create/alter backing tables before runtime-only reloads (`builder: false`) hydrate classes.
-- **Servus Services** – complex workflows live in Servus service objects (`app/services/**`), generated via `rails g servus:service`. See [docs/servus.md](docs/servus.md) for conventions.
+- **Uniform block DSL** – every macro call (`attribute`, `has_many`, `validates`, etc.) is persisted as `method_name`, `args`, `options`, and optional `body` in `darwin_blocks`. Association args are normalized *before save* (has_many pluralized, belongs_to/has_one singularized).
+- **Schema source of truth** – runtime table columns now come from `darwin_columns` (plus fallback to attribute/belongs_to blocks). Column add/edit/drop persists metadata first, then schema sync runs via `Darwin::SchemaSyncJob`.
+- **Multi-Pass Initialization** – runtime reloads run in two passes: Pass 1 defines empty classes under `Darwin::Runtime`, Pass 2 sorts blocks by [`Darwin::Runtime.block_priority`](docs/runtime_architecture.md#block-priority) and evaluates them so dependencies (columns → associations → validations → nested attrs) are satisfied.
+- **Schema Sync (queued + locked)** – `Darwin::SchemaSyncJob` serializes `SchemaManager.sync!/drop!` with a per-model file lock, then reloads runtime. It runs inline in test (`Rails.env.test?` or `DARWIN_SCHEMA_SYNC_INLINE=1`), otherwise it enqueues on Solid Queue.
+- **Servus Services** – complex workflows live in Servus service objects (`app/services/**`), generated via `rails g servus:service`. See [docs/servus.md](docs/servus.md).
 
 For the full runtime walkthrough (flow diagrams, block types, troubleshooting), read [docs/runtime_architecture.md](docs/runtime_architecture.md).
 
@@ -102,7 +103,7 @@ Once the definitions are in the database, you need to tell the Darwin runtime to
 Darwin::Runtime.reload_all!
 ```
 
-> 💡 **Builder vs Runtime mode**: UI interactions and seed scripts that mutate schema should call `Darwin::Runtime.reload_all!(builder: true)` so `Darwin::SchemaManager` stays in sync. Application boot typically runs without the flag (defaults to `builder: false`) because the schema is already prepared.
+> 💡 **Builder vs Runtime mode**: UI interactions and seed scripts that mutate schema should call `Darwin::Runtime.reload_all!(builder: true)` so `Darwin::SchemaManager` stays in sync. Application boot typically runs without the flag (defaults to `builder: false`) because the schema is already prepared. In production, schema sync/reload runs via `Darwin::SchemaSyncJob` (Solid Queue) with a per-model lock; tests run inline automatically.
 
 ### Step 3: Assign the Runtime Classes to Constants
 
@@ -245,7 +246,12 @@ Article.columns_hash.keys
 ### Author
 My name is John.
 
-## 9. Further Reading
+## 9. Performance & Concurrency (opt-in)
+
+- Seeding helpers and perf benchmarks live in `spec/support/performance_helpers.rb` and `benchmark/perf_benchmarks.rb` (Faker + benchmark-ips).
+- Heavy perf/concurrency specs are **not** part of the default suite; run them manually if needed.
+
+## 10. Further Reading
 
 - [docs/runtime_architecture.md](docs/runtime_architecture.md) – how multi-pass reloads, block priority, and schema sync interplay.
 - [docs/model_workflow.md](docs/model_workflow.md) – step-by-step cookbook for defining and using runtime models.

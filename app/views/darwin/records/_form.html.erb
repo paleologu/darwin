@@ -1,4 +1,4 @@
-<%= form_with(model: @record, url: @record.new_record? ? darwin.records_path(@model.name.pluralize.underscore) : darwin.record_path(@model.name.pluralize.underscore, @record)) do |form| %>
+<%= form_with(model: @record, url: @record.new_record? ? darwin.records_path(@model.collection_param) : darwin.record_path(@model.collection_param, @record)) do |form| %>
   <div class="space-y-6">
     <% if @record.errors.any? %>
       <%= render "ui/alert", variant: :destructive do %>
@@ -102,11 +102,11 @@
     <% end %>
 
     <div class="flex justify-end gap-3">
-      <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.name.pluralize.underscore), trigger_style: true do %>
+      <%= render "ui/navigation_menu/link", href: darwin.records_path(@model.collection_param), trigger_style: true do %>
         Cancel
       <% end %>
       <% if @record.persisted? %>
-        <%= render "ui/navigation_menu/link", href: darwin.record_path(@model.name.pluralize.underscore, @record), trigger_style: true do %>
+        <%= render "ui/navigation_menu/link", href: darwin.record_path(@model.collection_param, @record), trigger_style: true do %>
           Show
         <% end %>
       <% end %>
