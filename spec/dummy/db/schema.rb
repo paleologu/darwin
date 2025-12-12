@@ -23,6 +23,20 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_26_150200) do
     t.index ["model_id"], name: "index_darwin_blocks_on_model_id"
   end
 
+  create_table "darwin_columns", force: :cascade do |t|
+    t.string "column_type"
+    t.datetime "created_at", null: false
+    t.string "default"
+    t.integer "limit"
+    t.integer "model_id", null: false
+    t.string "name", null: false
+    t.boolean "null", default: true
+    t.integer "precision"
+    t.integer "scale"
+    t.datetime "updated_at", null: false
+    t.index ["model_id"], name: "index_darwin_columns_on_model_id"
+  end
+
   create_table "darwin_models", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -30,4 +44,5 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_26_150200) do
   end
 
   add_foreign_key "darwin_blocks", "darwin_models", column: "model_id"
+  add_foreign_key "darwin_columns", "darwin_models", column: "model_id"
 end

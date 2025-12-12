@@ -23,6 +23,22 @@ class CreateDarwinTables < ActiveRecord::Migration[7.1]
       t.timestamps
     end
 
+
+    create_table :darwin_columns do |t|
+      t.references :model, null: false, foreign_key: { to_table: :darwin_models }
+      t.string :name, null: false
+      t.string :column_type
+      t.string :default
+      t.boolean :null, default: true
+      t.integer :limit
+      t.integer :precision
+      t.integer :scale
+      t.timestamps
+    end
+    add_foreign_key "darwin_blocks", "darwin_models", column: "model_id"
+    add_foreign_key "darwin_columns", "darwin_models", column: "model_id"
+
   end
 
 end
+
