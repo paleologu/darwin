@@ -52,6 +52,15 @@ module TestHelpers
 
   def clear_test_data!
     Darwin::Model.destroy_all
+
+    connection = ActiveRecord::Base.connection
+    keep_tables = %w[darwin_models darwin_blocks darwin_columns schema_migrations ar_internal_metadata]
+    runtime_tables = connection.tables.grep(/^darwin_/)
+    (runtime_tables - keep_tables).each do |table|
+      connection.drop_table(table, if_exists: true)
+    end
+    connection.reset!
+
     # Undefine classes if they exist
     %i[Author Article Comment].each do |const|
       Object.send(:remove_const, const) if Object.const_defined?(const)

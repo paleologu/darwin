@@ -1,6 +1,6 @@
 class Darwin::ModelsController < Darwin::ApplicationController
   include Rails.application.routes.url_helpers
-  before_action :set_model, only: [:show, :edit, :update, :destroy, :attribute_type, :add_column]
+  before_action :set_model, only: [:show, :edit, :update, :destroy, :attribute_type, :add_column, :update_column, :destroy_column]
 
   def index
     @models = Darwin::Model.all
@@ -91,6 +91,64 @@ class Darwin::ModelsController < Darwin::ApplicationController
           end
           format.html do
             redirect_to darwin.edit_model_path(@model), notice: "Column #{@column.name} added"
+          end
+        end
+      rescue StandardError => e
+        handle_column_error(e.message)
+      end
+    else
+      handle_column_error(@column.errors.full_messages.to_sentence)
+    end
+  end
+
+  def update_column
+    return if performed?
+
+    @column = @model.columns.find_by(id: params[:id])
+    return handle_column_error("Column not found") unless @column
+
+    if @column.update(column_params)
+      begin
+        sync_and_reload_runtime!
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(
+              "columns-list",
+              partial: "darwin/models/table/columns",
+              locals: { model: @model }
+            )
+          end
+          format.html do
+            redirect_to darwin.edit_model_path(@model), notice: "Column #{@column.name} updated"
+          end
+        end
+      rescue StandardError => e
+        handle_column_error(e.message)
+      end
+    else
+      handle_column_error(@column.errors.full_messages.to_sentence)
+    end
+  end
+
+  def destroy_column
+    return if performed?
+
+    @column = @model.columns.find_by(id: params[:id])
+    return handle_column_error("Column not found") unless @column
+
+    if @column.destroy
+      begin
+        sync_and_reload_runtime!
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(
+              "columns-list",
+              partial: "darwin/models/table/columns",
+              locals: { model: @model }
+            )
+          end
+          format.html do
+            redirect_to darwin.edit_model_path(@model), notice: "Column removed"
           end
         end
       rescue StandardError => e

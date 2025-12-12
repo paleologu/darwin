@@ -11,14 +11,14 @@ module Darwin
         end
 
         def call
-          return failure(@model.errors.full_messages.to_sentence, model: @model) unless @model.destroy
+          return failure(@model.errors.full_messages.to_sentence) unless @model.destroy
 
           Darwin::SchemaManager.drop!(@model)
           Darwin::Runtime.reload_all!(builder: true)
 
           success(model: @model)
         rescue StandardError => e
-          failure(e.message, model: @model)
+          failure(e.message)
         end
       end
     end

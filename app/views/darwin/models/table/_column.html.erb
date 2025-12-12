@@ -1,29 +1,30 @@
 <%= render UI::DropdownMenu.new do %>
-  <%= render UI::DropdownMenuTrigger.new(as_child: false) do  %>
-
-
-
-
-
-<%= render UI::Tooltip.new do %>
-    <%= render UI::TooltipTrigger.new(as_child: true) do |attrs| %>
-      <%= render UI::Button.new(**attrs, variant: :outline) { column.name.humanize } %>
+  <%= render UI::DropdownMenuTrigger.new(as_child: false) do %>
+    <%= render UI::Tooltip.new do %>
+      <%= render UI::TooltipTrigger.new(as_child: true) do |attrs| %>
+        <%= render UI::Button.new(**attrs, variant: :outline) { column.name.humanize } %>
+      <% end %>
+      <%= render UI::TooltipContent.new { column.column_type } %>
     <% end %>
-    <%= render UI::TooltipContent.new { column.column_type } %>
-<% end %>
-
-
-
   <% end %>
-  <%= render UI::DropdownMenuContent.new(classes: "w-56") do %>
-    <%= render UI::DropdownMenuItem.new do %>
-      Edit
-    <% end %>
-    <%= render UI::DropdownMenuItem.new do %>
-      Drop
+
+  <%= render UI::DropdownMenuContent.new(classes: "w-64") do %>
+    <%= form_with url: darwin.column_model_path(model, column), method: :patch, data: { turbo_frame: "columns-list" } do %>
+      <%= render UI::DropdownMenuLabel.new { "Edit column" } %>
+      <div class="px-3 py-2 space-y-2">
+        <%= text_field_tag "column[name]", column.name, class: "w-full h-8 rounded border px-2 text-sm", required: true %>
+        <%= select_tag "column[column_type]",
+                       options_for_select(Darwin::Column::COLUMN_TYPES, column.column_type),
+                       class: "w-full h-8 rounded border px-2 text-sm",
+                       required: true %>
+        <%= render UI::Button.new(type: :submit, size: :sm) { "Save" } %>
+      </div>
     <% end %>
 
+    <%= form_with url: darwin.column_delete_model_path(model, column), method: :delete, data: { turbo_frame: "columns-list" } do %>
+      <%= render UI::DropdownMenuItem.new do %>
+        <%= submit_tag "Drop", data: { turbo_confirm: "Drop column #{column.name}?" }, class: "text-left w-full" %>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
-
-

@@ -18,7 +18,7 @@ module Darwin
         reload_runtime if @force_reload || !runtime_defined?(model)
 
         klass = fetch_runtime_class(model)
-        return failure('Runtime class missing after reload', model:) unless klass
+        return failure('Runtime class missing after reload') unless klass
 
         success(model:, runtime_class: klass)
       rescue StandardError => e

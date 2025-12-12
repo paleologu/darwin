@@ -5,6 +5,8 @@ Darwin::Engine.routes.draw do
       resources :blocks, only: [:new, :create, :destroy]
       get :attribute_type, on: :member
       post :columns, to: "models#add_column", on: :member
+      patch '/columns/:id', to: "models#update_column", as: :column, on: :member
+      delete '/columns/:id', to: "models#destroy_column", as: :column_delete, on: :member
     end
     namespace :v2 do 
       get '/editor(/:model_name)' => 'models#editor', as: :editor

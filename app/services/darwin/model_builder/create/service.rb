@@ -12,14 +12,14 @@ module Darwin
 
         def call
           model = Darwin::Model.new(@params)
-          return failure(model.errors.full_messages.to_sentence, model:) unless model.save
+          return failure(model.errors.full_messages.to_sentence) unless model.save
 
           Darwin::SchemaManager.sync!(model)
           Darwin::Runtime.reload_all!(current_model: model, builder: true)
 
           success(model:)
         rescue StandardError => e
-          failure(e.message, model: model)
+          failure(e.message)
         end
       end
     end

@@ -59,9 +59,33 @@ RSpec.configure do |config|
     # Manually run migrations to ensure the test database is up-to-date.
     # Include engine migrations so the darwin_models table has the columns field.
     migration_paths = ActiveRecord::Migrator.migrations_paths.map { |p| File.expand_path(p, Rails.root) }
-    migration_paths << File.expand_path('../db/migrate', __dir__)
+    migration_paths << Rails.root.join('db', 'migrate').to_s
+    migration_paths << File.expand_path('../../db/migrate', __dir__) # engine migrations
     migration_paths.uniq!
     ActiveRecord::MigrationContext.new(migration_paths).migrate
+    # Drop any leftover runtime tables from previous runs.
+    connection = ActiveRecord::Base.connection
+    keep_tables = %w[darwin_models darwin_blocks darwin_columns schema_migrations ar_internal_metadata]
+    unless connection.table_exists?(:darwin_columns)
+      connection.create_table(:darwin_columns) do |t|
+        t.references :model, null: false, foreign_key: { to_table: :darwin_models }
+        t.string :name, null: false
+        t.string :column_type
+        t.string :default
+        t.boolean :null, default: true
+        t.integer :limit
+        t.integer :precision
+        t.integer :scale
+        t.timestamps
+      end
+      connection.add_foreign_key "darwin_columns", "darwin_models", column: "model_id" unless connection.foreign_keys('darwin_columns').any? { |fk| fk.to_table == 'darwin_models' }
+      connection.reset!
+    end
+    connection.tables.grep(/^darwin_/).each do |table|
+      next if keep_tables.include?(table)
+      connection.drop_table(table, if_exists: true)
+    end
+    connection.reset!
     DatabaseCleaner.clean_with(:truncation)
   end
 
