@@ -158,7 +158,7 @@ BUNDLE_WITHOUT=development bundle exec rails db:prepare RAILS_ENV=test
 
 ## 5. Running the Dummy App in Development
 
-Use the Procfile runner to boot both the Rails server and Solid Queue worker so background jobs such as `Darwin::DemoJob` can process.
+Use the Procfile runner to boot both the Rails server and Solid Queue worker so background jobs such as `Darwin::DemoJob` **and schema sync jobs** can process. Without the worker, column/model changes won’t show up because `Darwin::SchemaSyncJob` won’t run.
 
 ```bash
 cd spec/dummy
