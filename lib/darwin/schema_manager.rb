@@ -42,6 +42,12 @@ module Darwin
       connection.reset!
     end
 
+    def self.drop_table!(table_name)
+      connection = ActiveRecord::Base.connection
+      connection.drop_table(table_name, if_exists: true)
+      connection.reset!
+    end
+
     def self.ensure_table!(table_name)
       connection = ActiveRecord::Base.connection
       return if connection.table_exists?(table_name)

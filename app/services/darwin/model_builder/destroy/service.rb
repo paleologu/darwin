@@ -11,10 +11,12 @@ module Darwin
         end
 
         def call
+          table_name = "darwin_#{@model.name.to_s.tableize}"
+          model_name = @model.name
+
           return failure(@model.errors.full_messages.to_sentence) unless @model.destroy
 
-          Darwin::SchemaManager.drop!(@model)
-          Darwin::Runtime.reload_all!(builder: true)
+          Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'drop', builder: false, model_name:, table_name:)
 
           success(model: @model)
         rescue StandardError => e

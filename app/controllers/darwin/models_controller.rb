@@ -80,7 +80,8 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
     if @column.save
       begin
-        sync_and_reload_runtime!
+        Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
+        @model.reload
         respond_to do |format|
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace(
@@ -109,7 +110,8 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
     if @column.update(column_params)
       begin
-        sync_and_reload_runtime!
+        Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
+        @model.reload
         respond_to do |format|
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace(
@@ -138,7 +140,8 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
     if @column.destroy
       begin
-        sync_and_reload_runtime!
+        Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
+        @model.reload
         respond_to do |format|
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace(
@@ -214,9 +217,8 @@ class Darwin::ModelsController < Darwin::ApplicationController
   end
 
   def sync_and_reload_runtime!
-    Darwin::SchemaManager.sync!(@model)
+    Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
     @model.reload
-    Darwin::Runtime.reload_all!(current_model: @model, builder: true)
   end
 
   def handle_column_error(message)

@@ -8,3 +8,8 @@ spec/dummy/tmp/
 
 # Queue persistence
 spec/dummy/db/queue_development.sqlite3
+
+# Bundler artifacts
+vendor/bundle/
+vendor/cache/
+vendor/bundle/ruby/

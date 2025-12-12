@@ -48,6 +48,7 @@ Dir[File.join(__dir__, 'support/**/*.rb')].each { |f| require f }
 # Configure RSpec
 RSpec.configure do |config|
   config.include TestHelpers
+  config.include PerformanceHelpers
   config.infer_spec_type_from_file_location!
   config.filter_rails_from_backtrace!
   config.use_transactional_fixtures = false

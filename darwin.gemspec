@@ -39,4 +39,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'shoulda-matchers'
   spec.add_development_dependency 'capybara'
   spec.add_development_dependency 'selenium-webdriver'
+  spec.add_development_dependency 'faker'
+  spec.add_development_dependency 'benchmark-ips'
 end

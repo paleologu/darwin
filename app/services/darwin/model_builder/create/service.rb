@@ -14,8 +14,7 @@ module Darwin
           model = Darwin::Model.new(@params)
           return failure(model.errors.full_messages.to_sentence) unless model.save
 
-          Darwin::SchemaManager.sync!(model)
-          Darwin::Runtime.reload_all!(current_model: model, builder: true)
+          Darwin::SchemaSyncJob.run(model_id: model.id, action: 'sync', builder: true)
 
           success(model:)
         rescue StandardError => e
