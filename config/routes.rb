@@ -4,10 +4,12 @@ Darwin::Engine.routes.draw do
     resources :models, param: :name, except: [:show], path: '/' do
       resources :blocks, only: [:new, :create, :destroy]
       get :attribute_type, on: :member
+      post :columns, to: "models#add_column", on: :member
     end
     namespace :v2 do 
       get '/editor(/:model_name)' => 'models#editor', as: :editor
       get '/home' => "static#home", as: :home
+      post '/models/:model_name/columns' => 'models#add_column', as: :model_columns
     end
     get '/:model_name' => 'records#index', as: :records
     get '/:model_name/new' => 'records#new', as: :new_record

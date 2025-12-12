@@ -1,6 +1,6 @@
 class Darwin::ModelsController < Darwin::ApplicationController
   include Rails.application.routes.url_helpers
-  before_action :set_model, only: [:show, :edit, :update, :destroy, :attribute_type]
+  before_action :set_model, only: [:show, :edit, :update, :destroy, :attribute_type, :add_column]
 
   def index
     @models = Darwin::Model.all
@@ -74,14 +74,67 @@ class Darwin::ModelsController < Darwin::ApplicationController
     render json: { type: column&.type }
   end
 
+  def add_column
+    return if performed?
+    column_name = params.dig(:column, :name).to_s.strip
+    column_type = params.dig(:column, :type).to_s.strip
+    if column_name.blank? || column_type.blank?
+      return redirect_to(darwin.edit_model_path(@model), alert: "Column name and type are required")
+    end
+
+    table_name = "darwin_#{@model.name.to_s.tableize}"
+    begin
+      Darwin::SchemaManager.ensure_column!(table_name, column_name, column_type)
+      Darwin::Runtime.reload_all!(current_model: @model, builder: false)
+      @runtime_class = runtime_for(@model, redirect_on_failure: false)
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "columns-list",
+            partial: "darwin/models/table/columns",
+            locals: { runtime_class: @runtime_class }
+          )
+        end
+        format.html do
+          redirect_to darwin.edit_model_path(@model), notice: "Column #{column_name} added"
+        end
+      end
+    rescue => e
+      respond_to do |format|
+        format.turbo_stream do
+          flash.now[:alert] = e.message
+          render turbo_stream: turbo_stream.replace(
+            "flash",
+            partial: "layouts/flash"
+          ), status: :unprocessable_entity
+        end
+        format.html do
+          redirect_to darwin.edit_model_path(@model), alert: e.message
+        end
+      end
+    end
+  end
+
   private
   def set_model
     name_param = params[:name].to_s
-    @model = Darwin::Model.where('lower(name) = ?', name_param.underscore).first ||
-             Darwin::Model.find_by(name: name_param.camelize)
-    unless @model
-      redirect_to darwin.models_path, alert: "Model not found"
+    candidates = [
+      name_param.singularize,
+      name_param,
+      name_param.tableize.singularize,
+      name_param.tableize,
+      name_param.camelize.singularize,
+      name_param.camelize,
+      name_param.underscore.singularize
+    ].compact.map { |c| c.to_s.downcase }.uniq
+
+    @model = nil
+    candidates.each do |candidate|
+      @model = Darwin::Model.where('lower(name) = ?', candidate).first
+      break if @model
     end
+
+    redirect_to(darwin.models_path, alert: "Model not found") unless @model
   end
 
   def runtime_for(model, redirect_on_failure: true)

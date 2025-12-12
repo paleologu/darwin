@@ -49,21 +49,20 @@ Back
     </div>
  
     <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Columns</p>
-    <div class="flex flex-wrap gap-2 text-sm text-muted-foreground">
-      <%=  render collection: @runtime_class.columns.drop(3), partial: "darwin/models/table/column" %>
-   
-  <%= render UI::Drawer.new(direction: "right") do %>
-    <%= render UI::DrawerTrigger.new(size: :icon) do %>
-          <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+<div id="columns-list" class="flex flex-wrap gap-2 text-sm text-muted-foreground">
+  <%= render collection: @runtime_class.columns.drop(3), partial: "darwin/models/table/column" %>
+</div>
+
+    <%# NEW COLUMN FORM HERE %>
+    <%= form_with url: darwin.columns_model_path(@model), method: :post, data: { controller: "columns", action: "submit->columns#submit change->columns#submit" }, html: { class: "flex items-center gap-2 mt-3" } do %>
+      <%= text_field_tag "column[name]", nil, placeholder: "column name", class: "h-9 rounded-md border px-3 py-2 text-sm", required: true, data: { "columns-target": "nameField", action: "blur->columns#normalizeName" } %>
+      <%= select_tag "column[type]",
+                     options_for_select(%w[string text integer float decimal boolean date datetime]),
+                     prompt: "Type",
+                     class: "h-9 rounded-md border px-3 py-2 text-sm",
+                     required: true %>
+      <%= render "ui/button", variant: "outline", type: "submit" do %>Add column<% end %>
     <% end %>
-    <%= render UI::DrawerOverlay.new %>
-    <%= render UI::DrawerContent.new(direction: "right") do %>
-      <%= render UI::DrawerHeader.new do %>
-        <%= render UI::DrawerTitle.new { "From Right" } %>
-      <% end %>
-      <div class="p-4">Content</div>
-    <% end %>
-  <% end %>
 
 
     </div>
@@ -77,7 +76,7 @@ Back
 
   <div class="flex flex-wrap gap-2">
     <% available_method_names(@model).each do |method_name| %>
-    <% next if method_name == "validates" %>
+    <% next if method_name.in?(%w[validates attribute]) %>
     <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
     <%= hidden_field_tag "darwin_block[method_name]", method_name %>
     <%= render "ui/button", variant: "outline", type: "submit" do %>
@@ -85,6 +84,7 @@ Back
     <% end %>
     <% end %>
     <% end %>
+
 
     <% if @runtime_class&.attribute_names&.any? %>
     <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-flex items-center gap-2" } do %>
