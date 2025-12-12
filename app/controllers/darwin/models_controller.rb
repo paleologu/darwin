@@ -76,46 +76,33 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
   def add_column
     return if performed?
-    column_name = params.dig(:column, :name).to_s.strip
-    column_type = params.dig(:column, :type).to_s.strip
-    if column_name.blank? || column_type.blank?
-      return redirect_to(darwin.edit_model_path(@model), alert: "Column name and type are required")
-    end
+    @column = @model.columns.new(column_params)
 
-    table_name = "darwin_#{@model.name.to_s.tableize}"
-    begin
-      Darwin::SchemaManager.ensure_column!(table_name, column_name, column_type)
-      Darwin::Runtime.reload_all!(current_model: @model, builder: false)
-      @runtime_class = runtime_for(@model, redirect_on_failure: false)
-      respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            "columns-list",
-            partial: "darwin/models/table/columns",
-            locals: { runtime_class: @runtime_class }
-          )
+    if @column.save
+      begin
+        sync_and_reload_runtime!
+        respond_to do |format|
+          format.turbo_stream do
+            render turbo_stream: turbo_stream.replace(
+              "columns-list",
+              partial: "darwin/models/table/columns",
+              locals: { model: @model }
+            )
+          end
+          format.html do
+            redirect_to darwin.edit_model_path(@model), notice: "Column #{@column.name} added"
+          end
         end
-        format.html do
-          redirect_to darwin.edit_model_path(@model), notice: "Column #{column_name} added"
-        end
+      rescue StandardError => e
+        handle_column_error(e.message)
       end
-    rescue => e
-      respond_to do |format|
-        format.turbo_stream do
-          flash.now[:alert] = e.message
-          render turbo_stream: turbo_stream.replace(
-            "flash",
-            partial: "layouts/flash"
-          ), status: :unprocessable_entity
-        end
-        format.html do
-          redirect_to darwin.edit_model_path(@model), alert: e.message
-        end
-      end
+    else
+      handle_column_error(@column.errors.full_messages.to_sentence)
     end
   end
 
   private
+
   def set_model
     name_param = params[:name].to_s
     candidates = [
@@ -155,5 +142,37 @@ class Darwin::ModelsController < Darwin::ApplicationController
         { options: [:default, :null, :limit, :precision, :scale] }
       ]
     )
+  end
+
+  def column_params
+    permitted = params.require(:column).permit(:name, :type, :column_type, :default, :null, :limit, :precision, :scale)
+    permitted[:column_type] ||= permitted.delete(:type)
+    permitted[:default] = nil if permitted[:default].is_a?(String) && permitted[:default].strip.empty?
+    %i[limit precision scale].each do |key|
+      permitted[key] = nil if permitted[key].respond_to?(:empty?) && permitted[key].empty?
+    end
+    permitted[:null] = ActiveModel::Type::Boolean.new.cast(permitted[:null]) if permitted.key?(:null)
+    permitted
+  end
+
+  def sync_and_reload_runtime!
+    Darwin::SchemaManager.sync!(@model)
+    @model.reload
+    Darwin::Runtime.reload_all!(current_model: @model, builder: true)
+  end
+
+  def handle_column_error(message)
+    respond_to do |format|
+      format.turbo_stream do
+        flash.now[:alert] = message
+        render turbo_stream: turbo_stream.replace(
+          "flash",
+          partial: "layouts/flash"
+        ), status: :unprocessable_entity
+      end
+      format.html do
+        redirect_to darwin.edit_model_path(@model), alert: message
+      end
+    end
   end
 end

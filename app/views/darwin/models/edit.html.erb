@@ -49,15 +49,13 @@ Back
     </div>
  
     <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Columns</p>
-<div id="columns-list" class="flex flex-wrap gap-2 text-sm text-muted-foreground">
-  <%= render collection: @runtime_class.columns.drop(3), partial: "darwin/models/table/column" %>
-</div>
+<%= render partial: "darwin/models/table/columns", locals: { model: @model } %>
 
     <%# NEW COLUMN FORM HERE %>
     <!-- Does this even hit the add column action? -->
     <%= form_with url: darwin.columns_model_path(@model), method: :post, data: { controller: "columns", action: "submit->columns#submit change->columns#submit" }, html: { class: "flex items-center gap-2 mt-3" } do %>
       <%= text_field_tag "column[name]", nil, placeholder: "column name", class: "h-9 rounded-md border px-3 py-2 text-sm", required: true, data: { "columns-target": "nameField", action: "blur->columns#normalizeName" } %>
-      <%= select_tag "column[type]",
+      <%= select_tag "column[column_type]",
                      options_for_select(%w[string text integer float decimal boolean date datetime]),
                      prompt: "Type",
                      class: "h-9 rounded-md border px-3 py-2 text-sm",

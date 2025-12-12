@@ -37,7 +37,7 @@
     <%= render UI::CardHeader.new do %>
       <%= render UI::CardDescription.new { "Tables" } %>
       <%= render UI::CardTitle.new(classes: "text-2xl") {  ActiveRecord::Base.connection.tables.select { |t| t.start_with?("darwin_") }
-  .reject { |t| ["darwin_models", "darwin_blocks"].include?(t) }.count } %>
+  .reject { |t| ["darwin_models", "darwin_blocks", "darwin_columns"].include?(t) }.count } %>
     <% end %>
     <%= render UI::CardContent.new do %>
       <p class="text-xs text-muted-foreground">+20.1% from last month</p>

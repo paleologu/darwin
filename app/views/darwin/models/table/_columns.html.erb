@@ -1,0 +1,7 @@
+<div id="columns-list" class="flex flex-wrap gap-2 text-sm text-muted-foreground">
+  <% if model.columns.any? %>
+    <%= render partial: "darwin/models/table/column", collection: model.columns, as: :column %>
+  <% else %>
+    <p class="text-sm text-muted-foreground">No columns yet.</p>
+  <% end %>
+</div>

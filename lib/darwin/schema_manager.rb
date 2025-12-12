@@ -8,30 +8,23 @@ module Darwin
 
       ensure_table!(table_name)
 
-      expected_columns = {}
-      model.blocks.where(method_name: 'attribute').each do |block|
-        name, type = block.args
-        expected_columns[name] = type.to_sym
-      end
-      model.blocks.where(method_name: 'belongs_to').each do |block|
-        assoc_name = block.args.first.to_s.underscore.to_sym
-        options = Darwin::Interpreter.deep_symbolize_keys(block.options)
-        foreign_key = options[:foreign_key] || "#{assoc_name}_id"
-        expected_columns[foreign_key.to_s] = :integer
-      end
+      expected_columns = column_specs_from_metadata(model)
+      expected_columns.merge!(column_specs_from_attribute_blocks(model))
+      expected_columns.merge!(column_specs_from_belongs_to_blocks(model))
 
       existing_columns = connection.columns(table_name).index_by { |c| c.name.to_s }
 
       # Add or change columns
-      expected_columns.each do |col_name, col_type|
+      expected_columns.each do |col_name, spec|
+        col_type = spec[:type]
+        col_options = spec[:options]
         if existing_columns[col_name]
-          # Column exists, check type
-          if existing_columns[col_name].type != col_type
-            connection.change_column(table_name, col_name, col_type)
+          if column_changed?(existing_columns[col_name], col_type, col_options)
+            connection.change_column(table_name, col_name, col_type, **col_options)
           end
         else
           # Column doesn't exist, add it
-          connection.add_column(table_name, col_name, col_type)
+          connection.add_column(table_name, col_name, col_type, **col_options)
         end
       end
 
@@ -76,7 +69,7 @@ module Darwin
       expected_tables = models.map { |m| "darwin_#{m.name.to_s.tableize}" }
       existing_tables = ActiveRecord::Base.connection.tables.grep(/^darwin_/)
 
-      tables_to_drop = existing_tables - expected_tables - %w[darwin_models darwin_blocks]
+      tables_to_drop = existing_tables - expected_tables - %w[darwin_models darwin_blocks darwin_columns]
       return if tables_to_drop.empty?
 
       tables_to_drop.each do |table|
@@ -88,6 +81,66 @@ module Darwin
     def sync_schema!
       Darwin::Model.all.each do |model|
         self.class.sync!(model)
+      end
+    end
+
+    def self.column_specs_from_metadata(model)
+      model.columns.each_with_object({}) do |column, specs|
+        next if column.name.blank? || column.column_type.blank?
+
+        specs[column.name.to_s] = {
+          type: column.column_type.to_sym,
+          options: column_options_from_metadata(column)
+        }
+      end
+    end
+
+    def self.column_specs_from_attribute_blocks(model)
+      model.blocks.where(method_name: 'attribute').each_with_object({}) do |block, specs|
+        name, type = Array(block.args)
+        next if name.blank? || type.blank?
+        next if specs.key?(name.to_s)
+
+        specs[name.to_s] = { type: type.to_sym, options: {} }
+      end
+    end
+
+    def self.column_specs_from_belongs_to_blocks(model)
+      model.blocks.where(method_name: 'belongs_to').each_with_object({}) do |block, specs|
+        assoc_name = block.args.first.to_s.underscore
+        next if assoc_name.blank?
+
+        options = Darwin::Interpreter.deep_symbolize_keys(block.options)
+        foreign_key = options[:foreign_key] || "#{assoc_name}_id"
+        next if specs.key?(foreign_key)
+
+        specs[foreign_key] = { type: :integer, options: { null: options.fetch(:optional, false) } }
+      end
+    end
+
+    def self.column_options_from_metadata(column)
+      {
+        default: column.default,
+        null: column.null.nil? ? true : column.null,
+        limit: column.limit,
+        precision: column.precision,
+        scale: column.scale
+      }.compact
+    end
+
+    def self.column_changed?(existing, type, options)
+      return true if existing.type != type
+
+      comparisons = {
+        default: existing.default,
+        null: existing.null,
+        limit: existing.limit,
+        precision: existing.precision,
+        scale: existing.scale
+      }
+
+      options.any? do |key, value|
+        comparisons[key] != value
       end
     end
   end

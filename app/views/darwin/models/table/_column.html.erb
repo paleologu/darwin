@@ -6,10 +6,10 @@
 
 
 <%= render UI::Tooltip.new do %>
-  <%= render UI::TooltipTrigger.new(as_child: true) do |attrs| %>
-    <%= render UI::Button.new(**attrs, variant: :outline) { column.name.humanize } %>
-  <% end %>
-  <%= render UI::TooltipContent.new { column.type } %>
+    <%= render UI::TooltipTrigger.new(as_child: true) do |attrs| %>
+      <%= render UI::Button.new(**attrs, variant: :outline) { column.name.humanize } %>
+    <% end %>
+    <%= render UI::TooltipContent.new { column.column_type } %>
 <% end %>
 
 
@@ -25,6 +25,5 @@
 
   <% end %>
 <% end %>
-
 
 
