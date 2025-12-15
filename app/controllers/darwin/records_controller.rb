@@ -30,7 +30,9 @@ class Darwin::RecordsController < Darwin::ApplicationController
     return if performed?
 
     @record = @runtime_class.new(record_params)
-    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully created.') if @record.save!
+    if @record.save
+      return redirect_to(darwin.record_path(@model.collection_param, @record), notice: 'Record was successfully created.')
+    end
 
     render :new, status: :unprocessable_entity
   end
@@ -51,7 +53,9 @@ class Darwin::RecordsController < Darwin::ApplicationController
     return if performed?
 
     @record = @runtime_class.find(params[:id])
-    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully updated.') if @record.update!(record_params)
+    if @record.update(record_params)
+      return redirect_to(darwin.record_path(@model.collection_param, @record), notice: 'Record was successfully updated.')
+    end
 
     render :edit, status: :unprocessable_entity
   end
@@ -83,7 +87,8 @@ class Darwin::RecordsController < Darwin::ApplicationController
   def record_params
     # Permit all attributes of the runtime class.
     # Permit all `_attributes` from associations that `accepts_nested_attributes_for`.
-    permitted_params = @runtime_class.attribute_names.map(&:to_sym)
+    sanitised_attributes = @runtime_class.attribute_names - %w[id created_at updated_at]
+    permitted_params = sanitised_attributes.map(&:to_sym)
     param_key = @runtime_class.model_name.param_key.to_sym
     @runtime_class.reflect_on_all_associations.each do |association|
       if @runtime_class.nested_attributes_options.key?(association.name)

@@ -6,6 +6,8 @@ module Darwin
       table_name = "darwin_#{model.name.to_s.tableize}"
       connection = ActiveRecord::Base.connection
 
+      Rails.logger.info "[Darwin::SchemaManager] sync! table=#{table_name} model=#{model.name}"
+
       ensure_table!(table_name)
 
       expected_columns = column_specs_from_metadata(model)
@@ -21,16 +23,19 @@ module Darwin
         if existing_columns[col_name]
           if column_changed?(existing_columns[col_name], col_type, col_options)
             connection.change_column(table_name, col_name, col_type, **col_options)
+            Rails.logger.info "[Darwin::SchemaManager] change_column #{table_name}.#{col_name} -> #{col_type} #{col_options.inspect}"
           end
         else
           # Column doesn't exist, add it
           connection.add_column(table_name, col_name, col_type, **col_options)
+          Rails.logger.info "[Darwin::SchemaManager] add_column #{table_name}.#{col_name} #{col_type} #{col_options.inspect}"
         end
       end
 
       # Remove old columns
       (existing_columns.keys - expected_columns.keys - %w[id created_at updated_at]).each do |col_name|
         connection.remove_column(table_name, col_name)
+        Rails.logger.info "[Darwin::SchemaManager] remove_column #{table_name}.#{col_name}"
       end
       connection.reset!
     end
@@ -111,11 +116,11 @@ module Darwin
         assoc_name = block.args.first.to_s.underscore
         next if assoc_name.blank?
 
-        options = Darwin::Interpreter.deep_symbolize_keys(block.options)
+        options = Darwin::Interpreter.deep_symbolize_keys(block.options) || {}
         foreign_key = options[:foreign_key] || "#{assoc_name}_id"
         next if specs.key?(foreign_key)
 
-        specs[foreign_key] = { type: :integer, options: { null: options.fetch(:optional, false) } }
+        specs[foreign_key] = { type: :integer, options: { null: options.fetch(:optional, true) } }
       end
     end
 

@@ -68,7 +68,6 @@
 <%= render "ui/table/cell" do %> <%= runtime_class ? Darwin::Runtime.const_source_location(runtime_class.name.split("::").last.to_sym) : nil %> <% end %>
 <%= render "ui/table/cell", classes: "text-right" do %>
 <div class="flex justify-end gap-2">
-  <%= render "ui/navigation_menu/link", href: darwin.edit_v2_model_path(model), trigger_style: true do %>V2<% end %>
   <%= render "ui/navigation_menu/link", href: darwin.model_path(model), trigger_style: true do %>Show<% end %>
   <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(model), trigger_style: true do %>Edit<% end %>
   <%= form_with url: darwin.model_path(model), method: :delete, data: { turbo_confirm: "Are you sure?" } do %>

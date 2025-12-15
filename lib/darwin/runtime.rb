@@ -4,6 +4,7 @@
 module Darwin
   module Runtime
     def self.reload_all!(current_model: nil, builder: false)
+      Rails.logger.info "[Darwin::Runtime] reload_all! builder=#{builder} current_model=#{current_model&.name}"
       # Eager-load blocks to prevent N+1 queries
       models = Darwin::Model.includes(:blocks).all.to_a
       models << current_model if current_model && !models.find { |m| m.id == current_model.id }
@@ -18,6 +19,7 @@ module Darwin
       blocks = models.flat_map(&:blocks)
       blocks.sort_by { |b| block_priority(b.method_name) }.each do |block|
         klass = runtime_class_for(block.darwin_model)
+        Rails.logger.info "[Darwin::Runtime] evaluating block #{block.id} #{block.method_name} for #{klass.name}"
         Darwin::Interpreter.evaluate_block(klass, block, builder:)
       end
     end
@@ -50,6 +52,7 @@ module Darwin
     end
 
     def self.define_runtime_classes(models)
+      Rails.logger.info "[Darwin::Runtime] define_runtime_classes for #{models.map(&:name).join(', ')}"
       models.each do |model|
         klass_name = model.name.classify
         table_name = "darwin_#{model.name.to_s.tableize}"

@@ -47,53 +47,81 @@ Back
       <% end %>
       <% end %>
     </div>
- 
+
     <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Columns</p>
-<%= render partial: "darwin/models/table/columns", locals: { model: @model } %>
+    <%= render partial: "darwin/models/table/columns", locals: { model: @model } %>
 
     <%# NEW COLUMN FORM HERE %>
     <!-- Does this even hit the add column action? -->
     <%= form_with url: darwin.columns_model_path(@model), method: :post, data: { controller: "columns", action: "submit->columns#submit change->columns#submit" }, html: { class: "flex items-center gap-2 mt-3" } do %>
-      <%= text_field_tag "column[name]", nil, placeholder: "column name", class: "h-9 rounded-md border px-3 py-2 text-sm", required: true, data: { "columns-target": "nameField", action: "blur->columns#normalizeName" } %>
-      <%= select_tag "column[column_type]",
-                     options_for_select(Darwin::Column::COLUMN_TYPES),
-                     prompt: "Type",
-                     class: "h-9 rounded-md border px-3 py-2 text-sm",
-                     required: true %>
-      <%= render "ui/button", variant: "outline", type: "submit" do %>Add column<% end %>
-    <% end %>
-
-
-    </div>
-  </div>
-
-
-  <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Blocks</p>
-    <div id="blocks" class="flex w-full max-w-md flex-col gap-2">
-      <%= render @model.blocks %>
-    </div>
-
-  <div class="flex flex-wrap gap-2">
-    <% available_method_names(@model).each do |method_name| %>
-    <% next if method_name.in?(%w[validates attribute]) %>
-    <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
-    <%= hidden_field_tag "darwin_block[method_name]", method_name %>
-    <%= render "ui/button", variant: "outline", type: "submit" do %>
-    Add <%= method_name.humanize %>
-    <% end %>
-    <% end %>
-    <% end %>
-
-
-    <% if @runtime_class&.attribute_names&.any? %>
-    <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-flex items-center gap-2" } do %>
-    <%= hidden_field_tag "darwin_block[method_name]", "validates" %>
-    <%= select_tag "darwin_block[args_name]",
-    options_for_select(@runtime_class.attribute_names.map { |n| [n.humanize, n] }),
-    prompt: "Add validation",
-    class: "inline-flex h-9 items-center rounded-md border px-3 py-2 text-sm",
-     onchange: "this.form.submit()" %>
+    <%= text_field_tag "column[name]", nil, placeholder: "column name", class: "h-9 rounded-md border px-3 py-2 text-sm", required: true, data: { "columns-target": "nameField", action: "blur->columns#normalizeName" } %>
+    <%= select_tag "column[column_type]",
+    options_for_select(Darwin::Column::COLUMN_TYPES),
+    prompt: "Type",
+    class: "h-9 rounded-md border px-3 py-2 text-sm",
+     required: true %>
+     <%= render "ui/button", variant: "outline", type: "submit" do %>Add column<% end %>
      <% end %>
-     <% end %>
+
+
    </div>
  </div>
+
+
+ <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Blocks</p>
+ <div id="blocks" class="flex w-full max-w-md flex-col gap-2">
+  <%= render @model.blocks %>
+</div>
+
+<div class="flex flex-wrap gap-2">
+
+  <%= render UI::DropdownMenu.new do %>
+
+  <%= render UI::DropdownMenuTrigger.new(as_child: true) do |attrs| %>
+  <%= render UI::Button.new(**attrs, variant: :outline) { "New association" } %>
+  <% end %>
+
+    <%= render UI::DropdownMenuContent.new(classes: "w-56") do %>
+ 
+  <% (available_method_names(@model) && ["has_many", "has_one", "belongs_to"]).each do |method_name| %>
+    <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
+  <%= hidden_field_tag "darwin_block[method_name]", method_name %>
+  <%= render "ui/button", variant: "outline", type: "submit" do %>
+  Add <%= method_name.humanize %> 
+  <% end %>
+  <% end %>
+  <% end %>
+    <% end %>
+  <% end if ["has_many", "has_one", "belongs_to"].any?{|x| available_method_names(@model).include?(x) }  %>
+
+  <% if ["has_many", "has_one", "belongs_to"].any?{|x| available_method_names(@model).include?(x) } %>
+  <% (available_method_names(@model) && ["has_many", "has_one", "belongs_to"]).each do |method_name| %>
+  <%= render "ui/button", variant: "outline", type: "submit" do %>
+  + Association 
+  <% end %>
+  <% end %>
+  <% end %>
+
+  <% available_method_names(@model).excluding("has_many", "has_one", "belongs_to").each do |method_name| %>
+  <% next if method_name.in?(%w[validates attribute]) %>
+  <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
+  <%= hidden_field_tag "darwin_block[method_name]", method_name %>
+  <%= render "ui/button", variant: "outline", type: "submit" do %>
+  Add <%= method_name.humanize %>
+  <% end %>
+  <% end %>
+  <% end %>
+
+
+  <% if @runtime_class&.attribute_names&.any? %>
+  <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-flex items-center gap-2" } do %>
+  <%= hidden_field_tag "darwin_block[method_name]", "validates" %>
+  <%= select_tag "darwin_block[args_name]",
+  options_for_select(@runtime_class.attribute_names.map { |n| [n.humanize, n] }),
+  prompt: "Add validation",
+  class: "inline-flex h-9 items-center rounded-md border px-3 py-2 text-sm",
+   onchange: "this.form.submit()" %>
+   <% end %>
+   <% end %>
+ </div>
+</div>

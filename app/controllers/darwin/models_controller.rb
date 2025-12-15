@@ -81,11 +81,12 @@ class Darwin::ModelsController < Darwin::ApplicationController
   def add_column
     return if performed?
     @column = @model.columns.new(column_params)
+    Rails.logger.info "[Darwin::ModelsController] add_column start model=#{@model.name} column=#{column_params.slice(:name, :column_type)}"
 
-    if @column.save!
+    if @column.save
       begin
-        Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
-        @model.reload
+        sync_and_reload_runtime!(builder: true)
+        Rails.logger.info "[Darwin::ModelsController] add_column sync complete model=#{@model.name}"
         respond_to do |format|
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace(
@@ -111,11 +112,12 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
     @column = @model.columns.find_by(id: params[:id])
     return handle_column_error("Column not found") unless @column
+    Rails.logger.info "[Darwin::ModelsController] update_column start model=#{@model.name} column_id=#{@column.id} params=#{column_params.slice(:name, :column_type)}"
 
-    if @column.update!(column_params)
+    if @column.update(column_params)
       begin
-        Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
-        @model.reload
+        sync_and_reload_runtime!(builder: true)
+        Rails.logger.info "[Darwin::ModelsController] update_column sync complete model=#{@model.name}"
         respond_to do |format|
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace(
@@ -141,11 +143,12 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
     @column = @model.columns.find_by(id: params[:id])
     return handle_column_error("Column not found") unless @column
+    Rails.logger.info "[Darwin::ModelsController] destroy_column start model=#{@model.name} column_id=#{@column.id}"
 
     if @column.destroy
       begin
-        Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
-        @model.reload
+        sync_and_reload_runtime!(builder: true)
+        Rails.logger.info "[Darwin::ModelsController] destroy_column sync complete model=#{@model.name}"
         respond_to do |format|
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace(
@@ -218,6 +221,21 @@ class Darwin::ModelsController < Darwin::ApplicationController
     end
     permitted[:null] = ActiveModel::Type::Boolean.new.cast(permitted[:null]) if permitted.key?(:null)
     permitted
+  end
+
+  def sync_and_reload_runtime!(builder: true)
+    if @schema_sync_performed
+      Rails.logger.info "[Darwin::ModelsController] sync_and_reload_runtime! already performed for #{ @model.name }"
+      return
+    end
+    Rails.logger.info "[Darwin::ModelsController] sync_and_reload_runtime! start model=#{@model.name} builder=#{builder}"
+
+    Darwin::SchemaManager.sync!(@model)
+    @model.reload
+    Darwin::Runtime.reload_all!(current_model: @model, builder: builder)
+    Rails.logger.info "[Darwin::ModelsController] sync_and_reload_runtime! finished model=#{@model.name}"
+
+    @schema_sync_performed = true
   end
 
   def handle_column_error(message)
