@@ -12,10 +12,11 @@ module Darwin
         end
 
         def call
-          return failure(@model.errors.full_messages.to_sentence) unless @model.update(@params)
+          return failure(@model.errors.full_messages.to_sentence) unless @model.update!(@params)
 
-          Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
-
+          Darwin::SchemaManager.sync!(@model)
+          Darwin::Runtime.reload_all!(current_model: @model, builder: true)
+          
           success(model: @model)
         rescue StandardError => e
           failure(e.message)

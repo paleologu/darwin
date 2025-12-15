@@ -30,7 +30,7 @@ class Darwin::RecordsController < Darwin::ApplicationController
     return if performed?
 
     @record = @runtime_class.new(record_params)
-    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully created.') if @record.save
+    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully created.') if @record.save!
 
     render :new, status: :unprocessable_entity
   end
@@ -51,7 +51,7 @@ class Darwin::RecordsController < Darwin::ApplicationController
     return if performed?
 
     @record = @runtime_class.find(params[:id])
-    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully updated.') if @record.update(record_params)
+    return redirect_to(record_path_for(@model, @record), notice: 'Record was successfully updated.') if @record.update!(record_params)
 
     render :edit, status: :unprocessable_entity
   end

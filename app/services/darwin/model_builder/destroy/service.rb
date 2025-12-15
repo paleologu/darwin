@@ -16,8 +16,11 @@ module Darwin
 
           return failure(@model.errors.full_messages.to_sentence) unless @model.destroy
 
-          Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'drop', builder: false, model_name:, table_name:)
-
+          target_table = table_name || (@model ? "darwin_#{model.name.to_s.tableize}" : nil)
+          next unless target_table
+          Darwin::SchemaManager.drop_table!(target_table)
+          Darwin::Runtime.reload_all!(builder: false)
+          
           success(model: @model)
         rescue StandardError => e
           failure(e.message)
@@ -26,3 +29,6 @@ module Darwin
     end
   end
 end
+
+
+

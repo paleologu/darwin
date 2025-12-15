@@ -5,7 +5,7 @@ module Darwin
     def create
       @block = @model.blocks.build(block_params)
 
-      if @block.save
+      if @block.save!
         respond_to do |format|
           format.turbo_stream { render_block_list }
           format.html { redirect_to darwin.edit_v2_model_path(@model) }
@@ -27,7 +27,7 @@ module Darwin
     def update
       @block = @model.blocks.find(params[:id])
 
-      if @block.update(block_params)
+      if @block.update!(block_params)
         respond_to do |format|
           format.turbo_stream do
             render turbo_stream: turbo_stream.replace(

@@ -13,7 +13,7 @@ module Darwin
 
         def call
           block = @model.blocks.new(@params)
-          return failure(block.errors.full_messages.to_sentence, block:) unless block.save
+          return failure(block.errors.full_messages.to_sentence, block:) unless block.save!
 
           touch_inverse_association(block)
 

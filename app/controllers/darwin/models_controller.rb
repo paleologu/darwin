@@ -82,7 +82,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
     return if performed?
     @column = @model.columns.new(column_params)
 
-    if @column.save
+    if @column.save!
       begin
         Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
         @model.reload
@@ -112,7 +112,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
     @column = @model.columns.find_by(id: params[:id])
     return handle_column_error("Column not found") unless @column
 
-    if @column.update(column_params)
+    if @column.update!(column_params)
       begin
         Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
         @model.reload
