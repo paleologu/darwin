@@ -26,11 +26,10 @@
       <% end %>
     <% end %>
 
-    <div data-block-form-target="fields" class="space-y-4">
-      <% if f.object.method_name.present? %>
-        <%= render partial: "darwin/models/block_forms/#{f.object.method_name}", locals: { f: f } %>
-      <% end %>
-    </div>
+    <% presenter = Darwin::BlockFormPresenter.new(block: f.object, builder: f, view_context: self) %>
+    <%= tag.div(**presenter.container_attributes) do %>
+      <%= presenter.render %>
+    <% end %>
 
     <div class="flex items-center justify-between rounded-md border border-dashed px-3 py-2">
       <%= render "ui/badge", classes: "uppercase tracking-wide" do %>
