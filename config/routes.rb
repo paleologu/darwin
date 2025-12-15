@@ -8,11 +8,6 @@ Darwin::Engine.routes.draw do
       patch '/columns/:id', to: "models#update_column", as: :column, on: :member
       delete '/columns/:id', to: "models#destroy_column", as: :column_delete, on: :member
     end
-    namespace :v2 do 
-      get '/editor(/:model_name)' => 'models#editor', as: :editor
-      get '/home' => "static#home", as: :home
-      post '/models/:model_name/columns' => 'models#add_column', as: :model_columns
-    end
     get '/:model_name' => 'records#index', as: :records
     get '/:model_name/new' => 'records#new', as: :new_record
     post '/:model_name' => 'records#create'
@@ -20,5 +15,11 @@ Darwin::Engine.routes.draw do
     get '/:model_name/:id/edit' => 'records#edit', as: :edit_record
     patch '/:model_name/:id' => 'records#update'
     delete '/:model_name/:id' => 'records#destroy'
+  end
+  namespace :v2 do 
+    resources :models, only: %w[show edit], param: :name do 
+      resources :colums, module: :models, only: %w[create update]
+      resources :blocks, module: :models, only: %w[create update]
+    end
   end
 end

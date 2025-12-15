@@ -40,7 +40,7 @@ module Darwin
           target_model.blocks.create!(method_name: 'belongs_to', args: [inverse_name]) unless inverse_block
         end
 
-        def sync_models!(block)
+        def sync_models!(block) # Blocks do not create columns unless they are associations.
           models_to_sync = [@model]
           if %w[has_many has_one].include?(block.method_name)
             target_class_name = block.options&.dig('class_name') || block.args.first.to_s.camelize.singularize

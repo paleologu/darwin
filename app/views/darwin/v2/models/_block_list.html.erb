@@ -1,0 +1,11 @@
+<% model ||= @model %>
+
+<%= turbo_frame_tag dom_id(model, :blocks) do %>
+  <div class="space-y-4">
+    <ol id="<%= dom_id(model, :blocks_list) %>" class="space-y-3">
+      <%= render partial: "darwin/v2/models/block", collection: model.blocks, locals: { model: model } %>
+    </ol>
+
+    <%= render "darwin/v2/models/new_block_form", model: model %>
+  </div>
+<% end %>
