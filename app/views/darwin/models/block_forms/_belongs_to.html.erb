@@ -4,7 +4,7 @@
   <% models = Darwin::Model.where.not(id: f.object.darwin_model.id).pluck(:name) %>
 
   <%= render "ui/field" do %>
-    <%= render "ui/field/label", for_id: assoc_id do %>Association Name<% end %>
+    <%= render "ui/field/label", for_id: assoc_id do %>Belongs to<% end %>
     <%= render "ui/field/content" do %>
       <%= render "ui/select", value: f.object.args.try(:first) do %>
         <%= render "ui/select/trigger", placeholder: "Select model", classes: "w-full" %>

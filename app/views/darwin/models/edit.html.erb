@@ -73,12 +73,12 @@ Back
   <%= render @model.blocks %>
 </div>
 
-<div class="flex flex-wrap gap-2">
+<div class="flex flex-wrap gap-2 pt-3">
 
   <%= render UI::DropdownMenu.new do %>
 
   <%= render UI::DropdownMenuTrigger.new(as_child: true) do |attrs| %>
-  <%= render UI::Button.new(**attrs, variant: :outline) { "New association" } %>
+  <%= render UI::Button.new(**attrs, variant: :outline) { "+ association" } %>
   <% end %>
 
     <%= render UI::DropdownMenuContent.new(classes: "w-56") do %>
@@ -94,20 +94,13 @@ Back
     <% end %>
   <% end if ["has_many", "has_one", "belongs_to"].any?{|x| available_method_names(@model).include?(x) }  %>
 
-  <% if ["has_many", "has_one", "belongs_to"].any?{|x| available_method_names(@model).include?(x) } %>
-  <% (available_method_names(@model) && ["has_many", "has_one", "belongs_to"]).each do |method_name| %>
-  <%= render "ui/button", variant: "outline", type: "submit" do %>
-  + Association 
-  <% end %>
-  <% end %>
-  <% end %>
 
   <% available_method_names(@model).excluding("has_many", "has_one", "belongs_to").each do |method_name| %>
   <% next if method_name.in?(%w[validates attribute]) %>
   <%= form_with url: darwin.model_blocks_path(@model), method: :post, html: { class: "inline-block" } do %>
   <%= hidden_field_tag "darwin_block[method_name]", method_name %>
   <%= render "ui/button", variant: "outline", type: "submit" do %>
-  Add <%= method_name.humanize %>
+  + <%= method_name.humanize %>
   <% end %>
   <% end %>
   <% end %>
