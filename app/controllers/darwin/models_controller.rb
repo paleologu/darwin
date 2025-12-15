@@ -220,11 +220,6 @@ class Darwin::ModelsController < Darwin::ApplicationController
     permitted
   end
 
-  def sync_and_reload_runtime!
-    Darwin::SchemaSyncJob.run(model_id: @model.id, action: 'sync', builder: true)
-    @model.reload
-  end
-
   def handle_column_error(message)
     respond_to do |format|
       format.turbo_stream do

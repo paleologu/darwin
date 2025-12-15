@@ -84,11 +84,6 @@ module Darwin
       ActiveRecord::Base.connection.reset!
     end
 
-    def sync_schema!
-      Darwin::Model.all.each do |model|
-        self.class.sync!(model)
-      end
-    end
 
     def self.column_specs_from_metadata(model)
       model.columns.each_with_object({}) do |column, specs|

@@ -5,8 +5,6 @@ require 'darwin/engine'
 require 'darwin/interpreter'
 require 'darwin/runtime'
 require 'darwin/schema_manager'
-# require "darwin/runtime/loader"
-# require "darwin/runtime/diagnostics"
 
 module Darwin
   # This module serves as the top-level namespace for the Resource engine.

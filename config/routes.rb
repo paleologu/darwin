@@ -16,10 +16,4 @@ Darwin::Engine.routes.draw do
     patch '/:model_name/:id' => 'records#update'
     delete '/:model_name/:id' => 'records#destroy'
   end
-  namespace :v2 do 
-    resources :models, only: %w[show edit], param: :name do 
-      resources :colums, module: :models, only: %w[create update]
-      resources :blocks, module: :models, only: %w[create update]
-    end
-  end
 end

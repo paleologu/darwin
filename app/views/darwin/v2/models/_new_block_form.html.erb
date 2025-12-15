@@ -1,6 +1,0 @@
-<% model ||= @model %>
-<% block ||= model.blocks.build %>
-
-<%= turbo_frame_tag dom_id(model, :new_block) do %>
-  <%= render "darwin/v2/models/block", block: block, model: model, frame_id: dom_id(model, :new_block) %>
-<% end %>
