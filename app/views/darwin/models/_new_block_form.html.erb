@@ -8,8 +8,8 @@
             <%= render "ui/select", classes: "w-full" do %>
               <%= render "ui/select/trigger", placeholder: "Select a block type" %>
               <%= render "ui/select/content" do %>
-                <% available_method_names(model).each do |method_name| %>
-                  <%= render "ui/select/item", value: method_name do %><%= method_name.titleize %><% end %>
+                <% block_type_options(model).each do |handler| %>
+                  <%= render "ui/select/item", value: handler.primary_name do %><%= handler.primary_name.titleize %><% end %>
                 <% end %>
               <% end %>
               <%= hidden_field_tag :method_name,

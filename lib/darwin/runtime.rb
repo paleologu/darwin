@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 # lib/darwin/runtime.rb
+require 'darwin/block_handler_registry'
+
 module Darwin
   module Runtime
     def self.reload_all!(current_model: nil, builder: false)
@@ -32,23 +34,7 @@ module Darwin
     end
 
     def self.block_priority(method_name)
-      @priority_map ||= {
-        'attribute' => 0,
-        'association' => 1,
-        'attachment' => 2,
-        'validates' => 3,
-        'accepts_nested_attributes_for' => 4,
-        'callback' => 5,
-        'scope' => 6
-      }
-      case method_name
-      when 'has_many', 'has_one', 'belongs_to'
-        @priority_map['association']
-      when 'has_one_attached', 'has_many_attached'
-        @priority_map['attachment']
-      else
-        @priority_map[method_name] || 99
-      end
+      Darwin::BlockHandlerRegistry.priority_for(method_name)
     end
 
     def self.define_runtime_classes(models)
