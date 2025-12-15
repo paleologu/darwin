@@ -51,34 +51,6 @@
         <% end %>
       <% end %>
 
-      <%= render "ui/card",
-                  classes: "space-y-4 shadow-sm",
-                  attributes: { data: { controller: "nested-form" } } do %>
-        <%= render "ui/card/header", classes: "flex items-center justify-between gap-4" do %>
-          <div>
-            <%= render "ui/card/description", content: "Blocks" %>
-            <%= render "ui/card/title", content: "Compose model behavior" %>
-          </div>
-          <%= render "ui/button", variant: "outline", size: "sm", type: "button",
-                      attributes: { data: { action: "nested-form#add" } } do %>
-            Add Block
-          <% end %>
-        <% end %>
-
-        <%= render "ui/card/content", classes: "space-y-6" do %>
-          <div id="blocks" class="space-y-4" data-nested-form-target="target">
-            <%= form.fields_for :blocks, @blocks do |block_form| %>
-              <%= render "block_fields", f: block_form %>
-            <% end %>
-          </div>
-
-          <template data-nested-form-target="template">
-            <%= form.fields_for :blocks, Darwin::Block.new, child_index: "NEW_RECORD" do |block_form| %>
-              <%= render "block_fields", f: block_form %>
-            <% end %>
-          </template>
-        <% end %>
-      <% end %>
 
       <div class="flex flex-wrap items-center justify-between gap-3">
         <%= render "ui/navigation_menu/link", href: darwin.root_path, trigger_style: true do %>

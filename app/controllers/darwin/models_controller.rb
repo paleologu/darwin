@@ -17,12 +17,14 @@ class Darwin::ModelsController < Darwin::ApplicationController
 
   def create
     result = Darwin::ModelBuilder::Create::Service.call(params: model_params)
-    return redirect_to(darwin.models_path, notice: 'Model was successfully created.') if result.success?
-
-    @model = result.data[:model] || Darwin::Model.new(model_params)
-    @blocks = @model.blocks
-    flash.now[:alert] = result.error.message
-    render :new, status: :unprocessable_entity
+    if result.success?
+      redirect_to(darwin.edit_model_path(result.data[:model]), notice: 'Model was successfully created.') 
+    else
+      @model = result.data[:model] || Darwin::Model.new(model_params)
+      @blocks = @model.blocks
+      flash.now[:alert] = result.error.message
+      render :new, status: :unprocessable_entity
+    end
   end
 
   def show
@@ -90,7 +92,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
               "columns-list",
               partial: "darwin/models/table/columns",
               locals: { model: @model }
-            )
+              )
           end
           format.html do
             redirect_to darwin.edit_model_path(@model), notice: "Column #{@column.name} added"
@@ -120,7 +122,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
               "columns-list",
               partial: "darwin/models/table/columns",
               locals: { model: @model }
-            )
+              )
           end
           format.html do
             redirect_to darwin.edit_model_path(@model), notice: "Column #{@column.name} updated"
@@ -150,7 +152,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
               "columns-list",
               partial: "darwin/models/table/columns",
               locals: { model: @model }
-            )
+              )
           end
           format.html do
             redirect_to darwin.edit_model_path(@model), notice: "Column removed"
@@ -204,7 +206,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
         :id, :method_name, :args_name, :args_type, { args: [] }, :position, :_destroy,
         { options: [:default, :null, :limit, :precision, :scale] }
       ]
-    )
+      )
   end
 
   def column_params
@@ -230,7 +232,7 @@ class Darwin::ModelsController < Darwin::ApplicationController
         render turbo_stream: turbo_stream.replace(
           "flash",
           partial: "layouts/flash"
-        ), status: :unprocessable_entity
+          ), status: :unprocessable_entity
       end
       format.html do
         redirect_to darwin.edit_model_path(@model), alert: message

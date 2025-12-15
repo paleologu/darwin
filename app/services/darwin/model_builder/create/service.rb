@@ -12,9 +12,12 @@ module Darwin
 
         def call
           model = Darwin::Model.new(@params)
-          return failure(model.errors.full_messages.to_sentence) unless model.save
+          return failure(model.errors.full_messages.to_sentence) unless model.save!
 
-          Darwin::SchemaSyncJob.run(model_id: model.id, action: 'sync', builder: true)
+          Darwin::SchemaManager.sync!(model)
+          models = []
+          models << model
+          Darwin::Runtime.define_runtime_classes(models)
 
           success(model:)
         rescue StandardError => e

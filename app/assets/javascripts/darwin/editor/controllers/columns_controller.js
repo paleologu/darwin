@@ -7,7 +7,7 @@ export default class extends Controller {
 
   submit(event) {
     // If the submit was triggered by change, ensure we still POST.
-    if (event.type === "change") {
+    if (event.type === "submit") {
       this.element.requestSubmit()
       return
     }
