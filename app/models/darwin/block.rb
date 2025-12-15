@@ -15,18 +15,12 @@ module Darwin
     attr_accessor :validation_type
     attr_writer :args_name, :args_type
 
-    before_validation :assemble_args, if: lambda {
-      %w[has_many belongs_to has_one validates accepts_nested_attributes_for].include?(method_name)
-    }
-    before_validation :normalize_association_args, if: lambda {
-      %w[has_many belongs_to has_one accepts_nested_attributes_for].include?(method_name)
-    }
-    before_validation :clean_options, if: -> { method_name == 'validates' }
+    before_validation :assemble_args_with_handler, if: :handler
+    before_validation :normalize_args_with_handler, if: :handler
     before_create :set_position
 
     validates :method_name, presence: true
-    validate :validate_attribute_block, if: -> { method_name == 'attribute' }
-    validate :validate_validation_block, if: -> { method_name == 'validates' }
+    validate :validate_with_handler, if: :handler
 
     def args=(value)
       if value.is_a?(String) && !value.blank?
@@ -65,41 +59,20 @@ module Darwin
 
     private
 
-    def assemble_args
-      case method_name
-      when 'attribute'
-        self.args = [@args_name, @args_type] if @args_name.present? || @args_type.present?
-      when 'has_many', 'belongs_to', 'has_one', 'validates', 'accepts_nested_attributes_for'
-        self.args = [@args_name] if @args_name.present?
-      end
+    def assemble_args_with_handler
+      handler.assemble_args
     end
 
-    def normalize_association_args
-      return unless args.present?
-
-      raw_name = args.is_a?(Array) ? args.first : args
-      normalized = raw_name.to_s.underscore
-      normalized = normalized.pluralize if method_name == 'has_many' || method_name == 'accepts_nested_attributes_for'
-      normalized = normalized.singularize if method_name == 'belongs_to' || method_name == 'has_one'
-
-      self.args = [normalized]
+    def normalize_args_with_handler
+      handler.normalize_args
     end
 
-    def validate_attribute_block
-      # Use the custom readers which will have the correct values
-      errors.add(:args_name, "can't be blank") if args_name.blank?
-      errors.add(:args_type, "can't be blank") if args_type.blank?
+    def validate_with_handler
+      handler.validate!
     end
 
-    def validate_validation_block
-      errors.add(:args, "can't be blank") if args.empty?
-      errors.add(:options, "can't be blank") if options.empty?
-    end
-
-    def clean_options
-      return unless options.is_a?(Hash) && validation_type.present?
-
-      self.options = options.slice(validation_type)
+    def handler
+      @handler ||= Darwin::Blocks::Registry.handler_for(self)
     end
 
     def set_position
