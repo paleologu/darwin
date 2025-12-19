@@ -3,6 +3,7 @@
 require 'darwin/version'
 require 'darwin/engine'
 require 'darwin/interpreter'
+require 'darwin/block_handler_registry'
 require 'darwin/runtime'
 require 'darwin/schema_manager'
 

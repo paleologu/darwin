@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'darwin/block_handler_registry'
+
 module Darwin
   class SchemaManager
     def self.sync!(model)
@@ -11,8 +13,13 @@ module Darwin
       ensure_table!(table_name)
 
       expected_columns = column_specs_from_metadata(model)
-      merge_column_specs!(expected_columns, column_specs_from_attribute_blocks(model))
-      merge_column_specs!(expected_columns, column_specs_from_belongs_to_blocks(model))
+      # HEAD
+      Darwin::BlockHandlerRegistry.schema_columns_for(model).each do |name, spec|
+        expected_columns[name] ||= spec
+      end
+      # REPLACES OR EXTENDS
+      # merge_column_specs!(expected_columns, column_specs_from_attribute_blocks(model))
+      # merge_column_specs!(expected_columns, column_specs_from_belongs_to_blocks(model))
 
       existing_columns = connection.columns(table_name).index_by { |c| c.name.to_s }
 
@@ -98,30 +105,6 @@ module Darwin
           type: column.column_type.to_sym,
           options: column_options_from_metadata(column)
         }
-      end
-    end
-
-    def self.column_specs_from_attribute_blocks(model)
-      model.blocks.where(method_name: 'attribute').each_with_object({}) do |block, specs|
-        name, type = Array(block.args)
-        next if name.blank? || type.blank?
-        next if specs.key?(name.to_s)
-
-        specs[name.to_s] = { type: type.to_sym, options: {} }
-      end
-    end
-
-    def self.column_specs_from_belongs_to_blocks(model)
-      model.blocks.where(method_name: 'belongs_to').each_with_object({}) do |block, specs|
-        assoc_name = block.args.first.to_s.underscore
-        next if assoc_name.blank?
-
-        options = Darwin::Interpreter.deep_symbolize_keys(block.options) || {}
-        foreign_key = options[:foreign_key] || "#{assoc_name}_id"
-        next if specs.key?(foreign_key)
-
-        nullability = options.key?(:optional) ? options[:optional] : false
-        specs[foreign_key] = { type: :integer, options: { null: nullability } }
       end
     end
 

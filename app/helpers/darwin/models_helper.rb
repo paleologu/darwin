@@ -1,11 +1,11 @@
 module Darwin::ModelsHelper
   def available_method_names(model)
+    block_type_options(model).map(&:primary_name)
+  end
+
+  def block_type_options(model)
     runtime_constant = runtime_class_for(model)
-    method_names = []
-    method_names << "validates" if runtime_constant&.attribute_names&.present?
-    method_names += %w[belongs_to has_many has_one] if Darwin::Model.count > 1
-    method_names << "accepts_nested_attributes_for" if runtime_constant&.reflect_on_all_associations&.any?
-    method_names
+    Darwin::BlockHandlerRegistry.ui_handlers(model:, runtime_class: runtime_constant)
   end
 
   def runtime_class_for(model)

@@ -2,7 +2,7 @@
             classes: "nested-fields mt-2",
             attributes: { data: { controller: "block-form", new_record: f.object.new_record? } } do %>
   <%= render "ui/card/content", classes: "space-y-5" do %>
-    <% block_types = %w[attribute validates belongs_to has_many has_one accepts_nested_attributes_for] %>
+    <% block_types = block_type_options(f.object.darwin_model) %>
     <%= render "ui/field" do %>
       <%= render "ui/field/label", content: "Block type" %>
       <%= render "ui/field/content" do %>
@@ -11,9 +11,9 @@
                     value: f.object.method_name.presence do %>
           <%= render "ui/select/trigger", placeholder: "Select a block" %>
           <%= render "ui/select/content" do %>
-            <% block_types.each do |type| %>
-              <%= render "ui/select/item", value: type do %>
-                <%= type.titleize %>
+            <% block_types.each do |handler| %>
+              <%= render "ui/select/item", value: handler.primary_name do %>
+                <%= handler.primary_name.titleize %>
               <% end %>
             <% end %>
           <% end %>
