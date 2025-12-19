@@ -2,7 +2,8 @@
   <%= render "ui/card" do %>
     <%= render "ui/card/content", classes: "space-y-4" do %>
       <%= form_with(model: [block.darwin_model, block], scope: :darwin_block) do |form| %>
-        <%= render partial: "darwin/models/block_forms/#{block.method_name}", locals: { f: form } %>
+        <% presenter = Darwin::BlockFormPresenter.new(block:, builder: form, view_context: self) %>
+        <%= presenter.render %>
         <div class="flex justify-end gap-3">
           <%= render "ui/navigation_menu/link", href: darwin.edit_model_path(block.darwin_model), trigger_style: true do %>
             Cancel
