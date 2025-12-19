@@ -3,7 +3,8 @@
     <%= render "ui/card/content", classes: "space-y-4" do %>
       <% if @block.method_name.present? %>
         <%= form_with(model: @block, scope: :darwin_block, url: darwin.model_blocks_path(@model)) do |form| %>
-          <%= render partial: "darwin/models/block_forms/#{@block.method_name}", locals: { f: form } %>
+          <% presenter = Darwin::BlockFormPresenter.new(block: @block, builder: form, view_context: self) %>
+          <%= presenter.render %>
           <div class="flex justify-end">
             <%= render "ui/button", type: "submit" do %>
               Save

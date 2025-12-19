@@ -31,4 +31,14 @@ RSpec.describe Darwin::Block, type: :model do
       expect(block.reload.options).to eq(options)
     end
   end
+
+  describe 'position defaults' do
+    it 'assigns sequential positions when none are provided' do
+      first_block = model.blocks.create!(method_name: 'attribute', args_name: 'first', args_type: 'string')
+      second_block = model.blocks.create!(method_name: 'attribute', args_name: 'second', args_type: 'string')
+
+      expect(first_block.position).to eq(0)
+      expect(second_block.position).to eq(1)
+    end
+  end
 end
