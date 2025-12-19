@@ -11,8 +11,8 @@ module Darwin
       ensure_table!(table_name)
 
       expected_columns = column_specs_from_metadata(model)
-      expected_columns.merge!(column_specs_from_attribute_blocks(model))
-      expected_columns.merge!(column_specs_from_belongs_to_blocks(model))
+      merge_column_specs!(expected_columns, column_specs_from_attribute_blocks(model))
+      merge_column_specs!(expected_columns, column_specs_from_belongs_to_blocks(model))
 
       existing_columns = connection.columns(table_name).index_by { |c| c.name.to_s }
 
@@ -132,6 +132,14 @@ module Darwin
         precision: column.precision,
         scale: column.scale
       }.compact
+    end
+
+    def self.merge_column_specs!(target, new_specs)
+      new_specs.each do |col_name, spec|
+        next if target.key?(col_name)
+
+        target[col_name] = spec
+      end
     end
 
     def self.column_changed?(existing, type, options)
