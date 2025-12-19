@@ -111,4 +111,19 @@ describe '.sync!' do
 
     expect(ActiveRecord::Base.connection.columns(table_name).find { |c| c.name == 'author_id' }.null).to be false
   end
+ 
+    it 'prefers metadata over attribute blocks when syncing columns' do
+    model = Darwin::Model.create!(name: 'MetadataPriority')
+    model.columns.create!(name: 'title', column_type: 'string', default: 'Untitled', null: false, limit: 191)
+    model.blocks.create!(method_name: 'attribute', args: %w[title text])
+    table_name = 'darwin_metadata_priorities'
+
+    Darwin::SchemaManager.sync!(model)
+
+    column = ActiveRecord::Base.connection.columns(table_name).find { |c| c.name == 'title' }
+    expect(column.type).to eq(:string)
+    expect(column.default).to eq('Untitled')
+    expect(column.null).to be false
+    expect(column.limit).to eq(191)
+  end
 end
