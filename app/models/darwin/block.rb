@@ -6,7 +6,7 @@ module Darwin
 
     belongs_to :darwin_model, class_name: 'Darwin::Model', foreign_key: :model_id, touch: true
 
-
+    attribute :position, :integer, default: nil
     # https://www.visuality.pl/posts/active-record---store-vs-store-accessor
     attribute :args, :json, default: []
     attribute :options, :json, default: {}
@@ -103,9 +103,9 @@ module Darwin
     end
 
     def set_position
-      return unless position.blank?
+      return unless position.nil?
 
-      self.position = (darwin_model.blocks.maximum(:position) || 0) + 1
+      self.position = (darwin_model.blocks.maximum(:position) || -1) + 1
     end
   end
 

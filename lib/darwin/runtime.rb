@@ -17,7 +17,7 @@ module Darwin
 
       # Pass 2: Evaluate attributes for all models by priority
       blocks = models.flat_map(&:blocks)
-      blocks.sort_by { |b| block_priority(b.method_name) }.each do |block|
+      blocks.sort_by { |b| [block_priority(b.method_name), b.position || 0, b.id] }.each do |block|
         klass = runtime_class_for(block.darwin_model)
         Rails.logger.info "[Darwin::Runtime] evaluating block #{block.id} #{block.method_name} for #{klass.name}"
         Darwin::Interpreter.evaluate_block(klass, block, builder:)

@@ -19,6 +19,25 @@ RSpec.describe Darwin::Runtime do
       expect(Article.column_names).to include('title', 'content')
       expect(Comment.column_names).to include('message')
     end
+
+    it 'evaluates same-priority blocks deterministically when positions match' do
+      ordered_model = Darwin::Model.create!(name: 'OrderedTest')
+      first_block = ordered_model.blocks.create!(method_name: 'attribute', args: %w[first string], position: 0)
+      second_block = ordered_model.blocks.create!(method_name: 'attribute', args: %w[second string], position: 0)
+
+      evaluated_ids = []
+      allow(Darwin::Interpreter).to receive(:evaluate_block).and_wrap_original do |method, klass, block, builder:|
+        evaluated_ids << block.id
+        method.call(klass, block, builder:)
+      end
+
+      Darwin::Runtime.reload_all!(builder: true)
+
+      ordered_evaluations = evaluated_ids.select { |id| [first_block.id, second_block.id].include?(id) }
+      expect(ordered_evaluations).to eq([first_block.id, second_block.id])
+    ensure
+      ordered_model&.destroy
+    end
   end
 
   describe 'has_one associations' do
