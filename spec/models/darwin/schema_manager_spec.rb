@@ -83,7 +83,36 @@ describe '.sync!' do
     expect(column_after.type).to eq(:integer)
   end
 
-  it 'prefers metadata over attribute blocks when syncing columns' do
+  it 'sets foreign key nullability based on the optional flag' do
+    model = Darwin::Model.create!(name: 'OptionalBelongsToNullability')
+    model.blocks.create!(method_name: 'belongs_to', args: ['author'])
+    model.blocks.create!(method_name: 'belongs_to', args: ['editor'], options: { optional: true })
+    model.blocks.create!(method_name: 'belongs_to', args: ['publisher'], options: { optional: false })
+
+    Darwin::SchemaManager.sync!(model)
+
+    columns = ActiveRecord::Base.connection.columns('darwin_optional_belongs_to_nullabilities').index_by(&:name)
+
+    expect(columns['author_id'].null).to be false
+    expect(columns['editor_id'].null).to be true
+    expect(columns['publisher_id'].null).to be false
+  end
+
+  it 'updates foreign key nullability for existing columns when optional changes' do
+    model = Darwin::Model.create!(name: 'OptionalBelongsToChange')
+    association_block = model.blocks.create!(method_name: 'belongs_to', args: ['author'], options: { optional: true })
+    table_name = 'darwin_optional_belongs_to_changes'
+
+    Darwin::SchemaManager.sync!(model)
+    expect(ActiveRecord::Base.connection.columns(table_name).find { |c| c.name == 'author_id' }.null).to be true
+
+    association_block.update!(options: { optional: false })
+    Darwin::SchemaManager.sync!(model)
+
+    expect(ActiveRecord::Base.connection.columns(table_name).find { |c| c.name == 'author_id' }.null).to be false
+  end
+ 
+    it 'prefers metadata over attribute blocks when syncing columns' do
     model = Darwin::Model.create!(name: 'MetadataPriority')
     model.columns.create!(name: 'title', column_type: 'string', default: 'Untitled', null: false, limit: 191)
     model.blocks.create!(method_name: 'attribute', args: %w[title text])

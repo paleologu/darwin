@@ -120,7 +120,8 @@ module Darwin
         foreign_key = options[:foreign_key] || "#{assoc_name}_id"
         next if specs.key?(foreign_key)
 
-        specs[foreign_key] = { type: :integer, options: { null: options.fetch(:optional, true) } }
+        nullability = options.key?(:optional) ? options[:optional] : false
+        specs[foreign_key] = { type: :integer, options: { null: nullability } }
       end
     end
 
